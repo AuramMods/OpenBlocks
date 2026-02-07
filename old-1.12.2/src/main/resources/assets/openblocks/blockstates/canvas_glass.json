@@ -1,0 +1,44 @@
+{
+    "forge_marker": 1,
+    "variants": {
+        "inventory": [{
+            "model": "cube_all",
+            "textures": {
+                "all": "openblocks:blocks/canvas"
+            }
+        }],
+        "orientation": {
+            "xp_yp" : {
+                "model": "openblocks:magic-canvas",
+                "custom": {
+                    "base": "openblocks:canvas#blank",
+                    "baseLayers": ["Solid"]
+                }
+            }
+        },
+        "material": {
+            "sponge": {},
+            "grass": {},
+            "ground": {},
+            "wood": {},
+            "rock": {},
+            "iron": {},
+            "leaves": {},
+            "plants": {},
+            "cloth": {},
+            "sand": {},
+            "circuits": {},
+            "glass": {},
+            "ice": {},
+            "snow": {},
+            "clay": {},
+            "carpet": {}
+        },
+        "blank": [{
+            "model": "cube_all",
+            "textures": {
+                "all": "openblocks:blocks/canvas"
+            }
+        }]
+    }
+}

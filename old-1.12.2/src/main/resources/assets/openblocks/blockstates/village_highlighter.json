@@ -1,0 +1,25 @@
+{
+    "forge_marker" : 1,
+    "defaults" : {
+        "model" : "openblocks:village",
+        "transform": "forge:default-block"
+    },
+    "variants" : {
+        "inventory": [{}],
+        "powered" : {
+            "true": {
+                "textures": {
+                    "side": "openblocks:blocks/village_side_active",
+                    "back": "openblocks:blocks/village_back_active"
+                }
+            },
+            "false": {}
+        },
+        "orientation" : {
+            "xp_yp" : { "y" :   0 },
+            "zp_yp" : { "y" :  90 },
+            "xn_yp" : { "y" : 180 },
+            "zn_yp" : { "y" : 270 }
+        }
+    }
+}
