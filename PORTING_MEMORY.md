@@ -12,6 +12,38 @@
   - `PORTING_MEMORY.md`
   - `PORTING_MANIFEST.md`
 
+## 1.20.1 Progress Snapshot
+- Block/item registry baseline implemented in current project:
+  - `/Users/cyberpwn/development/workspace/AuramMods/OpenBlocks/src/main/java/art/arcane/openblocks/OpenBlocks.java`
+  - `/Users/cyberpwn/development/workspace/AuramMods/OpenBlocks/src/main/java/art/arcane/openblocks/registry/OBBlocks.java`
+  - `/Users/cyberpwn/development/workspace/AuramMods/OpenBlocks/src/main/java/art/arcane/openblocks/registry/OBItems.java`
+  - `/Users/cyberpwn/development/workspace/AuramMods/OpenBlocks/src/main/java/art/arcane/openblocks/registry/OBCreativeTabs.java`
+- Registered in 1.20.1 scaffolding:
+  - 41 block IDs (legacy names preserved)
+  - 41 block items (one per block)
+  - 30 standalone item IDs (legacy names preserved)
+  - 1 creative tab listing all registered items in a single place
+- Asset scaffolding generated and wired:
+  - `/Users/cyberpwn/development/workspace/AuramMods/OpenBlocks/src/main/resources/assets/open_blocks/blockstates` (41)
+  - `/Users/cyberpwn/development/workspace/AuramMods/OpenBlocks/src/main/resources/assets/open_blocks/models/block` (41)
+  - `/Users/cyberpwn/development/workspace/AuramMods/OpenBlocks/src/main/resources/assets/open_blocks/models/item` (71)
+  - `/Users/cyberpwn/development/workspace/AuramMods/OpenBlocks/src/main/resources/assets/open_blocks/lang/en_us.json`
+  - `/Users/cyberpwn/development/workspace/AuramMods/OpenBlocks/src/main/resources/assets/open_blocks/textures/blocks` (legacy texture import)
+  - `/Users/cyberpwn/development/workspace/AuramMods/OpenBlocks/src/main/resources/assets/open_blocks/textures/items` (legacy texture import)
+- All currently registered IDs now have matching blockstate/model/lang coverage:
+  - 41/41 blockstates
+  - 41/41 block models
+  - 71/71 item models
+  - 41 block lang keys + 30 standalone item lang keys
+- Validation:
+  - `./gradlew compileJava` succeeds after registry + asset changes.
+  - `./gradlew compileJava runData` succeeds (2026-02-08).
+- Datagen runtime safety fix:
+  - `build.gradle` now skips optional runtime jars from `extra-mods-1.20.1` when requested tasks include `runData`/`datagen`.
+  - This prevents unrelated dev-runtime mods (AE2 etc.) from crashing datagen runs.
+- Important namespace note:
+  - Current mod namespace is `open_blocks` (project default), not `openblocks` yet.
+
 ## Critical Architecture Facts
 - Main entrypoint is `old-1.12.2/src/main/java/openblocks/OpenBlocks.java`.
 - Most object registration is centralized in `OpenBlocks` nested classes:
@@ -39,6 +71,9 @@
 - Legacy `EntityRegistry.registerModEntity` and `DataFixer` calls are used.
 - Legacy ore dictionary is used (`craftingTableWood`, `chestWood`).
 - Old villager profession registration exists (`openblocks:radio`).
+- Legacy creative tab behavior is NOT one-item-per-ID:
+  - Many items expose multiple creative variants via `getSubItems` (paint can colors, elevator colors, glyph variants, stencil patterns, etc.).
+  - Current 1.20.1 breadth scaffold intentionally shows one stack per registered ID only (parity pass later).
 
 ## Registry Scope to Preserve
 - Blocks: 41
@@ -67,4 +102,4 @@
 5. `old-1.12.2/src/main/java/openblocks/Config.java`
 
 ## Next Breadth Step (Planned)
-- Build 1.20.1 registry skeleton first (all IDs present, minimal behavior), then deepen per-feature.
+- Continue Phase 1 breadth: add fluids/block entities/entities/sound/enchantment/menu/recipe serializer registries with placeholder implementations.

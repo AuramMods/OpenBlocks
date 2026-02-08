@@ -37,10 +37,11 @@ Deliverables:
 Goal: all major registry objects exist in 1.20.1 with canonical IDs, even if behavior is minimal.
 
 Checklist:
-- [ ] Create/verify central mod bootstrap wiring in current 1.20.1 project.
+- [x] Create/verify central mod bootstrap wiring in current 1.20.1 project.
 - [ ] Create deferred registers (or equivalent) for:
-  - [ ] Blocks
-  - [ ] Items
+  - [x] Blocks
+  - [x] Items
+  - [x] Creative mode tab
   - [ ] Fluids + fluid type + bucket
   - [ ] BlockEntityType
   - [ ] EntityType
@@ -48,11 +49,14 @@ Checklist:
   - [ ] Enchantment
   - [ ] MenuType
   - [ ] RecipeSerializer (custom recipes)
-- [ ] Recreate all legacy block IDs (from manifest) as stubs/placeholders where needed.
-- [ ] Recreate all legacy item IDs (including meta-item strategy replacement plan).
+- [x] Recreate all legacy block IDs (from manifest) as stubs/placeholders where needed.
+- [x] Recreate all legacy item IDs (including meta-item strategy replacement plan).
 - [ ] Recreate all legacy entity IDs as registered entity types.
 - [ ] Recreate all legacy sound IDs in code/data.
 - [ ] Establish compatibility mapping plan for old IDs/legacy names.
+- [x] Generate asset scaffolding for blockstates/models/lang so registry visibility can be verified quickly.
+- [x] Replace placeholder stone/iron assets with legacy texture-backed block/item models for all currently registered IDs.
+- [x] Ensure datagen run path works for this project workflow (`./gradlew compileJava runData`).
 
 Exit criteria:
 - [ ] Project compiles with all primary registries present.
@@ -62,16 +66,21 @@ Exit criteria:
 Goal: every registered object has minimum data assets so the game loads cleanly.
 
 Checklist:
-- [ ] Blockstates for all registered blocks.
-- [ ] Item models for all registered items.
-- [ ] Language entries for all objects.
+- [x] Blockstates for all registered blocks.
+- [x] Item models for all registered items.
+- [x] Language entries for all objects.
 - [ ] Sound definitions (`sounds.json`) aligned with code registrations.
 - [ ] Basic loot tables where required.
 - [ ] Basic recipes (or temporary placeholders) for each craftable feature.
 - [ ] Tags needed for gameplay parity and compatibility.
+- [x] Cross-check that each registered block/item ID has matching model/lang assets.
 
 Exit criteria:
 - [ ] Data generation/resources run without missing-model or missing-lang spam for core objects.
+
+Validation log:
+- [x] `./gradlew compileJava` succeeds after registry + asset changes.
+- [x] `./gradlew compileJava runData` succeeds (as of 2026-02-08) after isolating datagen runs from optional `extra-mods-1.20.1` jars.
 
 ## Phase 3: Systems Skeleton (Breadth Gameplay Pass)
 Goal: recreate cross-cutting systems in thin form before deep feature parity.
@@ -121,4 +130,4 @@ Checklist:
 - [ ] Cleanup dead stubs and document final architecture.
 
 ## Immediate Next Task
-- [ ] Start Phase 1 by creating or validating 1.20.1 registry scaffolding and listing each legacy ID into the new registry classes with placeholder implementations.
+- [ ] Continue Phase 1 breadth: add deferred-register skeletons for fluids/fluid types, block entities, entities, sounds, enchantments, menu types, and recipe serializers with legacy IDs preserved.

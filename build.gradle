@@ -162,13 +162,20 @@ repositories {
     }
 }
 
-dependencies
-{
-    for (extraModJar in fileTree(dir: extraModsDir, include: '*.jar')) {
-        def basename = extraModJar.name.substring(0, extraModJar.name.length() - ".jar".length())
-        def versionSep = basename.lastIndexOf('-')
-        assert versionSep != -1
-        def artifactId = basename.substring(0, versionSep)
-        def version = basename.substring(versionSep + 1)
-        runtimeOnly fg.deobf("extra-mods:$artifactId:$version")}
+def requestedTasks = gradle.startParameter.taskNames.collect { it.toLowerCase() }
+def runningDataGen = requestedTasks.any { it.contains("rundata") || it.contains("datagen") }
+
+if (!runningDataGen) {
+    dependencies {
+        for (extraModJar in fileTree(dir: extraModsDir, include: '*.jar')) {
+            def basename = extraModJar.name.substring(0, extraModJar.name.length() - ".jar".length())
+            def versionSep = basename.lastIndexOf('-')
+            assert versionSep != -1
+            def artifactId = basename.substring(0, versionSep)
+            def version = basename.substring(versionSep + 1)
+            runtimeOnly fg.deobf("extra-mods:$artifactId:$version")
+        }
+    }
+} else {
+    logger.lifecycle("Skipping optional jars from ${extraModsDir} for data generation runs")
 }

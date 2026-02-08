@@ -3,11 +3,42 @@
 ## Purpose
 - Canonical breadth-first inventory of registries, IDs, and source locations in the 1.12.2 codebase.
 - Use this file as the quick lookup map before touching implementation.
+- Also tracks current 1.20.1 scaffold coverage and where each breadth-phase registry now lives.
 
 ## Source Scope
 - Legacy root: `old-1.12.2`
 - Main code root: `old-1.12.2/src/main/java/openblocks`
 - Main assets root: `old-1.12.2/src/main/resources/assets/openblocks`
+
+## Current 1.20.1 Port Snapshot (2026-02-08)
+Current source roots:
+- Java root: `src/main/java/art/arcane/openblocks`
+- Assets root: `src/main/resources/assets/open_blocks`
+
+Current registry classes:
+- Mod bootstrap: `src/main/java/art/arcane/openblocks/OpenBlocks.java`
+- Blocks register: `src/main/java/art/arcane/openblocks/registry/OBBlocks.java`
+- Items register: `src/main/java/art/arcane/openblocks/registry/OBItems.java`
+- Creative tab register: `src/main/java/art/arcane/openblocks/registry/OBCreativeTabs.java`
+
+Current scaffold counts:
+- Block IDs registered: 41
+- Item IDs registered: 71 (41 block items + 30 standalone)
+- Creative tabs registered: 1 (`open_blocks:main`)
+
+Current asset coverage:
+- Blockstates: `src/main/resources/assets/open_blocks/blockstates` (41 files)
+- Block models: `src/main/resources/assets/open_blocks/models/block` (41 files)
+- Item models: `src/main/resources/assets/open_blocks/models/item` (71 files)
+- Language file: `src/main/resources/assets/open_blocks/lang/en_us.json`
+- Imported legacy textures:
+  - `src/main/resources/assets/open_blocks/textures/blocks`
+  - `src/main/resources/assets/open_blocks/textures/items`
+
+Current validation status:
+- `./gradlew compileJava` passes.
+- `./gradlew compileJava runData` passes.
+- Build rule note: `build.gradle` skips optional jars from `extra-mods-1.20.1` when task names include `runData`/`datagen`, so datagen is not blocked by unrelated runtime mods.
 
 ## Top-Level Entry Points
 - Mod entrypoint and major registration flow:
@@ -137,6 +168,36 @@ Source:
   - `sketching_pencil`
 - `Items.genericUnstackable` (`ItemOBGenericUnstackable`) variants:
   - `pointer`
+
+## Legacy Creative Tab Behavior (Model/Lang Parity Critical)
+Primary sources:
+- `old-1.12.2/src/main/java/openblocks/OpenBlocks.java` (`createTabOpenBlocks`, `setupConfigPre`)
+- Item/block classes with `getSubItems` overrides under `old-1.12.2/src/main/java/openblocks/common/item`
+
+Core behavior:
+- `setupConfigPre` sets one shared creative tab for registered OpenBlocks content: `gameConfig.setCreativeTab(OpenBlocks::createTabOpenBlocks)`.
+- Tab icon is `Blocks.flag` with default color, fallback `minecraft:sponge` if flag is disabled/unavailable.
+- Tab appends enchanted books for `explosive`, `last_stand`, and `flim_flam` when those enchantments are registered.
+
+Important item variant behavior in legacy tab:
+- `ItemElevator`: exposes 16 color metadata variants.
+- `ItemPaintCan`: exposes one full can per color.
+- `ItemSkyBlock`: exposes normal + inverted variants.
+- `ItemTrophyBlock`: exposes one stack per trophy/entity type.
+- `ItemImaginary`: exposes pencil + all crayon colors.
+- `ItemPaintBrush`: exposes blank + colored variants.
+- `ItemStencil`: exposes all stencil patterns.
+- `ItemEmptyMap`: exposes scale variants (`0..3`).
+- `ItemGoldenEye`: exposes charged and depleted states.
+- `ItemGlyph`: exposes display character set in OpenBlocks tab; optionally full charset in Search tab (config-controlled).
+- `ItemImaginationGlasses.ItemCrayonGlasses`: exposes one pair per color.
+- `ItemCartographer`: exposes all assistant type variants (currently one enum value).
+- `ItemXpBucket`: only appears when `Config.showXpBucketInCreative` is true.
+- `ItemHeightMap`: intentionally hidden from creative tab (`getSubItems` is empty).
+
+Port implication:
+- Current 1.20.1 breadth scaffold intentionally shows one stack per registry ID in the creative tab.
+- Metadata/NBT creative-variant parity is a later depth pass item.
 
 ## Fluids
 Source: `old-1.12.2/src/main/java/openblocks/OpenBlocks.java`
