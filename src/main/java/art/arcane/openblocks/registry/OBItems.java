@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -72,7 +74,7 @@ public final class OBItems {
     public static final RegistryObject<Item> CRANE_CONTROL = registerItem("crane_control");
     public static final RegistryObject<Item> CRANE_BACKPACK = registerItem("crane_backpack");
     public static final RegistryObject<Item> SLIMALYZER = registerItem("slimalyzer");
-    public static final RegistryObject<Item> XP_BUCKET = registerItem("xp_bucket");
+    public static final RegistryObject<Item> XP_BUCKET = registerBucketItem("xp_bucket");
     public static final RegistryObject<Item> SLEEPING_BAG = registerItem("sleeping_bag");
     public static final RegistryObject<Item> PAINTBRUSH = registerItem("paintbrush");
     public static final RegistryObject<Item> STENCIL = registerItem("stencil");
@@ -106,6 +108,13 @@ public final class OBItems {
 
     private static RegistryObject<Item> registerBlockItem(final String id, final RegistryObject<Block> block) {
         final RegistryObject<Item> item = ITEMS.register(id, () -> new BlockItem(block.get(), new Item.Properties()));
+        CREATIVE_ORDER.add(item);
+        return item;
+    }
+
+    private static RegistryObject<Item> registerBucketItem(final String id) {
+        final RegistryObject<Item> item = ITEMS.register(id,
+                () -> new BucketItem(OBFluids.XP_JUICE, new Item.Properties().stacksTo(1).craftRemainder(Items.BUCKET)));
         CREATIVE_ORDER.add(item);
         return item;
     }
