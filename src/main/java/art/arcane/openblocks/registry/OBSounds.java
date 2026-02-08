@@ -34,7 +34,7 @@ public final class OBSounds {
     private OBSounds() {}
 
     private static RegistryObject<SoundEvent> register(final String id) {
-        final ResourceLocation location = new ResourceLocation(OpenBlocks.MODID, id);
+        final ResourceLocation location = ResourceLocation.fromNamespaceAndPath(OpenBlocks.MODID, id);
         return SOUND_EVENTS.register(id, () -> SoundEvent.createVariableRangeEvent(location));
     }
 }

@@ -1,0 +1,114 @@
+{
+    "elevator.activate": {
+        "sounds": [
+            "open_blocks:teleport"
+        ]
+    },
+    "cannon.activate": {
+        "sounds": [
+            "open_blocks:cannon"
+        ]
+    },
+    "radio.activate": {
+        "sounds": [
+            "open_blocks:radio"
+        ]
+    },
+    "bottler.signal": {
+        "sounds": [
+            "open_blocks:fill"
+        ]
+    },
+    "crayon.place": {
+        "sounds": [
+            "open_blocks:draw1",
+            "open_blocks:draw2",
+            "open_blocks:draw3",
+            "open_blocks:draw4"
+        ]
+    },
+    "target.open": {
+        "sounds": [
+            "open_blocks:open"
+        ]
+    },
+    "target.close": {
+        "sounds": [
+            "open_blocks:close"
+        ]
+    },
+    "beartrap.open": {
+        "sounds": [
+            "open_blocks:beartrapopen"
+        ]
+    },
+    "beartrap.close": {
+        "sounds": [
+            "open_blocks:beartrapclose",
+            "open_blocks:beartrapcloseb"
+        ]
+    },
+    "luggage.eat.item": {
+        "sounds": [
+            "open_blocks:chomp"
+        ]
+    },
+    "luggage.eat.food": {
+        "sounds": [
+            "open_blocks:slowpokenom"
+        ]
+    },
+    "luggage.walk": {
+        "sounds": [
+            "open_blocks:feet"
+        ]
+    },
+    "slimalyzer.signal": {
+        "sounds": [
+            "open_blocks:beep"
+        ]
+    },
+    "pedometer.use": {
+        "sounds": [
+            "open_blocks:beep"
+        ]
+    },
+    "squeegee.use": {
+        "sounds": [
+            "open_blocks:wipe"
+        ]
+    },
+    "best.feature.ever.fart": {
+        "sounds": [
+            "open_blocks:fart1",
+            "open_blocks:fart2",
+            "open_blocks:fart3",
+            "open_blocks:fart4"
+        ]
+    },
+    "annoying.mosquito": {
+        "sounds": [
+            "open_blocks:mosquito"
+        ]
+    },
+    "annoying.alarmclock": {
+        "sounds": [
+            "open_blocks:alarmclock"
+        ]
+    },
+    "annoying.vibrate": {
+        "sounds": [
+            "open_blocks:vibrate"
+        ]
+    },
+    "unused.mortar": {
+        "sounds": [
+            "open_blocks:mortar"
+        ]
+    },
+    "grave.rob": {
+        "sounds": [
+            "open_blocks:bwv565"
+        ]
+    }
+}
