@@ -1,6 +1,7 @@
 {
-  "parent": "minecraft:block/cube_all",
+  "parent": "open_blocks:block/big_button_inactive",
   "textures": {
-    "all": "open_blocks:blocks/digital_fuse_3"
+    "all": "minecraft:block/stone",
+    "particle": "minecraft:block/stone"
   }
 }

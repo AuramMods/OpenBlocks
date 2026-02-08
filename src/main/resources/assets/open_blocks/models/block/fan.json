@@ -1,6 +1,6 @@
 {
-  "parent": "minecraft:block/cube_all",
+  "parent": "open_blocks:block/fan_frame",
   "textures": {
-    "all": "open_blocks:blocks/fan_frame"
+    "particle": "open_blocks:block/fan_frame"
   }
 }

@@ -1,6 +1,7 @@
 {
   "parent": "minecraft:block/cube_all",
   "textures": {
-    "all": "open_blocks:blocks/canvas_glass"
+    "all": "open_blocks:block/canvas_glass",
+    "particle": "open_blocks:block/canvas_glass"
   }
 }

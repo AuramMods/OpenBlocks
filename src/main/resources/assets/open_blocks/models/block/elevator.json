@@ -1,6 +1,7 @@
 {
   "parent": "minecraft:block/cube_all",
   "textures": {
-    "all": "open_blocks:blocks/elevator"
+    "all": "open_blocks:block/elevator",
+    "particle": "open_blocks:block/elevator"
   }
 }

@@ -1,6 +1,7 @@
 {
-  "parent": "minecraft:block/cube_all",
+  "parent": "open_blocks:block/imaginary_block",
   "textures": {
-    "all": "open_blocks:blocks/crayon_block"
+    "block": "open_blocks:block/crayon_block",
+    "particle": "open_blocks:block/crayon_block"
   }
 }

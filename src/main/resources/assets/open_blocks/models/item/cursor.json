@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "open_blocks:items/cursor"
+    "layer0": "open_blocks:item/cursor"
   }
 }

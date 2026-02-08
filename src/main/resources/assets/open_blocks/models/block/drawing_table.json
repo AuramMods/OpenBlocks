@@ -1,6 +1,7 @@
 {
   "parent": "minecraft:block/cube_all",
   "textures": {
-    "all": "open_blocks:blocks/drawing_table_top"
+    "all": "open_blocks:block/drawing_table_top",
+    "particle": "open_blocks:block/drawing_table_top"
   }
 }

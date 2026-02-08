@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "open_blocks:items/crane_backpack"
+    "layer0": "open_blocks:item/crane_backpack"
   }
 }

@@ -1,6 +1,16 @@
 {
-  "parent": "minecraft:block/cube_all",
-  "textures": {
-    "all": "open_blocks:blocks/rope_ladder"
-  }
+    "textures": {
+        "front": "open_blocks:block/rope_ladder",
+        "particle": "open_blocks:block/rope_ladder"
+    },
+    "elements": [
+        {
+            "from": [ 0.0, 0.0, 0.0 ],
+            "to": [ 16.0, 16.0, 0.25 ],
+            "faces": {
+                "north": { "texture": "#front", "uv": [ 0.0, 0.0, 16.0, 16.0 ], "cullface": "north" },
+                "south": { "texture": "#front", "uv": [ 0.0, 0.0, 16.0, 16.0 ] }
+            }
+        }
+    ]
 }

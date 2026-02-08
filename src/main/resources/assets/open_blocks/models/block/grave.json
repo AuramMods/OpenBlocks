@@ -1,6 +1,6 @@
 {
-  "parent": "minecraft:block/cube_all",
+  "parent": "open_blocks:block/grave_ground",
   "textures": {
-    "all": "open_blocks:blocks/grave_front"
+    "particle": "open_blocks:block/grave_front"
   }
 }

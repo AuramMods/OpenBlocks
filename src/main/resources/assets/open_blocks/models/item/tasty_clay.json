@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "open_blocks:items/yum_yum"
+    "layer0": "open_blocks:item/yum_yum"
   }
 }

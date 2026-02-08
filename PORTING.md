@@ -81,6 +81,7 @@ Exit criteria:
 Validation log:
 - [x] `./gradlew compileJava` succeeds after registry + asset changes.
 - [x] `./gradlew compileJava runData` succeeds (as of 2026-02-08) after isolating datagen runs from optional `extra-mods-1.20.1` jars.
+- [x] Added initial non-full-block render/collision parity pass for legacy-style models (cutout/translucent setup + custom voxel/collision shapes) and revalidated with `./gradlew compileJava runData` on 2026-02-08.
 
 ## Phase 3: Systems Skeleton (Breadth Gameplay Pass)
 Goal: recreate cross-cutting systems in thin form before deep feature parity.
@@ -130,4 +131,5 @@ Checklist:
 - [ ] Cleanup dead stubs and document final architecture.
 
 ## Immediate Next Task
+- [ ] Have user run a quick in-game visual sweep (no `runClient` on agent side) to confirm the latest transparency/collision changes removed purple-black model regressions and face-culling issues.
 - [ ] Continue Phase 1 breadth: add deferred-register skeletons for fluids/fluid types, block entities, entities, sounds, enchantments, menu types, and recipe serializers with legacy IDs preserved.

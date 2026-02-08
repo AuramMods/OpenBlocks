@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "open_blocks:items/pedometer_still"
+    "layer0": "open_blocks:item/pedometer_still"
   }
 }

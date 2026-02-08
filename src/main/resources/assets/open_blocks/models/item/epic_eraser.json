@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "open_blocks:items/epic_eraser"
+    "layer0": "open_blocks:item/epic_eraser"
   }
 }

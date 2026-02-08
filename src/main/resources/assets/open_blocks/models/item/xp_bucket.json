@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "open_blocks:items/xp_bucket"
+    "layer0": "open_blocks:item/xp_bucket"
   }
 }

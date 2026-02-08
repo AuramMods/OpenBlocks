@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "open_blocks:items/empty_map"
+    "layer0": "open_blocks:item/empty_map"
   }
 }

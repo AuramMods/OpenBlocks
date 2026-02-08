@@ -1,0 +1,17 @@
+{
+    "parent": "item/generated",
+    "textures": {
+        "layer0": "open_blocks:item/crayon_1",
+        "layer1": "open_blocks:item/crayon_2"
+    },
+    "overrides": [
+         { "predicate": { "mode": 0 }, "model": "open_blocks:item/crayon_block" },
+         { "predicate": { "mode": 1 }, "model": "open_blocks:item/crayon_panel" },
+         { "predicate": { "mode": 2 }, "model": "open_blocks:item/crayon_half" },
+         { "predicate": { "mode": 3 }, "model": "open_blocks:item/crayon_stairs" },
+         { "predicate": { "mode": 4 }, "model": "open_blocks:item/crayon_inverted_block" },
+         { "predicate": { "mode": 5 }, "model": "open_blocks:item/crayon_inverted_panel" },
+         { "predicate": { "mode": 6 }, "model": "open_blocks:item/crayon_inverted_half" },
+         { "predicate": { "mode": 7 }, "model": "open_blocks:item/crayon_inverted_stairs" }
+    ]
+}

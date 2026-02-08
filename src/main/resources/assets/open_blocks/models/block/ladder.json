@@ -1,6 +1,7 @@
 {
-  "parent": "minecraft:block/cube_all",
+  "parent": "minecraft:block/template_trapdoor_open",
   "textures": {
-    "all": "open_blocks:blocks/ladder"
+    "texture": "open_blocks:block/ladder",
+    "particle": "open_blocks:block/ladder"
   }
 }

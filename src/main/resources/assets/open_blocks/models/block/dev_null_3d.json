@@ -1,0 +1,6 @@
+{
+    "parent": "open_blocks:block/dev_null_3d_base",
+    "textures": {
+        "all": "open_blocks:item/dev_full"
+    }
+}

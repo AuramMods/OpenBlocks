@@ -1,6 +1,6 @@
 {
-  "parent": "minecraft:block/cube_all",
+  "parent": "open_blocks:block/tank_frame",
   "textures": {
-    "all": "open_blocks:blocks/tank"
+    "particle": "open_blocks:block/tank"
   }
 }

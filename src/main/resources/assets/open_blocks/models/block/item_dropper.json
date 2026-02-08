@@ -1,6 +1,21 @@
 {
-  "parent": "minecraft:block/cube_all",
-  "textures": {
-    "all": "open_blocks:blocks/item_dropper_front"
-  }
+    "textures": {
+        "boring": "open_blocks:block/item_dropper",
+        "active": "open_blocks:block/item_dropper_front",
+        "particle": "open_blocks:block/item_dropper"
+    },
+    "elements": [
+        {
+            "from": [ 0.0, 0.0, 0.0 ],
+            "to": [ 16.0, 16.0, 16.0 ],
+            "faces": {
+                "north": { "texture": "#boring", "uv": [ 0.0, 0.0, 16.0, 16.0 ], "cullface": "north" },
+                "east": { "texture": "#boring", "uv": [ 0.0, 0.0, 16.0, 16.0 ], "cullface": "east" },
+                "south": { "texture": "#boring", "uv": [ 0.0, 0.0, 16.0, 16.0 ], "cullface": "south" },
+                "west": { "texture": "#boring", "uv": [ 0.0, 0.0, 16.0, 16.0 ], "cullface": "west" },
+                "up": { "texture": "#boring", "uv": [ 0.0, 0.0, 16.0, 16.0 ], "cullface": "up" },
+                "down": { "texture": "#active", "uv": [ 0.0, 0.0, 16.0, 16.0 ], "cullface": "down" }
+            }
+        }
+    ]
 }

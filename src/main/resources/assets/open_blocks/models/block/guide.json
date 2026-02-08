@@ -1,6 +1,8 @@
 {
-  "parent": "minecraft:block/cube_all",
+  "parent": "minecraft:block/cube_column",
   "textures": {
-    "all": "open_blocks:blocks/guide"
+    "end": "open_blocks:block/guide_top_new",
+    "side": "open_blocks:block/guide_side_new",
+    "particle": "open_blocks:block/guide_side_new"
   }
 }

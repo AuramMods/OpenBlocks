@@ -20,6 +20,8 @@ Current registry classes:
 - Blocks register: `src/main/java/art/arcane/openblocks/registry/OBBlocks.java`
 - Items register: `src/main/java/art/arcane/openblocks/registry/OBItems.java`
 - Creative tab register: `src/main/java/art/arcane/openblocks/registry/OBCreativeTabs.java`
+- Non-full shape helper block: `src/main/java/art/arcane/openblocks/block/OBShapeBlock.java`
+- Client render-layer setup: `src/main/java/art/arcane/openblocks/client/OBClientRenderLayers.java`
 
 Current scaffold counts:
 - Block IDs registered: 41
@@ -32,13 +34,16 @@ Current asset coverage:
 - Item models: `src/main/resources/assets/open_blocks/models/item` (71 files)
 - Language file: `src/main/resources/assets/open_blocks/lang/en_us.json`
 - Imported legacy textures:
-  - `src/main/resources/assets/open_blocks/textures/blocks`
-  - `src/main/resources/assets/open_blocks/textures/items`
+  - `src/main/resources/assets/open_blocks/textures/block`
+  - `src/main/resources/assets/open_blocks/textures/item`
 
 Current validation status:
 - `./gradlew compileJava` passes.
 - `./gradlew compileJava runData` passes.
 - Build rule note: `build.gradle` skips optional jars from `extra-mods-1.20.1` when task names include `runData`/`datagen`, so datagen is not blocked by unrelated runtime mods.
+- Client asset note: model texture paths must use `open_blocks:block/...` and `open_blocks:item/...` (not plural `blocks/items`) for 1.20 atlas resolution.
+- Run-log note: `run/logs/latest.log` had a concrete missing texture warning for `open_blocks:paint_mixer` (`open_blocks:model/paint_mixer`).
+  - Fixed by switching to atlas-safe `open_blocks:block/paint_mixer_model` and adding `textures/block/paint_mixer_model.png`.
 
 ## Top-Level Entry Points
 - Mod entrypoint and major registration flow:

@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "open_blocks:items/hang_glider"
+    "layer0": "open_blocks:item/hang_glider"
   }
 }

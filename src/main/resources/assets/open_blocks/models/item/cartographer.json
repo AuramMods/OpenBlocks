@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "open_blocks:items/assistant_cartographer"
+    "layer0": "open_blocks:item/assistant_cartographer"
   }
 }

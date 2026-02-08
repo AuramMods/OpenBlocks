@@ -28,8 +28,8 @@
   - `/Users/cyberpwn/development/workspace/AuramMods/OpenBlocks/src/main/resources/assets/open_blocks/models/block` (41)
   - `/Users/cyberpwn/development/workspace/AuramMods/OpenBlocks/src/main/resources/assets/open_blocks/models/item` (71)
   - `/Users/cyberpwn/development/workspace/AuramMods/OpenBlocks/src/main/resources/assets/open_blocks/lang/en_us.json`
-  - `/Users/cyberpwn/development/workspace/AuramMods/OpenBlocks/src/main/resources/assets/open_blocks/textures/blocks` (legacy texture import)
-  - `/Users/cyberpwn/development/workspace/AuramMods/OpenBlocks/src/main/resources/assets/open_blocks/textures/items` (legacy texture import)
+  - `/Users/cyberpwn/development/workspace/AuramMods/OpenBlocks/src/main/resources/assets/open_blocks/textures/block` (legacy texture import, 1.20 atlas path)
+  - `/Users/cyberpwn/development/workspace/AuramMods/OpenBlocks/src/main/resources/assets/open_blocks/textures/item` (legacy texture import, 1.20 atlas path)
 - All currently registered IDs now have matching blockstate/model/lang coverage:
   - 41/41 blockstates
   - 41/41 block models
@@ -41,6 +41,48 @@
 - Datagen runtime safety fix:
   - `build.gradle` now skips optional runtime jars from `extra-mods-1.20.1` when requested tasks include `runData`/`datagen`.
   - This prevents unrelated dev-runtime mods (AE2 etc.) from crashing datagen runs.
+- Client render-path fix:
+  - 1.20.1 expects atlas texture roots under `textures/block` and `textures/item`.
+  - Legacy-style plural paths (`textures/blocks`, `textures/items`) caused purple-black fallback with `Missing textures in model open_blocks:*` warnings.
+  - Models now reference `open_blocks:block/...` and `open_blocks:item/...`.
+- Legacy block model pass (shape-focused) completed:
+  - Imported legacy block model files from `old-1.12.2/src/main/resources/assets/openblocks/models/block` into `src/main/resources/assets/open_blocks/models/block`.
+  - Imported legacy model textures to `src/main/resources/assets/open_blocks/textures/model` (and `textures/misc`).
+  - Converted model namespace/path refs to 1.20-style namespace/path (`open_blocks:*`, `block/item/model` texture roots).
+  - Added static wrappers for blocks that used OpenMods dynamic blockstate loaders in 1.12:
+    - `sprinkler -> sprinkler_static`
+    - `target -> target_inactive`
+    - `flag -> flag_ground`
+    - `grave -> grave_ground`
+    - `golden_egg -> egg`
+    - `fan -> fan_frame`
+    - `tank -> tank_frame`
+    - `trophy -> trophy_base`
+    - `vacuum_hopper -> vacuum_hopper_body`
+    - `village_highlighter -> village`
+    - `big_button`/`big_button_wood` -> `big_button_inactive` with vanilla stone/oak textures
+  - Added a thin non-full `path` model.
+  - Validation: no missing `open_blocks:*` refs across currently registered block/item models.
+- Static render/collision parity pass (2026-02-08, follow-up):
+  - Added client render-layer setup for transparency-sensitive blocks:
+    - `src/main/java/art/arcane/openblocks/client/OBClientRenderLayers.java`
+    - Uses `RenderType.cutout()` for ladder/rope ladder/path/xp drain/sprinkler/flag/scaffolding/paint can/guide/builder guide/canvas.
+    - Uses `RenderType.translucent()` for `canvas_glass`.
+  - Expanded non-occlusion + custom voxel shape mapping in:
+    - `src/main/java/art/arcane/openblocks/registry/OBBlocks.java`
+    - Added/updated shapes for `path`, `xp_drain`, `beartrap`, `cannon`, `sprinkler`, `target`, `paint_mixer`, `projector`, `xp_shower`, and others.
+    - Added empty collision overrides for `path`, `cannon`, and `flag` to allow walking through non-solid visual space.
+  - Extended shape block implementation:
+    - `src/main/java/art/arcane/openblocks/block/OBShapeBlock.java`
+    - Supports separate outline and collision shapes.
+  - Fixed concrete missing-texture warning from `run/logs/latest.log`:
+    - Warning was `Missing textures in model open_blocks:paint_mixer` for `open_blocks:model/paint_mixer`.
+    - Model updated to `open_blocks:block/paint_mixer_model`.
+    - Added atlas-safe texture file: `src/main/resources/assets/open_blocks/textures/block/paint_mixer_model.png`.
+  - Ladder model switched from full cube wrapper to trapdoor-open template for non-full visual geometry:
+    - `src/main/resources/assets/open_blocks/models/block/ladder.json`
+  - Validation after these changes:
+    - `./gradlew compileJava runData` passes.
 - Important namespace note:
   - Current mod namespace is `open_blocks` (project default), not `openblocks` yet.
 

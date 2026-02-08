@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "open_blocks:items/glasses_crayon"
+    "layer0": "open_blocks:item/glasses_crayon"
   }
 }

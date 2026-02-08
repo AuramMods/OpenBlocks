@@ -1,6 +1,7 @@
 {
   "parent": "minecraft:block/cube_all",
   "textures": {
-    "all": "open_blocks:blocks/donation_station"
+    "all": "open_blocks:block/donation_station",
+    "particle": "open_blocks:block/donation_station"
   }
 }

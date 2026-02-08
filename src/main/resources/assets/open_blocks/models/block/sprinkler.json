@@ -1,6 +1,6 @@
 {
-  "parent": "minecraft:block/cube_all",
+  "parent": "open_blocks:block/sprinkler_static",
   "textures": {
-    "all": "open_blocks:blocks/sprinkler"
+    "particle": "open_blocks:block/sprinkler"
   }
 }
