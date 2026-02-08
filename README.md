@@ -1,1 +1,73 @@
-# Satiscraftory
+# OpenBlocks (Forge 1.12.2 -> Forge 1.20.1 Port)
+
+## What This Project Is
+This repository is a staged port of the original OpenBlocks mod from Forge 1.12.2 to Forge 1.20.1.
+
+- Legacy source lives in `old-1.12.2`.
+- New port source lives under `src/main/java/art/arcane/openblocks` and `src/main/resources/assets/open_blocks`.
+- The mod ID in the current port is `open_blocks`.
+
+## What We Are Doing
+The port strategy is breadth-first, then depth-first:
+
+1. Recreate the full registry surface and IDs first.
+2. Ensure every registered object has basic data/models/lang.
+3. Rebuild systems (menus, networking, capabilities, etc.) in thin form.
+4. Deep-port behavior and polish feature-by-feature.
+
+This avoids getting stuck perfecting one feature while the rest of the mod is still missing.
+
+## How To Check Progress
+Use these files in this exact order:
+
+1. `PORTING_MEMORY.md`
+2. `PORTING.md`
+3. `PORTING_MANIFEST.md`
+
+What each file is for:
+
+- `PORTING_MEMORY.md`: session-critical notes and "do not forget" context.
+- `PORTING.md`: phase plan + checklist status for active work.
+- `PORTING_MANIFEST.md`: canonical inventory of legacy IDs, registries, and source locations.
+
+## Progress Workflow (Per Session)
+1. Read the three docs in order above.
+2. Pick the next unchecked item in `PORTING.md`.
+3. Implement the smallest breadth-safe slice.
+4. Validate with:
+   - `./gradlew compileJava`
+   - `./gradlew runData`
+5. Update `PORTING.md` and `PORTING_MEMORY.md`.
+6. If new IDs/sources are discovered, update `PORTING_MANIFEST.md`.
+
+## Command Loop
+Primary validation loop for this port:
+
+- `./gradlew compileJava`
+- `./gradlew runData`
+- optionally `./gradlew compileJava runData`
+
+This project intentionally uses compile/datagen as the default verification path during scaffold stages.
+
+## High-Level Scope Snapshot
+From current manifest inventory:
+
+- 41 legacy block IDs
+- 30 legacy direct item IDs (+ block items)
+- 1 primary fluid (`xpjuice`)
+- 3 enchantments
+- 19 sound events
+- 11 entities
+- 35 block entities (tile entity equivalents)
+- 7 custom recipe registrations
+
+## Directory Map
+- `old-1.12.2`: original mod source/resources for reference
+- `src/main/java/art/arcane/openblocks`: 1.20.1 Java port
+- `src/main/resources/assets/open_blocks`: 1.20.1 assets
+- `PORTING.md`: phase/checklist tracker
+- `PORTING_MEMORY.md`: continuity memory
+- `PORTING_MANIFEST.md`: registry/source manifest
+
+## Project Goal
+Deliver a maintainable Forge 1.20.1 OpenBlocks port with stable ID coverage first, then full gameplay parity and polish.
