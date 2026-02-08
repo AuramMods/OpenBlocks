@@ -27,9 +27,9 @@ public final class OBFluids {
     private static final class FluidProps {
         private static final ForgeFlowingFluid.Properties XP_JUICE = new ForgeFlowingFluid.Properties(
                 OBFluidTypes.XP_JUICE_TYPE,
-                XP_JUICE,
-                FLOWING_XP_JUICE)
+                OBFluids.XP_JUICE,
+                OBFluids.FLOWING_XP_JUICE)
                         .bucket(OBItems.XP_BUCKET)
-                        .block(XP_JUICE_BLOCK);
+                        .block(OBFluids.XP_JUICE_BLOCK);
     }
 }
