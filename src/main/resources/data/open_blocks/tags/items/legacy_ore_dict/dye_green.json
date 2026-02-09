@@ -1,6 +1,8 @@
 {
   "replace": false,
   "values": [
+    "#forge:dyes/green",
+    "#forge:dyes",
     "minecraft:green_dye"
   ]
 }

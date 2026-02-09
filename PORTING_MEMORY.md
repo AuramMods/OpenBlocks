@@ -142,7 +142,7 @@
     - `forge:ore_shaped` -> `minecraft:crafting_shaped`
     - `forge:ore_shapeless` -> `minecraft:crafting_shapeless`
     - namespace remap `openblocks:*` -> `open_blocks:*`
-  - Temporary compromise used for ore dictionary ingredients: translated to `open_blocks:legacy_ore_dict/*` tags that currently map to baseline vanilla item values.
+  - Ore dictionary ingredients are translated to `open_blocks:legacy_ore_dict/*` tags. These tags now include broader `forge`/`minecraft` groups (plus vanilla fallback items) to improve cross-mod ingredient matching during the breadth pass.
   - Legacy metadata (`data`) is currently collapsed to modern single-ID items for breadth coverage (color/subtype fidelity still pending depth pass).
   - Legacy `openmods:enchanting` flim-flam recipes are now replaced by a dedicated 1.20 custom serializer/recipe path:
     - `src/main/java/art/arcane/openblocks/recipe/OBFlimFlamBookRecipe.java`
@@ -151,6 +151,13 @@
   - Validation:
     - `./gradlew compileJava runData` succeeds after adding these 185 recipes.
     - `run-data/logs/latest.log` scan showed no recipe parse/load errors in datagen run.
+- Recipe/tag compatibility follow-up (2026-02-09):
+  - Expanded 34 legacy ore-dict tag files in `src/main/resources/data/open_blocks/tags/items/legacy_ore_dict` beyond single-value placeholders.
+  - Typical pattern now uses grouped tags first, then concrete fallbacks. Example:
+    - `#forge:ingots/iron`, `#forge:ingots`, `minecraft:iron_ingot`
+  - Validation:
+    - `./gradlew compileJava runData` succeeds.
+    - `run-data/logs/latest.log` shows no tag/recipe parse failures.
 - Systems skeleton expansion (2026-02-09):
   - Added command wiring for legacy command IDs in:
     - `src/main/java/art/arcane/openblocks/command/OBCommands.java`
@@ -190,6 +197,20 @@
     - Gameplay hook parity: not yet (pedometer/bowels/flim-flam logic paths still pending).
   - Validation:
     - `./gradlew compileJava runData` succeeds after capability additions (2026-02-09).
+- Trigger/capability gameplay hook follow-up (2026-02-09):
+  - Added event bridge hooks:
+    - `src/main/java/art/arcane/openblocks/advancement/OBAdvancementHooks.java`
+  - Current hooks:
+    - `tasty_clay` consumption increments `open_blocks:bowels` count.
+    - Brick item toss triggers `open_blocks:brick_dropped` when allowed (creative or positive bowels count, with decrement for non-creative).
+    - Periodic placeholder dev-null depth approximation from inventory count triggers `open_blocks:dev_null_stacked`.
+  - Related item property parity updates in:
+    - `src/main/java/art/arcane/openblocks/registry/OBItems.java`
+    - `tasty_clay` is now edible.
+    - `dev_null` and `generic_unstackable` are now stack size 1.
+  - Validation:
+    - `./gradlew compileJava runData` succeeds after hook/property additions (2026-02-09).
+    - quick grep scans show no model/texture warnings in `run/logs/latest.log` and no recipe/tag load errors in `run-data/logs/latest.log`.
 
 ## Critical Architecture Facts
 - Main entrypoint is `old-1.12.2/src/main/java/openblocks/OpenBlocks.java`.
@@ -253,9 +274,9 @@
 - Move Phase 3 command/trigger work from placeholders to hooked gameplay paths:
   - connect `flimflam` command to real effect execution
   - connect `ob_inventory` commands to inventory dump/restore backend
-  - fire `brick_dropped` and `dev_null_stacked` triggers from the relevant gameplay events
+  - replace temporary trigger hooks with legacy-accurate sources (boo/brick action and nested dev-null depth logic)
 - Move Phase 3 capability work from placeholders to hooked gameplay paths:
   - feed pedometer movement sampling into `open_blocks:pedometer_state`
-  - connect brick/bowels behavior to `open_blocks:bowels`
+  - expand brick/bowels behavior from current tasty-clay + brick toss baseline to full legacy parity (including death drops)
   - restore luck cooldown/forced-trigger behavior for `open_blocks:luck`
 - Draft legacy compatibility/remap mapping plan (`openblocks` namespace + legacy alias IDs -> `open_blocks` canonical IDs).

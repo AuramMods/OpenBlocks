@@ -1,6 +1,8 @@
 {
   "replace": false,
   "values": [
+    "#forge:gems/emerald",
+    "#forge:gems",
     "minecraft:emerald"
   ]
 }

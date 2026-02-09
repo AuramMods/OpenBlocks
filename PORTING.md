@@ -90,6 +90,8 @@ Validation log:
 - [x] Replaced legacy `openmods:enchanting` flim-flam recipe family with a 1.20 custom crafting recipe serializer (`open_blocks:flim_flam_book`) that recreates level scaling from emerald count (1-4), validated with `./gradlew compileJava runData` on 2026-02-08.
 - [-] Added systems skeleton for legacy command IDs (`flimflam`, `luck`, `ob_inventory`) and custom advancement triggers (`open_blocks:brick_dropped`, `open_blocks:dev_null_stacked`) with 1.20 wiring + placeholder behavior, validated with `./gradlew compileJava runData` on 2026-02-09.
 - [-] Added capability skeleton for legacy player capability IDs (`open_blocks:luck`, `open_blocks:pedometer_state`, `open_blocks:bowels`) with registration + attach + clone-copy persistence, and switched `/luck` command state to capability-backed storage, validated with `./gradlew compileJava runData` on 2026-02-09.
+- [x] Expanded legacy ore-dict compatibility tags in `src/main/resources/data/open_blocks/tags/items/legacy_ore_dict` from single-item placeholders to broader `forge`/`minecraft` tag membership across 34 files, validated with `./gradlew compileJava runData` on 2026-02-09.
+- [-] Added initial gameplay event hooks for custom triggers/capability bridge in `OBAdvancementHooks` (`tasty_clay` consume -> bowels +1, brick toss -> `brick_dropped` with bowels decrement, periodic dev-null depth approximation -> `dev_null_stacked`), and updated item properties for parity (`tasty_clay` edible, `dev_null`/`generic_unstackable` unstackable), validated with `./gradlew compileJava runData` on 2026-02-09.
 
 ## Phase 3: Systems Skeleton (Breadth Gameplay Pass)
 Goal: recreate cross-cutting systems in thin form before deep feature parity.
@@ -146,11 +148,9 @@ Checklist:
   - `ob_inventory`: reconnect to inventory dump/restore storage backend
 - [ ] Replace capability placeholders with gameplay hooks:
   - `pedometer_state`: reconnect movement update/read paths used by pedometer item flow
-  - `bowels`: reconnect brick drop / death drop behavior
+  - `bowels`: expand from current tasty-clay + brick-toss hooks to legacy behavior parity (death drops + keybound brick-drop path)
   - `luck`: reconnect full flim-flam cooldown and forced-trigger logic (currently just raw value storage)
 - [ ] Wire custom advancement triggers into gameplay events:
-  - `brick_dropped` on brick-drop event path
-  - `dev_null_stacked` when dev null stack depth thresholds are reached
+  - replace temporary hooks with legacy-accurate trigger sources (`brick_dropped` from boo/brick action path, `dev_null_stacked` from nested dev-null inventory depth)
 - [ ] Finish legacy recipe migration for skipped recipe files:
-  - review and expand `open_blocks:legacy_ore_dict/*` tag membership so cross-mod ingredients are accepted where practical
   - revisit metadata-collapsed conversions to restore accurate color/subtype behavior where needed (generic/meta items, paintbrush variants, elevator/flag color outputs, etc.)

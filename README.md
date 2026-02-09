@@ -68,9 +68,11 @@ Current breadth scaffolding highlights:
 - Legacy missing-mapping compatibility is wired (`openblocks`/`OpenBlocks` -> `open_blocks` + legacy alias IDs).
 - Model/texture/lang scaffolding is in place for all currently registered block/item IDs.
 - A first recipe breadth-pass is in place: 185 legacy shaped/shapeless recipes are mechanically converted under `src/main/resources/data/open_blocks/recipes/legacy`, with legacy ore-dict names routed through `src/main/resources/data/open_blocks/tags/items/legacy_ore_dict`.
+- Legacy ore-dict compatibility tags were expanded beyond single-item placeholders to broader `forge`/`minecraft` groups with fallback items for better cross-mod ingredient matching.
 - Legacy flim-flam enchanting recipes are replaced by a custom 1.20 recipe serializer (`open_blocks:flim_flam_book`) that preserves level scaling from emerald cost.
 - Legacy command and trigger IDs now exist in 1.20.1 scaffolding, so world/server content referencing those IDs has baseline continuity while deeper behavior is ported.
 - Legacy player capabilities are now registered/attached and clone-persisted in 1.20.1 scaffolding, with `/luck` already switched to capability-backed state.
+- Initial trigger-to-gameplay hooks are now present via Forge events (`tasty_clay` -> bowels, brick toss -> `brick_dropped`, placeholder dev-null depth scan -> `dev_null_stacked`), and key item properties were aligned (`tasty_clay` edible, `dev_null`/`generic_unstackable` unstackable).
 - Datagen loop is stable with `./gradlew compileJava runData`.
 
 ## Directory Map

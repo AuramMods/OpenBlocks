@@ -1,6 +1,8 @@
 {
   "replace": false,
   "values": [
+    "#forge:dyes/light_gray",
+    "#forge:dyes",
     "minecraft:light_gray_dye"
   ]
 }

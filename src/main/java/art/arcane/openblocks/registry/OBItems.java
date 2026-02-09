@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.List;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.BucketItem;
+import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
@@ -82,12 +83,13 @@ public final class OBItems {
     public static final RegistryObject<Item> HEIGHT_MAP = registerItem("height_map");
     public static final RegistryObject<Item> EMPTY_MAP = registerItem("empty_map");
     public static final RegistryObject<Item> CARTOGRAPHER = registerItem("cartographer");
-    public static final RegistryObject<Item> TASTY_CLAY = registerItem("tasty_clay");
+    public static final RegistryObject<Item> TASTY_CLAY = registerItem("tasty_clay", new Item.Properties().food(
+            new FoodProperties.Builder().nutrition(1).saturationMod(0.1f).alwaysEat().build()));
     public static final RegistryObject<Item> GOLDEN_EYE = registerItem("golden_eye");
-    public static final RegistryObject<Item> GENERIC_UNSTACKABLE = registerItem("generic_unstackable");
+    public static final RegistryObject<Item> GENERIC_UNSTACKABLE = registerItem("generic_unstackable", new Item.Properties().stacksTo(1));
     public static final RegistryObject<Item> CURSOR = registerItem("cursor");
     public static final RegistryObject<Item> INFO_BOOK = registerItem("info_book");
-    public static final RegistryObject<Item> DEV_NULL = registerItem("dev_null");
+    public static final RegistryObject<Item> DEV_NULL = registerItem("dev_null", new Item.Properties().stacksTo(1));
     public static final RegistryObject<Item> SPONGE_ON_A_STICK = registerItem("sponge_on_a_stick");
     public static final RegistryObject<Item> PEDOMETER = registerItem("pedometer");
     public static final RegistryObject<Item> EPIC_ERASER = registerItem("epic_eraser");
@@ -101,7 +103,11 @@ public final class OBItems {
     }
 
     private static RegistryObject<Item> registerItem(final String id) {
-        final RegistryObject<Item> item = ITEMS.register(id, () -> new Item(new Item.Properties()));
+        return registerItem(id, new Item.Properties());
+    }
+
+    private static RegistryObject<Item> registerItem(final String id, final Item.Properties properties) {
+        final RegistryObject<Item> item = ITEMS.register(id, () -> new Item(properties));
         CREATIVE_ORDER.add(item);
         return item;
     }

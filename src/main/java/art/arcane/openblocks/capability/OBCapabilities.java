@@ -1,6 +1,7 @@
 package art.arcane.openblocks.capability;
 
 import art.arcane.openblocks.OpenBlocks;
+import java.util.OptionalInt;
 import java.util.function.Supplier;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -71,6 +72,22 @@ public final class OBCapabilities {
     public static int addLuck(final Player player, final int amount) {
         return player.getCapability(LUCK)
                 .map((data) -> data.addLuck(amount))
+                .orElse(0);
+    }
+
+    public static OptionalInt getBowelBrickCount(final Player player) {
+        return player.getCapability(BOWELS)
+                .map((data) -> OptionalInt.of(data.getBrickCount()))
+                .orElseGet(OptionalInt::empty);
+    }
+
+    public static int setBowelBrickCount(final Player player, final int count) {
+        return player.getCapability(BOWELS)
+                .map((data) -> {
+                    final int normalized = Math.max(0, count);
+                    data.setBrickCount(normalized);
+                    return normalized;
+                })
                 .orElse(0);
     }
 

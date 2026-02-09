@@ -35,6 +35,7 @@ Current registry classes:
   - `src/main/java/art/arcane/openblocks/advancement/OBCriterions.java`
   - `src/main/java/art/arcane/openblocks/advancement/OBBrickDroppedTrigger.java`
   - `src/main/java/art/arcane/openblocks/advancement/OBDevNullStackTrigger.java`
+  - `src/main/java/art/arcane/openblocks/advancement/OBAdvancementHooks.java`
 - Non-full shape helper block: `src/main/java/art/arcane/openblocks/block/OBShapeBlock.java`
 - Client render-layer setup: `src/main/java/art/arcane/openblocks/client/OBClientRenderLayers.java`
 - Datagen entrypoint: `src/main/java/art/arcane/openblocks/datagen/OBDataGenerators.java`
@@ -87,6 +88,7 @@ Current validation status:
 - `./gradlew runData` now executes `Loot Tables` provider and writes 41 block loot tables.
 - `./gradlew runData` now also executes `Tags for minecraft:block mod id open_blocks` and writes 3 baseline block tag files.
 - Custom recipe placeholder JSONs for all 7 legacy custom recipe IDs load with current datagen/compile loop.
+- Legacy ore-dict compatibility tags now use broader `forge`/`minecraft` groups + fallback items across 34 updated files in `src/main/resources/data/open_blocks/tags/items/legacy_ore_dict`.
 - Capability scaffold note:
   - Legacy player capability IDs are now registered/attached under `open_blocks` namespace and clone-copied on respawn (`luck`, `pedometer_state`, `bowels`).
 - Build rule note: `build.gradle` skips optional jars from `extra-mods-1.20.1` when task names include `runData`/`datagen`, so datagen is not blocked by unrelated runtime mods.
@@ -106,6 +108,13 @@ Current validation status:
   - `/luck` state storage now reads/writes through `OBCapabilities` (`open_blocks:luck`) rather than ad-hoc player persistent data.
   - `src/main/java/art/arcane/openblocks/capability/OBCapabilities.java` now registers and attaches legacy player capability IDs (`open_blocks:luck`, `open_blocks:pedometer_state`, `open_blocks:bowels`) and copies them during `PlayerEvent.Clone`.
   - `src/main/java/art/arcane/openblocks/advancement/OBCriterions.java` now registers custom trigger IDs `open_blocks:brick_dropped` and `open_blocks:dev_null_stacked` for advancement compatibility baseline.
+  - `src/main/java/art/arcane/openblocks/advancement/OBAdvancementHooks.java` now wires initial trigger/capability gameplay hooks:
+    - `tasty_clay` consume increments bowels count,
+    - brick toss conditionally fires `brick_dropped` and decrements bowels for survival players,
+    - periodic placeholder inventory scan approximates dev-null depth and fires `dev_null_stacked`.
+  - `src/main/java/art/arcane/openblocks/registry/OBItems.java` now sets parity-critical item properties:
+    - `tasty_clay` is edible,
+    - `dev_null` and `generic_unstackable` are stack size 1.
 
 ## Top-Level Entry Points
 - Mod entrypoint and major registration flow:
@@ -151,7 +160,7 @@ Source: `old-1.12.2/src/main/resources/assets/openblocks/recipes`
   - Conversion baseline details:
     - legacy `openblocks:*` IDs remapped to `open_blocks:*`
     - legacy metadata (`data`) collapsed to modern single-ID forms for breadth coverage
-    - ore dictionary entries translated to `open_blocks:legacy_ore_dict/*` tags (currently populated with baseline vanilla item values)
+    - ore dictionary entries translated to `open_blocks:legacy_ore_dict/*` tags (now populated with broader `forge`/`minecraft` group tags plus vanilla fallback items)
   - Legacy `openmods:enchanting` replacements:
     - `open_blocks:flim_flam_book` custom crafting recipe implemented in:
       - `src/main/java/art/arcane/openblocks/recipe/OBFlimFlamBookRecipe.java`

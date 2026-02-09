@@ -1,6 +1,8 @@
 {
   "replace": false,
   "values": [
+    "#forge:ingots/iron",
+    "#forge:ingots",
     "minecraft:iron_ingot"
   ]
 }
