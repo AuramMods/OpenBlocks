@@ -308,6 +308,31 @@
   - Validation:
     - `./gradlew compileJava` succeeds.
     - `./gradlew compileJava runData` succeeds after ladder/rope-ladder pass (2026-02-09).
+- Elevator functionality follow-up (2026-02-09):
+  - Added:
+    - `src/main/java/art/arcane/openblocks/block/OBElevatorBlock.java`
+    - `src/main/java/art/arcane/openblocks/block/OBElevatorRotatingBlock.java`
+  - Updated:
+    - `src/main/java/art/arcane/openblocks/registry/OBBlocks.java`
+      - `elevator` now instantiates `OBElevatorBlock`
+      - `elevator_rotating` now instantiates `OBElevatorRotatingBlock`
+    - `src/main/resources/assets/open_blocks/blockstates/elevator_rotating.json`
+      - now declares facing variants (`north/east/south/west`) for rotating-elevator state serialization.
+  - Current behavior parity added:
+    - `elevator`:
+      - right-click teleports up to nearest reachable elevator in range.
+      - sneak-right-click teleports down.
+      - baseline travel constraints mirror legacy defaults (distance limit + blocker limit).
+    - `elevator_rotating`:
+      - uses the same search/teleport flow.
+      - aligns player yaw to destination block facing on arrival.
+  - Current parity gap:
+    - movement-trigger activation (`jump` / `sneak` packet/event path) is not yet restored.
+    - dye-based color matching/recolor behavior is not yet restored.
+    - config-driven special pass-through/xp drain rules are not yet restored.
+  - Validation:
+    - `./gradlew compileJava` succeeds.
+    - `./gradlew compileJava runData` succeeds after elevator pass (2026-02-09).
   - Death dump integration:
     - on player death, inventory is now dumped automatically using type `death` into command-readable `inventory-*.dat` files.
   - Current parity gap:

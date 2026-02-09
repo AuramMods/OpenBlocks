@@ -1,6 +1,8 @@
 package art.arcane.openblocks.registry;
 
 import art.arcane.openblocks.OpenBlocks;
+import art.arcane.openblocks.block.OBElevatorBlock;
+import art.arcane.openblocks.block.OBElevatorRotatingBlock;
 import art.arcane.openblocks.block.OBGraveBlock;
 import art.arcane.openblocks.block.OBHealBlock;
 import art.arcane.openblocks.block.OBLadderBlock;
@@ -126,6 +128,8 @@ public final class OBBlocks {
                 ? BlockBehaviour.Properties.copy(Blocks.STONE).noOcclusion()
                 : BlockBehaviour.Properties.copy(Blocks.STONE);
 
+        if ("elevator".equals(id)) return new OBElevatorBlock(properties);
+        if ("elevator_rotating".equals(id)) return new OBElevatorRotatingBlock(properties);
         if ("ladder".equals(id)) return new OBLadderBlock(properties, shape, collisionShape);
         if ("rope_ladder".equals(id)) return new OBRopeLadderBlock(properties, shape, collisionShape);
         if ("heal".equals(id)) return new OBHealBlock(properties);
