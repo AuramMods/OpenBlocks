@@ -1,6 +1,7 @@
 package art.arcane.openblocks.registry;
 
 import art.arcane.openblocks.OpenBlocks;
+import art.arcane.openblocks.block.OBGraveBlock;
 import art.arcane.openblocks.block.OBShapeBlock;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -120,6 +121,7 @@ public final class OBBlocks {
                 ? BlockBehaviour.Properties.copy(Blocks.STONE).noOcclusion()
                 : BlockBehaviour.Properties.copy(Blocks.STONE);
 
+        if ("grave".equals(id)) return new OBGraveBlock(properties, shape, collisionShape);
         if (shape != null) return new OBShapeBlock(properties, shape, collisionShape);
         return new Block(properties);
     }

@@ -233,6 +233,23 @@ public final class OBInventoryStore {
         return getSaveFolder(level).resolve(PREFIX + id + EXT);
     }
 
+    public static List<ItemStack> readDroppedItems(final ServerLevel level, final String inventoryId) throws IOException {
+        final CompoundTag root = readInventoryTag(level, inventoryId);
+        if (root == null || !root.contains(TAG_INVENTORY, Tag.TAG_LIST)) return List.of();
+
+        final ListTag inventoryData = root.getList(TAG_INVENTORY, Tag.TAG_COMPOUND);
+        final List<ItemStack> result = new ArrayList<>();
+        for (int i = 0; i < inventoryData.size(); i++) {
+            final ItemStack stack = ItemStack.of(inventoryData.getCompound(i));
+            if (!stack.isEmpty()) result.add(stack);
+        }
+        return result;
+    }
+
+    public static boolean deleteDump(final ServerLevel level, final String inventoryId) throws IOException {
+        return Files.deleteIfExists(resolveDumpPath(level, inventoryId));
+    }
+
     private static Path createDumpPath(final ServerLevel level, final String playerName, final String type) {
         final String timestamp = FILE_FORMAT.get().format(new Date());
         int index = 0;

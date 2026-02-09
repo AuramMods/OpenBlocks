@@ -1,6 +1,7 @@
 package art.arcane.openblocks.registry;
 
 import art.arcane.openblocks.OpenBlocks;
+import art.arcane.openblocks.block.entity.OBGraveBlockEntity;
 import art.arcane.openblocks.block.entity.OBPlaceholderBlockEntity;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,7 +23,7 @@ public final class OBBlockEntities {
     public static final RegistryObject<BlockEntityType<OBPlaceholderBlockEntity>> ELEVATOR_ROTATING = register("elevator_rotating", OBBlocks.ELEVATOR_ROTATING);
     public static final RegistryObject<BlockEntityType<OBPlaceholderBlockEntity>> HEAL = register("heal", OBBlocks.HEAL);
     public static final RegistryObject<BlockEntityType<OBPlaceholderBlockEntity>> TARGET = register("target", OBBlocks.TARGET);
-    public static final RegistryObject<BlockEntityType<OBPlaceholderBlockEntity>> GRAVE = register("grave", OBBlocks.GRAVE);
+    public static final RegistryObject<BlockEntityType<OBGraveBlockEntity>> GRAVE = registerGrave("grave", OBBlocks.GRAVE);
     public static final RegistryObject<BlockEntityType<OBPlaceholderBlockEntity>> FLAG = register("flag", OBBlocks.FLAG);
     public static final RegistryObject<BlockEntityType<OBPlaceholderBlockEntity>> TANK = register("tank", OBBlocks.TANK);
     public static final RegistryObject<BlockEntityType<OBPlaceholderBlockEntity>> TROPHY = register("trophy", OBBlocks.TROPHY);
@@ -68,6 +69,16 @@ public final class OBBlockEntities {
                 resolveBlocks(blocks)).build(null));
         ALL.add((RegistryObject) holder[0]);
         return holder[0];
+    }
+
+    @SafeVarargs
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    private static RegistryObject<BlockEntityType<OBGraveBlockEntity>> registerGrave(final String id, final RegistryObject<Block>... blocks) {
+        final RegistryObject<BlockEntityType<OBGraveBlockEntity>> holder = BLOCK_ENTITY_TYPES.register(
+                id,
+                () -> BlockEntityType.Builder.of(OBGraveBlockEntity::new, resolveBlocks(blocks)).build(null));
+        ALL.add((RegistryObject) holder);
+        return holder;
     }
 
     private static Block[] resolveBlocks(final RegistryObject<Block>[] blocks) {
