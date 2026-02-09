@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "open_blocks:village_highlighter",
+  "pattern": [
+    "www",
+    "wew",
+    "ccc"
+  ],
+  "key": {
+    "c": {
+      "item": "minecraft:cobblestone"
+    },
+    "e": {
+      "item": "minecraft:emerald"
+    },
+    "w": {
+      "item": "minecraft:oak_planks"
+    }
+  },
+  "result": {
+    "item": "open_blocks:village_highlighter"
+  }
+}

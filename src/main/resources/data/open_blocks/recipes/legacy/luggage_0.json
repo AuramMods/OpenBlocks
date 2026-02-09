@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "open_blocks:luggage",
+  "pattern": [
+    "sds",
+    "scs",
+    "sss"
+  ],
+  "key": {
+    "s": {
+      "item": "minecraft:stick"
+    },
+    "c": {
+      "item": "minecraft:chest"
+    },
+    "d": {
+      "item": "minecraft:diamond"
+    }
+  },
+  "result": {
+    "item": "open_blocks:luggage"
+  }
+}

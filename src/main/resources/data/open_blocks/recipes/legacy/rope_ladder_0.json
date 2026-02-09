@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "open_blocks:rope_ladder",
+  "pattern": [
+    "sts",
+    "sts",
+    "sts"
+  ],
+  "key": {
+    "s": {
+      "item": "minecraft:string"
+    },
+    "t": {
+      "item": "minecraft:stick"
+    }
+  },
+  "result": {
+    "item": "open_blocks:rope_ladder",
+    "count": 8
+  }
+}

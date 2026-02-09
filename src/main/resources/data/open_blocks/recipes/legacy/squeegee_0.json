@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "open_blocks:squeegee",
+  "pattern": [
+    "sss",
+    " w ",
+    " w "
+  ],
+  "key": {
+    "s": {
+      "item": "open_blocks:sponge"
+    },
+    "w": {
+      "item": "minecraft:stick"
+    }
+  },
+  "result": {
+    "item": "open_blocks:squeegee"
+  }
+}

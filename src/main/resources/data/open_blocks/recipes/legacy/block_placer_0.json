@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "open_blocks:block_placer",
+  "pattern": [
+    "icc",
+    "src",
+    "icc"
+  ],
+  "key": {
+    "r": {
+      "item": "minecraft:redstone"
+    },
+    "c": {
+      "item": "minecraft:cobblestone"
+    },
+    "s": {
+      "item": "minecraft:piston"
+    },
+    "i": {
+      "item": "minecraft:iron_ingot"
+    }
+  },
+  "result": {
+    "item": "open_blocks:block_placer"
+  }
+}

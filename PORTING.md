@@ -53,7 +53,7 @@ Checklist:
 - [x] Recreate all legacy item IDs (including meta-item strategy replacement plan).
 - [x] Recreate all legacy entity IDs as registered entity types.
 - [x] Recreate all legacy sound IDs in code/data.
-- [ ] Establish compatibility mapping plan for old IDs/legacy names.
+- [x] Establish compatibility mapping plan for old IDs/legacy names.
 - [x] Generate asset scaffolding for blockstates/models/lang so registry visibility can be verified quickly.
 - [x] Replace placeholder stone/iron assets with legacy texture-backed block/item models for all currently registered IDs.
 - [x] Ensure datagen run path works for this project workflow (`./gradlew compileJava runData`).
@@ -85,6 +85,7 @@ Validation log:
 - [x] Added datagen wiring and generated 41 self-drop block loot tables under `src/generated/resources/data/open_blocks/loot_tables/blocks` (validated with `./gradlew compileJava` and `./gradlew runData` on 2026-02-08).
 - [x] Added baseline block tags via datagen (`minecraft:mineable/pickaxe`, `minecraft:needs_stone_tool`, and `minecraft:climbable` for ladder/rope_ladder/scaffolding) and revalidated with `./gradlew compileJava` + `./gradlew runData` on 2026-02-08.
 - [x] Added placeholder JSON definitions for all 7 legacy custom recipes under `src/main/resources/data/open_blocks/recipes` (types only; behavior parity still pending) and revalidated with `./gradlew compileJava runData` on 2026-02-08.
+- [x] Added legacy ID compatibility remap hook in `OBMissingMappings` (namespace remap `openblocks`/`OpenBlocks` -> `open_blocks`, plus legacy alias paths including camelCase/lowercase variants) and revalidated with `./gradlew compileJava runData` on 2026-02-08.
 
 ## Phase 3: Systems Skeleton (Breadth Gameplay Pass)
 Goal: recreate cross-cutting systems in thin form before deep feature parity.
@@ -136,4 +137,4 @@ Checklist:
 ## Immediate Next Task
 - [ ] Have user run a quick in-game visual sweep (no `runClient` on agent side) to confirm the latest transparency/collision changes removed purple-black model regressions and face-culling issues.
 - [ ] Extend recipe coverage beyond custom special recipe placeholders (core craft paths for major blocks/items).
-- [ ] Draft legacy ID compatibility/remap mapping plan (`openblocks` -> `open_blocks`, legacy camelCase IDs, and alternate aliases).
+- [ ] Build a mechanical conversion pass for legacy recipe JSONs (`old-1.12.2/assets/openblocks/recipes`) into 1.20-compatible formats/tags, then split unsupported recipe types (`openmods:enchanting`, metadata-heavy variants) into explicit follow-up tasks.

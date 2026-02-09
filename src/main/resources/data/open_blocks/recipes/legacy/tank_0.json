@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "open_blocks:tank",
+  "pattern": [
+    "ogo",
+    "ggg",
+    "ogo"
+  ],
+  "key": {
+    "g": {
+      "item": "minecraft:glass_pane"
+    },
+    "o": {
+      "item": "minecraft:obsidian"
+    }
+  },
+  "result": {
+    "item": "open_blocks:tank",
+    "count": 2
+  }
+}

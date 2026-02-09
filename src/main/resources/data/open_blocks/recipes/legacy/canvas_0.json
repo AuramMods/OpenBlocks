@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "open_blocks:canvas",
+  "pattern": [
+    "ppp",
+    "pfp",
+    "ppp"
+  ],
+  "key": {
+    "p": {
+      "item": "minecraft:paper"
+    },
+    "f": {
+      "item": "minecraft:fence"
+    }
+  },
+  "result": {
+    "item": "open_blocks:canvas",
+    "count": 9
+  }
+}

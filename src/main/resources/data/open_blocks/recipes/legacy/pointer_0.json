@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "open_blocks:pointer",
+  "pattern": [
+    "w  ",
+    "ww ",
+    "w  "
+  ],
+  "key": {
+    "w": {
+      "item": "minecraft:white_wool"
+    }
+  },
+  "result": {
+    "item": "open_blocks:generic_unstackable"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "open_blocks:wrench",
+  "pattern": [
+    " ii",
+    "iii",
+    "ii "
+  ],
+  "key": {
+    "i": {
+      "item": "minecraft:iron_ingot"
+    }
+  },
+  "result": {
+    "item": "open_blocks:wrench"
+  }
+}

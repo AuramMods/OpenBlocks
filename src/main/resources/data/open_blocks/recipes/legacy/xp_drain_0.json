@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "open_blocks:xp_drain",
+  "pattern": [
+    "iii",
+    "iii",
+    "iii"
+  ],
+  "key": {
+    "i": {
+      "item": "minecraft:iron_bars"
+    }
+  },
+  "result": {
+    "item": "open_blocks:xp_drain"
+  }
+}

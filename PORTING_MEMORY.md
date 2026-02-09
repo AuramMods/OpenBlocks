@@ -71,6 +71,17 @@
   - `src/main/resources/data/open_blocks/recipes/golden_eye_recharge.json`
   - `src/main/resources/data/open_blocks/recipes/epic_eraser_action.json`
   - These are temporary type-only placeholders for custom serializers; recipe logic parity remains a later depth pass.
+- Legacy missing-mapping compatibility baseline added:
+  - `src/main/java/art/arcane/openblocks/registry/OBMissingMappings.java`
+  - Subscribed on Forge event bus (`MissingMappingsEvent` is not a MOD-bus event).
+  - Handles namespace migration:
+    - `openblocks:* -> open_blocks:*`
+    - `OpenBlocks:* -> open_blocks:*`
+  - Handles key alias migration for known legacy IDs across blocks/items/fluids/block entities/menus:
+    - examples: `vacuumhopper -> vacuum_hopper`, `blockPlacer -> block_placer`, `filledbucket -> xp_bucket`, `liquidxp -> xpjuice`
+  - Alias lookup now includes both original and lowercased keys to survive historical casing normalization in saved data.
+  - Validation:
+    - `./gradlew compileJava runData` succeeds with remap hook present (2026-02-08).
 - Datagen runtime safety fix:
   - `build.gradle` now skips optional runtime jars from `extra-mods-1.20.1` when requested tasks include `runData`/`datagen`.
   - This prevents unrelated dev-runtime mods (AE2 etc.) from crashing datagen runs.
@@ -118,6 +129,12 @@
     - `./gradlew compileJava runData` passes.
 - Important namespace note:
   - Current mod namespace is `open_blocks` (project default), not `openblocks` yet.
+- Recipe corpus size note (legacy source):
+  - `old-1.12.2/src/main/resources/assets/openblocks/recipes` has 189 recipe files:
+    - 107 `forge:ore_shaped`
+    - 78 `forge:ore_shapeless`
+    - 4 `openmods:enchanting`
+  - Main conversion blockers for a breadth-pass port are ore-dict/tag translation and metadata-based outputs (color/state variants).
 
 ## Critical Architecture Facts
 - Main entrypoint is `old-1.12.2/src/main/java/openblocks/OpenBlocks.java`.

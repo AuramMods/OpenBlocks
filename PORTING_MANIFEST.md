@@ -78,6 +78,14 @@ Current validation status:
 - Client asset note: model texture paths must use `open_blocks:block/...` and `open_blocks:item/...` (not plural `blocks/items`) for 1.20 atlas resolution.
 - Run-log note: `run/logs/latest.log` had a concrete missing texture warning for `open_blocks:paint_mixer` (`open_blocks:model/paint_mixer`).
   - Fixed by switching to atlas-safe `open_blocks:block/paint_mixer_model` and adding `textures/block/paint_mixer_model.png`.
+- Legacy remap note:
+  - `src/main/java/art/arcane/openblocks/registry/OBMissingMappings.java` now handles compatibility remaps for missing mappings.
+  - Namespace remap coverage: `openblocks` and `OpenBlocks` to canonical `open_blocks`.
+  - Alias coverage includes legacy camelCase/compact IDs and lowercased fallback forms for blocks/items/fluids/block entities/menus.
+  - Core aliases include:
+    - blocks: `vacuumhopper`, `bigbutton`, `xpbottler`, `autoanvil`, `autoenchantmenttable`, `xpdrain`, `blockbreaker`, `blockPlacer`, `itemDropper`, `ropeladder`, `donationStation`, `paintmixer`, `paintcan`, `canvasglass`, `drawingtable`, `xpshower`, `goldenegg`
+    - items: `hangglider`, `sonicglasses`, `pencilGlasses`, `crayonGlasses`, `technicolorGlasses`, `seriousGlasses`, `craneControl`, `craneBackpack`, `filledbucket`, `sleepingBag`, `paintBrush`, `heightMap`, `emptyMap`, `tastyClay`, `goldenEye`, `genericUnstackable`, `infoBook`, `devnull`, `spongeonastick`, `epicEraser`
+    - fluid: `liquidxp` -> `xpjuice`
 
 ## Top-Level Entry Points
 - Mod entrypoint and major registration flow:
@@ -103,6 +111,21 @@ Current validation status:
 - Commands: 3
 - Custom advancements/triggers: 2
 - Custom capabilities: 3
+
+## Legacy Recipe Corpus Snapshot
+Source: `old-1.12.2/src/main/resources/assets/openblocks/recipes`
+
+- Total recipe files: 189
+- Top-level recipe types:
+  - `forge:ore_shaped`: 107
+  - `forge:ore_shapeless`: 78
+  - `openmods:enchanting`: 4
+- Existing 1.20 scaffold recipes currently present:
+  - `src/main/resources/data/open_blocks/recipes` (7 custom serializer placeholders from `CustomRecipesSetup`)
+- Known conversion blockers (breadth-pass):
+  - Ore dictionary ingredient conversion (`forge:ore_dict` -> modern tags).
+  - Metadata-based result variants (`data` field) for color/state items.
+  - OpenMods-specific recipe wrapper (`openmods:enchanting`) requiring new 1.20 equivalent.
 
 ## Blocks (`OpenBlocks.Blocks`)
 Source: `old-1.12.2/src/main/java/openblocks/OpenBlocks.java`

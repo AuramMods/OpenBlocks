@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "open_blocks:guide",
+  "pattern": [
+    "grg",
+    "gtg",
+    "grg"
+  ],
+  "key": {
+    "r": {
+      "item": "minecraft:redstone"
+    },
+    "t": {
+      "item": "minecraft:torch"
+    },
+    "g": {
+      "item": "minecraft:glass"
+    }
+  },
+  "result": {
+    "item": "open_blocks:guide"
+  }
+}

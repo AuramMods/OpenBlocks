@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "open_blocks:sprinkler",
+  "pattern": [
+    "ifi",
+    "iri",
+    "ifi"
+  ],
+  "key": {
+    "r": {
+      "item": "minecraft:redstone_torch"
+    },
+    "f": {
+      "item": "minecraft:iron_bars"
+    },
+    "i": {
+      "item": "minecraft:iron_ingot"
+    }
+  },
+  "result": {
+    "item": "open_blocks:sprinkler"
+  }
+}

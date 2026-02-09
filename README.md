@@ -61,6 +61,11 @@ From current manifest inventory:
 - 35 block entities (tile entity equivalents)
 - 7 custom recipe registrations
 
+Current breadth scaffolding highlights:
+- Legacy missing-mapping compatibility is wired (`openblocks`/`OpenBlocks` -> `open_blocks` + legacy alias IDs).
+- Model/texture/lang scaffolding is in place for all currently registered block/item IDs.
+- Datagen loop is stable with `./gradlew compileJava runData`.
+
 ## Directory Map
 - `old-1.12.2`: original mod source/resources for reference
 - `src/main/java/art/arcane/openblocks`: 1.20.1 Java port

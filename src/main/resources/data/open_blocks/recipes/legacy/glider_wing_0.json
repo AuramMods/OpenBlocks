@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "open_blocks:glider_wing",
+  "pattern": [
+    " sl",
+    "sll",
+    "lll"
+  ],
+  "key": {
+    "s": {
+      "item": "minecraft:stick"
+    },
+    "l": {
+      "item": "minecraft:leather"
+    }
+  },
+  "result": {
+    "item": "open_blocks:generic"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "open_blocks:scaffolding",
+  "pattern": [
+    "sss",
+    "s s",
+    "sss"
+  ],
+  "key": {
+    "s": {
+      "item": "minecraft:stick"
+    }
+  },
+  "result": {
+    "item": "open_blocks:scaffolding",
+    "count": 8
+  }
+}

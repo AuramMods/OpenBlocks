@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "open_blocks:fan",
+  "pattern": [
+    "f",
+    "i",
+    "s"
+  ],
+  "key": {
+    "s": {
+      "item": "minecraft:smooth_stone_slab"
+    },
+    "f": {
+      "item": "minecraft:iron_bars"
+    },
+    "i": {
+      "item": "minecraft:iron_ingot"
+    }
+  },
+  "result": {
+    "item": "open_blocks:fan"
+  }
+}

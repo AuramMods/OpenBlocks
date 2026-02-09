@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "open_blocks:sky",
+  "pattern": [
+    "geg",
+    "gsg",
+    "geg"
+  ],
+  "key": {
+    "s": {
+      "item": "minecraft:end_stone"
+    },
+    "e": {
+      "item": "minecraft:ender_eye"
+    },
+    "g": {
+      "item": "minecraft:glass"
+    }
+  },
+  "result": {
+    "item": "open_blocks:sky",
+    "count": 6
+  }
+}

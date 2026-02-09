@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "open_blocks:projector",
+  "pattern": [
+    "grl",
+    "iri",
+    "srs"
+  ],
+  "key": {
+    "r": {
+      "item": "minecraft:redstone"
+    },
+    "s": {
+      "item": "minecraft:smooth_stone_slab"
+    },
+    "g": {
+      "item": "minecraft:glowstone_dust"
+    },
+    "i": {
+      "item": "minecraft:iron_ingot"
+    },
+    "l": {
+      "item": "minecraft:lapis_lazuli"
+    }
+  },
+  "result": {
+    "item": "open_blocks:projector"
+  }
+}
