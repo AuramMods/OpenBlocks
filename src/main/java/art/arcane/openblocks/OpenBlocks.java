@@ -13,6 +13,7 @@ import art.arcane.openblocks.registry.OBItems;
 import art.arcane.openblocks.registry.OBMenuTypes;
 import art.arcane.openblocks.registry.OBRecipeSerializers;
 import art.arcane.openblocks.registry.OBSounds;
+import art.arcane.openblocks.world.OBGameRules;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -42,5 +43,6 @@ public class OpenBlocks {
         modEventBus.addListener(OBCapabilities::onRegisterCapabilities);
 
         OBCriterions.bootstrap();
+        OBGameRules.bootstrap();
     }
 }

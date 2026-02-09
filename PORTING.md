@@ -99,6 +99,7 @@ Validation log:
 - [-] Replaced `/flimflam` placeholder responses with executable breadth-stage effect actions via new `OBFlimFlamEffects` (all legacy command effect IDs wired to thin server-side behaviors: inventory shuffle/disarm, potion/sound/entity prank effects, encase/skyblock, etc.), validated with `./gradlew compileJava runData` on 2026-02-09.
 - [-] Expanded `/ob_inventory` breadth parity: dumps now include sub-inventory payloads (`armor`, `offhand`, `ender_chest`) with target-aware spawn/restore handling, and added automatic death-time inventory dump storage via `OBInventoryHooks` to command-consumable `inventory-*.dat` files, validated with `./gradlew compileJava runData` on 2026-02-09.
 - [-] Added legacy-style inventory subsystem event bridge (`OBInventoryEvent`): `/ob_inventory store` now captures arbitrary event-provided sub-inventory payloads into dump `SubInventories`, `/ob_inventory restore` now publishes the decoded payload map back to listeners, and command target suggestions/spawn support now include serialized dynamic subsystem keys, validated with `./gradlew compileJava runData` on 2026-02-09.
+- [-] Added grave gamerule + backup dump breadth skeleton: registered legacy-style gamerule key `openblocks:spawn_graves` (`OBGameRules`), added `OBGraveHooks` drop-time backup dumps (`type=grave`) gated by `keepInventory` + gamerule state, and extended `OBInventoryStore` with drop-list dump writes, validated with `./gradlew compileJava runData` on 2026-02-09.
 
 ## Phase 3: Systems Skeleton (Breadth Gameplay Pass)
 Goal: recreate cross-cutting systems in thin form before deep feature parity.
@@ -111,8 +112,8 @@ Checklist:
 - [-] Rebuild command registration.
 - [ ] Rebuild loot injection strategy.
 - [ ] Rebuild villager/trade registration strategy.
-- [ ] Rebuild game rule registration strategy.
-- [ ] Rebuild world data persistence equivalents (map data, grave data dependencies, etc).
+- [-] Rebuild game rule registration strategy.
+- [-] Rebuild world data persistence equivalents (map data, grave data dependencies, etc).
 
 Exit criteria:
 - [ ] Server and client run with all major systems wired (even if behavior is simplified).
@@ -155,7 +156,10 @@ Checklist:
   - tune per-effect details from thin stubs toward legacy-accurate behavior
 - [ ] Deepen `/ob_inventory` parity beyond current built-in + event-bridge baseline:
   - add first concrete subsystem consumers/producers for `OBInventoryEvent` payloads (legacy-style arbitrary subsystem parity in practice, not just schema support)
-  - reconnect gravestone/inventory-backend integrations to reuse the dump pipeline
+  - reconnect gravestone/inventory-backend integrations to reuse the dump pipeline (drop-time backup dumps and gamerule gate now in place; placement + restore UX still pending)
+- [ ] Deepen grave parity from current backup-only skeleton:
+  - implement actual grave block placement/search logic and route stored grave loot into placed container data
+  - port grave drop filtering/event behavior (store/drop/delete actions) from legacy `GraveDropsEvent` flow
 - [ ] Replace capability placeholders with gameplay hooks:
   - `pedometer_state`: expand from current explicit start/reset/report baseline to deeper parity (client-side speed property behavior + legacy unit/readout polish)
   - `bowels`: expand from current tasty-clay + brick-toss + death-drop hooks to full legacy behavior parity (keybound brick-drop path + sound/stat nuances)

@@ -272,6 +272,23 @@
     - gravestone/backend reuse of the dump pipeline remains pending.
   - Validation:
     - `./gradlew compileJava runData` succeeds after event-bridge wiring (2026-02-09).
+- Grave/gamerule skeleton follow-up (2026-02-09):
+  - Added `src/main/java/art/arcane/openblocks/world/OBGameRules.java`:
+    - registers legacy-style gamerule key `openblocks:spawn_graves` with default `true`.
+    - wired via `OpenBlocks` bootstrap so registration happens during mod init.
+  - Added `src/main/java/art/arcane/openblocks/grave/OBGraveHooks.java`:
+    - listens to `LivingDropsEvent` (server-player filtered).
+    - skips fake players and canceled events.
+    - gates grave backup handling on vanilla `keepInventory` + `openblocks:spawn_graves`.
+    - writes drop-list backup dumps through `OBInventoryStore` using dump type `grave`.
+  - Updated `src/main/java/art/arcane/openblocks/command/OBInventoryStore.java`:
+    - added `storeDroppedItems(...)` for drop-list dumps.
+    - drop dump schema uses main `Inventory` list + existing owner/time/location metadata.
+  - Current parity gap:
+    - no grave block placement/search/pathing yet.
+    - no legacy `GraveDropsEvent` action filtering equivalent yet.
+  - Validation:
+    - `./gradlew compileJava runData` succeeds after gamerule + grave-backup wiring (2026-02-09).
 - Flimflam command backend follow-up (2026-02-09):
   - Added `src/main/java/art/arcane/openblocks/command/OBFlimFlamEffects.java`.
   - Updated `src/main/java/art/arcane/openblocks/command/OBCommands.java` to execute real effect actions through the registry instead of placeholder chat output.
@@ -342,7 +359,7 @@
 - Continue Phase 2 breadth: expand recipe coverage beyond current custom-recipe placeholders.
 - Move Phase 3 command/trigger work from placeholders to hooked gameplay paths:
   - deepen `flimflam` from current breadth-stage effects to legacy cost/weight/luck/blacklist behavior
-  - deepen `ob_inventory` from current built-in targets + event-bridge payload schema to concrete subsystem integrations + grave/backend parity
+  - deepen `ob_inventory` from current built-in targets + event-bridge payload schema + grave backup dumps to concrete subsystem integrations + full grave/backend parity
   - replace temporary trigger hooks with legacy-accurate sources (boo/brick action and nested dev-null depth logic)
 - Move Phase 3 capability work from placeholders to hooked gameplay paths:
   - expand pedometer from current explicit start/reset/report baseline to deeper parity (legacy unit formatting, client-side speed property behavior, polish on readout cadence)

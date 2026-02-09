@@ -80,6 +80,25 @@ public final class OBInventoryStore {
         return stripFilename(dumpPath.getFileName().toString());
     }
 
+    public static String storeDroppedItems(final ServerPlayer player, final String type, final List<ItemStack> drops)
+            throws IOException {
+        final String safePlayerName = sanitize(player.getGameProfile().getName());
+        final Path dumpPath = createDumpPath(player.serverLevel(), safePlayerName, sanitize(type));
+
+        final CompoundTag root = new CompoundTag();
+        root.put(TAG_INVENTORY, encodeMainInventoryList(drops));
+        root.putLong(TAG_CREATED, System.currentTimeMillis());
+        root.putString(TAG_TYPE, type);
+        root.putString(TAG_PLAYER_NAME, player.getGameProfile().getName());
+        root.putString(TAG_PLAYER_UUID, player.getUUID().toString());
+        root.put(TAG_LOCATION, encodePlayerLocation(player));
+        root.put(TAG_SUB_INVENTORIES, new CompoundTag());
+
+        Files.createDirectories(dumpPath.getParent());
+        NbtIo.writeCompressed(root, dumpPath.toFile());
+        return stripFilename(dumpPath.getFileName().toString());
+    }
+
     public static boolean restoreInventory(final ServerPlayer player, final String inventoryId) throws IOException {
         final CompoundTag root = readInventoryTag(player.serverLevel(), inventoryId);
         if (root == null || !root.contains(TAG_INVENTORY, Tag.TAG_LIST)) return false;
@@ -243,6 +262,20 @@ public final class OBInventoryStore {
         location.putDouble(TAG_LOCATION_Z, player.getZ());
         location.putString(TAG_LOCATION_DIMENSION, player.level().dimension().location().toString());
         return location;
+    }
+
+    private static ListTag encodeMainInventoryList(final List<ItemStack> stacks) {
+        final ListTag inventoryData = new ListTag();
+        for (int slot = 0; slot < stacks.size(); slot++) {
+            final ItemStack stack = stacks.get(slot);
+            if (stack == null || stack.isEmpty()) continue;
+
+            final CompoundTag stackTag = stack.save(new CompoundTag());
+            stackTag.putInt(TAG_SLOT, slot);
+            inventoryData.add(stackTag);
+        }
+
+        return inventoryData;
     }
 
     private static CompoundTag encodeSubInventories(final Map<String, OBInventoryEvent.SubInventory> subInventories) {
