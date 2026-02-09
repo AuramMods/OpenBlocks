@@ -101,6 +101,7 @@ Validation log:
 - [-] Added legacy-style inventory subsystem event bridge (`OBInventoryEvent`): `/ob_inventory store` now captures arbitrary event-provided sub-inventory payloads into dump `SubInventories`, `/ob_inventory restore` now publishes the decoded payload map back to listeners, and command target suggestions/spawn support now include serialized dynamic subsystem keys, validated with `./gradlew compileJava runData` on 2026-02-09.
 - [-] Added grave gamerule + backup dump breadth skeleton: registered legacy-style gamerule key `openblocks:spawn_graves` (`OBGameRules`), added `OBGraveHooks` drop-time backup dumps (`type=grave`) gated by `keepInventory` + gamerule state, and extended `OBInventoryStore` with drop-list dump writes, validated with `./gradlew compileJava runData` on 2026-02-09.
 - [-] Deepened grave parity from backup-only to place+claim baseline: added dedicated grave block/entity wiring (`OBGraveBlock`, `OBGraveBlockEntity`), upgraded `OBGraveHooks` to search/place graves and bind dump IDs on death, and extended `OBInventoryStore` with grave-claim helpers (`readDroppedItems`, `deleteDump`); successful grave placement now clears world drops and grave interaction now restores stored loot + removes the grave, validated with `./gradlew compileJava runData` on 2026-02-09.
+- [-] Deepened grave parity with action-filter + interaction pass: added legacy-style `OBGraveDropsEvent` (`STORE`/`DROP`/`DELETE`) and wired `OBGraveHooks` to post/filter drop actions before storage/placement, plus grave interaction now shows stored death message on normal use and requires shovel-action interaction to claim loot from placed graves, validated with `./gradlew compileJava runData` on 2026-02-09.
 
 ## Phase 3: Systems Skeleton (Breadth Gameplay Pass)
 Goal: recreate cross-cutting systems in thin form before deep feature parity.
@@ -159,8 +160,8 @@ Checklist:
   - add first concrete subsystem consumers/producers for `OBInventoryEvent` payloads (legacy-style arbitrary subsystem parity in practice, not just schema support)
   - reconnect gravestone/inventory-backend integrations to reuse the dump pipeline (grave placement + claim now wired; subsystem-specific restore UX and backend consumers still pending)
 - [ ] Deepen grave parity from current place+claim skeleton:
-  - port grave drop filtering/event behavior (store/drop/delete actions) from legacy `GraveDropsEvent` flow
-  - carry richer grave metadata/behavior (owner restrictions, death message text, base-placement/facing details) into block/entity state
+  - expand `OBGraveDropsEvent` parity beyond current action filtering (hook concrete listeners/producers and mirror more legacy filtering/consumption flows)
+  - carry richer grave metadata/behavior (owner restrictions, richer death-message formatting, base-placement/facing details) into block/entity state
   - harden grave placement edge-cases (destructive fallback policy, cross-dimension guarantees, failure-path UX/messages)
 - [ ] Replace capability placeholders with gameplay hooks:
   - `pedometer_state`: expand from current explicit start/reset/report baseline to deeper parity (client-side speed property behavior + legacy unit/readout polish)

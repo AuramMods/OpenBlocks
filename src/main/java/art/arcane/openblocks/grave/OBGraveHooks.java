@@ -1,6 +1,7 @@
 package art.arcane.openblocks.grave;
 
 import art.arcane.openblocks.OpenBlocks;
+import art.arcane.openblocks.api.OBGraveDropsEvent;
 import art.arcane.openblocks.block.entity.OBGraveBlockEntity;
 import art.arcane.openblocks.command.OBInventoryStore;
 import art.arcane.openblocks.registry.OBBlocks;
@@ -17,6 +18,7 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -41,17 +43,38 @@ public final class OBGraveHooks {
         if (level.getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY)) return;
         if (!level.getGameRules().getBoolean(OBGameRules.SPAWN_GRAVES)) return;
 
-        final List<ItemStack> drops = new ArrayList<>();
+        final OBGraveDropsEvent dropsEvent = new OBGraveDropsEvent(player);
         for (final ItemEntity itemEntity : event.getDrops()) {
+            if (!itemEntity.getItem().isEmpty()) dropsEvent.addItem(itemEntity);
+        }
+        if (dropsEvent.getDrops().isEmpty()) return;
+        if (MinecraftForge.EVENT_BUS.post(dropsEvent)) return;
+
+        final List<ItemStack> storedDrops = new ArrayList<>();
+        final List<ItemEntity> worldDrops = new ArrayList<>();
+        for (final OBGraveDropsEvent.ItemAction action : dropsEvent.getDrops()) {
+            final ItemEntity itemEntity = action.getItem();
             final ItemStack stack = itemEntity.getItem();
-            if (!stack.isEmpty()) drops.add(stack.copy());
+            if (stack.isEmpty()) continue;
+
+            switch (action.getAction()) {
+                case STORE -> storedDrops.add(stack.copy());
+                case DROP -> worldDrops.add(itemEntity);
+                case DELETE -> {
+                    // intentionally omitted from both grave storage and world drops.
+                }
+            }
         }
 
-        if (drops.isEmpty()) return;
+        if (storedDrops.isEmpty()) {
+            event.getDrops().clear();
+            event.getDrops().addAll(worldDrops);
+            return;
+        }
 
         final String id;
         try {
-            id = OBInventoryStore.storeDroppedItems(player, "grave", drops);
+            id = OBInventoryStore.storeDroppedItems(player, "grave", storedDrops);
         } catch (final IOException e) {
             player.sendSystemMessage(Component.literal(
                     "OpenBlocks failed to store grave backup: " + e.getMessage()));
@@ -68,10 +91,13 @@ public final class OBGraveHooks {
         if (!placeGrave(level, gravePos, player, id)) {
             player.sendSystemMessage(Component.literal(
                     "OpenBlocks stored your grave backup as '" + id + "' (grave placement failed)."));
+            event.getDrops().clear();
+            event.getDrops().addAll(worldDrops);
             return;
         }
 
         event.getDrops().clear();
+        event.getDrops().addAll(worldDrops);
         player.sendSystemMessage(Component.literal(
                 "OpenBlocks placed your grave at "
                         + gravePos.getX() + ", " + gravePos.getY() + ", " + gravePos.getZ()
@@ -90,8 +116,14 @@ public final class OBGraveHooks {
             return false;
         }
 
-        graveBlockEntity.initializeFromDeath(player, inventoryId);
+        graveBlockEntity.initializeFromDeath(player, inventoryId, deathMessage(player));
         return true;
+    }
+
+    private static String deathMessage(final ServerPlayer player) {
+        final Component message = player.getCombatTracker().getDeathMessage();
+        if (message == null) return "";
+        return message.getString();
     }
 
     private static BlockPos findPlacement(final ServerLevel level, final BlockPos origin) {

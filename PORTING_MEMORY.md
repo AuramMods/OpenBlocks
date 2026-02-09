@@ -272,7 +272,7 @@
     - gravestone/backend reuse of the dump pipeline is now partially wired via grave placement+claim, but subsystem/backend integrations remain pending.
   - Validation:
     - `./gradlew compileJava runData` succeeds after event-bridge wiring (2026-02-09).
-- Grave/gamerule skeleton follow-up (2026-02-09, second pass):
+- Grave/gamerule skeleton follow-up (2026-02-09, third pass):
   - Added `src/main/java/art/arcane/openblocks/world/OBGameRules.java`:
     - registers legacy-style gamerule key `openblocks:spawn_graves` with default `true`.
     - wired via `OpenBlocks` bootstrap so registration happens during mod init.
@@ -282,20 +282,26 @@
     - `OBBlocks` now instantiates `OBGraveBlock` for `open_blocks:grave`, and `OBBlockEntities.GRAVE` is now typed to `OBGraveBlockEntity`.
   - Updated `src/main/java/art/arcane/openblocks/grave/OBGraveHooks.java`:
     - still listens to `LivingDropsEvent` (server-player filtered), skips fake players, and gates behavior on `keepInventory` + `openblocks:spawn_graves`.
-    - now stores grave backups, searches nearby placement candidates, places grave blocks, binds dump IDs into grave block entities, and clears death drops only when placement succeeds.
+    - now posts `src/main/java/art/arcane/openblocks/api/OBGraveDropsEvent` and applies legacy-style drop actions (`STORE`/`DROP`/`DELETE`) before grave storage/placement.
+    - stores grave backups from `STORE` actions, preserves `DROP` actions in world drops, and omits `DELETE` actions from both paths.
+    - searches nearby placement candidates, places grave blocks, binds dump IDs into grave block entities, and clears only stored drops from world output on successful placement.
     - placement fallback remains backup-only when no valid location is found or placement fails.
+  - Added legacy-style grave drop action event API:
+    - `src/main/java/art/arcane/openblocks/api/OBGraveDropsEvent.java`
+    - cancellable event with mutable per-item action entries (`STORE`, `DROP`, `DELETE`).
   - Updated `src/main/java/art/arcane/openblocks/command/OBInventoryStore.java`:
     - existing `storeDroppedItems(...)` remains the grave backup writer.
     - added `readDroppedItems(...)` for grave-claim loot extraction.
     - added `deleteDump(...)` for cleanup after successful claim.
-  - Added grave claim interaction path:
-    - right-clicking a placed grave now reads stored dump stacks, drops them at grave position, deletes the dump file when possible, and removes the grave block.
+  - Added grave interaction parity follow-up:
+    - right-clicking a placed grave with a shovel-action item now reads stored dump stacks, drops them at grave position, deletes the dump file when possible, and removes the grave block.
+    - right-clicking without a shovel-action item now shows stored death message text (or fallback epitaph text).
   - Current parity gap:
-    - no legacy `GraveDropsEvent` action filtering equivalent yet (`store`/`drop`/`delete` split).
-    - no owner/death-message/base/facing parity in grave state yet (current grave metadata is minimal).
+    - no concrete external listeners/producers are wired to `OBGraveDropsEvent` yet (API/event path exists, ecosystem parity pending).
+    - no owner/base/facing parity in grave state yet (death message is now stored/shown, but richer legacy metadata is still incomplete).
     - no destructive placement fallback policy yet when polite placement fails.
   - Validation:
-    - `./gradlew compileJava runData` succeeds after grave placement+claim wiring (2026-02-09).
+    - `./gradlew compileJava runData` succeeds after grave action-filter + interaction follow-up (2026-02-09).
 - Flimflam command backend follow-up (2026-02-09):
   - Added `src/main/java/art/arcane/openblocks/command/OBFlimFlamEffects.java`.
   - Updated `src/main/java/art/arcane/openblocks/command/OBCommands.java` to execute real effect actions through the registry instead of placeholder chat output.
@@ -366,7 +372,7 @@
 - Continue Phase 2 breadth: expand recipe coverage beyond current custom-recipe placeholders.
 - Move Phase 3 command/trigger work from placeholders to hooked gameplay paths:
   - deepen `flimflam` from current breadth-stage effects to legacy cost/weight/luck/blacklist behavior
-  - deepen `ob_inventory` from current built-in targets + event-bridge payload schema + grave placement/claim baseline to concrete subsystem integrations + full grave/backend parity
+  - deepen `ob_inventory` from current built-in targets + event-bridge payload schema + grave placement/claim/action-filter baseline to concrete subsystem integrations + full grave/backend parity
   - replace temporary trigger hooks with legacy-accurate sources (boo/brick action and nested dev-null depth logic)
 - Move Phase 3 capability work from placeholders to hooked gameplay paths:
   - expand pedometer from current explicit start/reset/report baseline to deeper parity (legacy unit formatting, client-side speed property behavior, polish on readout cadence)

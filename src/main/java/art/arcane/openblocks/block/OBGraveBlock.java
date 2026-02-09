@@ -13,6 +13,7 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraftforge.common.ToolActions;
 
 public class OBGraveBlock extends OBShapeBlock implements EntityBlock {
 
@@ -43,7 +44,12 @@ public class OBGraveBlock extends OBShapeBlock implements EntityBlock {
         final BlockEntity blockEntity = level.getBlockEntity(pos);
         if (!(blockEntity instanceof OBGraveBlockEntity graveBlockEntity)) return InteractionResult.PASS;
 
-        graveBlockEntity.claimLoot(serverPlayer);
+        if (player.getItemInHand(hand).canPerformAction(ToolActions.SHOVEL_DIG)) {
+            graveBlockEntity.claimLoot(serverPlayer);
+        } else {
+            graveBlockEntity.sendDeathMessage(serverPlayer);
+        }
+
         return InteractionResult.CONSUME;
     }
 }

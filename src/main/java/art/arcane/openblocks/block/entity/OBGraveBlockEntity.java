@@ -19,11 +19,13 @@ public class OBGraveBlockEntity extends BlockEntity {
     private static final String TAG_INVENTORY_ID = "InventoryId";
     private static final String TAG_OWNER_NAME = "OwnerName";
     private static final String TAG_OWNER_UUID = "OwnerUUID";
+    private static final String TAG_DEATH_MESSAGE = "DeathMessage";
     private static final String TAG_CREATED = "Created";
 
     private String inventoryId = "";
     private String ownerName = "";
     private String ownerUuid = "";
+    private String deathMessage = "";
     private long created;
 
     public OBGraveBlockEntity(final BlockPos pos, final BlockState state) {
@@ -31,11 +33,30 @@ public class OBGraveBlockEntity extends BlockEntity {
     }
 
     public void initializeFromDeath(final ServerPlayer player, final String inventoryId) {
+        initializeFromDeath(player, inventoryId, "");
+    }
+
+    public void initializeFromDeath(final ServerPlayer player, final String inventoryId, final String deathMessage) {
         this.inventoryId = inventoryId == null ? "" : inventoryId;
         this.ownerName = player.getGameProfile().getName();
         this.ownerUuid = player.getUUID().toString();
+        this.deathMessage = deathMessage == null ? "" : deathMessage;
         this.created = System.currentTimeMillis();
         setChanged();
+    }
+
+    public void sendDeathMessage(final ServerPlayer player) {
+        if (!deathMessage.isBlank()) {
+            player.sendSystemMessage(Component.literal(deathMessage));
+            return;
+        }
+
+        if (!ownerName.isBlank()) {
+            player.sendSystemMessage(Component.literal("Here lies " + ownerName + "."));
+            return;
+        }
+
+        player.sendSystemMessage(Component.literal("A weathered gravestone."));
     }
 
     public boolean claimLoot(final ServerPlayer player) {
@@ -90,6 +111,7 @@ public class OBGraveBlockEntity extends BlockEntity {
         this.inventoryId = "";
         this.ownerName = "";
         this.ownerUuid = "";
+        this.deathMessage = "";
         this.created = 0L;
         setChanged();
         level.removeBlock(worldPosition, false);
@@ -101,6 +123,7 @@ public class OBGraveBlockEntity extends BlockEntity {
         tag.putString(TAG_INVENTORY_ID, inventoryId);
         tag.putString(TAG_OWNER_NAME, ownerName);
         tag.putString(TAG_OWNER_UUID, ownerUuid);
+        tag.putString(TAG_DEATH_MESSAGE, deathMessage);
         tag.putLong(TAG_CREATED, created);
     }
 
@@ -110,6 +133,7 @@ public class OBGraveBlockEntity extends BlockEntity {
         this.inventoryId = tag.getString(TAG_INVENTORY_ID);
         this.ownerName = tag.getString(TAG_OWNER_NAME);
         this.ownerUuid = tag.getString(TAG_OWNER_UUID);
+        this.deathMessage = tag.getString(TAG_DEATH_MESSAGE);
         this.created = tag.getLong(TAG_CREATED);
     }
 }
