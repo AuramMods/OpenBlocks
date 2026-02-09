@@ -106,11 +106,12 @@ Current validation status:
 - Systems skeleton note:
   - `src/main/java/art/arcane/openblocks/command/OBCommands.java` now registers the three legacy command IDs in Brigadier form (`flimflam`, `luck`, `ob_inventory`) with breadth-stage placeholder behavior for unported backends.
   - `/luck` state storage now reads/writes through `OBCapabilities` (`open_blocks:luck`) rather than ad-hoc player persistent data.
-  - `src/main/java/art/arcane/openblocks/capability/OBCapabilities.java` now registers and attaches legacy player capability IDs (`open_blocks:luck`, `open_blocks:pedometer_state`, `open_blocks:bowels`) and copies them during `PlayerEvent.Clone`.
+  - `src/main/java/art/arcane/openblocks/capability/OBCapabilities.java` now registers and attaches legacy player capability IDs (`open_blocks:luck`, `open_blocks:pedometer_state`, `open_blocks:bowels`) and copies them during `PlayerEvent.Clone` (except `bowels` on death clones, to avoid duplicate death-drop state).
   - `src/main/java/art/arcane/openblocks/advancement/OBCriterions.java` now registers custom trigger IDs `open_blocks:brick_dropped` and `open_blocks:dev_null_stacked` for advancement compatibility baseline.
   - `src/main/java/art/arcane/openblocks/advancement/OBAdvancementHooks.java` now wires initial trigger/capability gameplay hooks:
     - `tasty_clay` consume increments bowels count,
     - brick toss conditionally fires `brick_dropped` and decrements bowels for survival players,
+    - `LivingDropsEvent` emits up to 16 brick drops from bowels count and clears stored bowels state,
     - periodic placeholder inventory scan approximates dev-null depth and fires `dev_null_stacked`.
   - `src/main/java/art/arcane/openblocks/registry/OBItems.java` now sets parity-critical item properties:
     - `tasty_clay` is edible,

@@ -4,10 +4,12 @@ import art.arcane.openblocks.OpenBlocks;
 import art.arcane.openblocks.capability.OBCapabilities;
 import art.arcane.openblocks.registry.OBItems;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.item.ItemTossEvent;
+import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -40,6 +42,27 @@ public final class OBAdvancementHooks {
             if (count <= 0) return;
             OBCapabilities.setBowelBrickCount(player, count - 1);
             OBCriterions.BRICK_DROPPED.trigger(player);
+        });
+    }
+
+    @SubscribeEvent
+    public static void onLivingDrops(final LivingDropsEvent event) {
+        if (!(event.getEntity() instanceof ServerPlayer player)) return;
+
+        OBCapabilities.getBowelBrickCount(player).ifPresent((count) -> {
+            if (count <= 0) return;
+
+            final int drops = Math.min(count, 16);
+            for (int i = 0; i < drops; i++) {
+                event.getDrops().add(new ItemEntity(
+                        player.level(),
+                        player.getX(),
+                        player.getY(),
+                        player.getZ(),
+                        new ItemStack(Items.BRICK)));
+            }
+
+            OBCapabilities.setBowelBrickCount(player, 0);
         });
     }
 

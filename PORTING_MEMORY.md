@@ -203,7 +203,10 @@
   - Current hooks:
     - `tasty_clay` consumption increments `open_blocks:bowels` count.
     - Brick item toss triggers `open_blocks:brick_dropped` when allowed (creative or positive bowels count, with decrement for non-creative).
+    - Player death now drops up to 16 bricks based on bowels count and clears bowels state.
     - Periodic placeholder dev-null depth approximation from inventory count triggers `open_blocks:dev_null_stacked`.
+  - Clone behavior update:
+    - `src/main/java/art/arcane/openblocks/capability/OBCapabilities.java` now avoids copying `open_blocks:bowels` on death clones to prevent duplicated death-drop bricks.
   - Related item property parity updates in:
     - `src/main/java/art/arcane/openblocks/registry/OBItems.java`
     - `tasty_clay` is now edible.
@@ -277,6 +280,6 @@
   - replace temporary trigger hooks with legacy-accurate sources (boo/brick action and nested dev-null depth logic)
 - Move Phase 3 capability work from placeholders to hooked gameplay paths:
   - feed pedometer movement sampling into `open_blocks:pedometer_state`
-  - expand brick/bowels behavior from current tasty-clay + brick toss baseline to full legacy parity (including death drops)
+  - expand brick/bowels behavior from current tasty-clay + brick toss + death-drop baseline to full legacy parity (keybound boo action path, whoops sound/stat behavior)
   - restore luck cooldown/forced-trigger behavior for `open_blocks:luck`
 - Draft legacy compatibility/remap mapping plan (`openblocks` namespace + legacy alias IDs -> `open_blocks` canonical IDs).

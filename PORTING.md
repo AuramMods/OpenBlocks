@@ -92,6 +92,7 @@ Validation log:
 - [-] Added capability skeleton for legacy player capability IDs (`open_blocks:luck`, `open_blocks:pedometer_state`, `open_blocks:bowels`) with registration + attach + clone-copy persistence, and switched `/luck` command state to capability-backed storage, validated with `./gradlew compileJava runData` on 2026-02-09.
 - [x] Expanded legacy ore-dict compatibility tags in `src/main/resources/data/open_blocks/tags/items/legacy_ore_dict` from single-item placeholders to broader `forge`/`minecraft` tag membership across 34 files, validated with `./gradlew compileJava runData` on 2026-02-09.
 - [-] Added initial gameplay event hooks for custom triggers/capability bridge in `OBAdvancementHooks` (`tasty_clay` consume -> bowels +1, brick toss -> `brick_dropped` with bowels decrement, periodic dev-null depth approximation -> `dev_null_stacked`), and updated item properties for parity (`tasty_clay` edible, `dev_null`/`generic_unstackable` unstackable), validated with `./gradlew compileJava runData` on 2026-02-09.
+- [-] Expanded bowels parity hooks with death-drop behavior in `OBAdvancementHooks` (`LivingDropsEvent`: drop up to 16 bricks from stored bowels count, then clear), and updated clone behavior in `OBCapabilities` to not copy bowels on death clones, validated with `./gradlew compileJava runData` on 2026-02-09.
 
 ## Phase 3: Systems Skeleton (Breadth Gameplay Pass)
 Goal: recreate cross-cutting systems in thin form before deep feature parity.
@@ -148,7 +149,7 @@ Checklist:
   - `ob_inventory`: reconnect to inventory dump/restore storage backend
 - [ ] Replace capability placeholders with gameplay hooks:
   - `pedometer_state`: reconnect movement update/read paths used by pedometer item flow
-  - `bowels`: expand from current tasty-clay + brick-toss hooks to legacy behavior parity (death drops + keybound brick-drop path)
+  - `bowels`: expand from current tasty-clay + brick-toss + death-drop hooks to full legacy behavior parity (keybound brick-drop path + sound/stat nuances)
   - `luck`: reconnect full flim-flam cooldown and forced-trigger logic (currently just raw value storage)
 - [ ] Wire custom advancement triggers into gameplay events:
   - replace temporary hooks with legacy-accurate trigger sources (`brick_dropped` from boo/brick action path, `dev_null_stacked` from nested dev-null inventory depth)

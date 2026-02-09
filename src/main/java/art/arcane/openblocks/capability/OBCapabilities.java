@@ -57,7 +57,7 @@ public final class OBCapabilities {
         try {
             copy(original, clone, LUCK);
             copy(original, clone, PEDOMETER_STATE);
-            copy(original, clone, BOWELS);
+            if (!event.isWasDeath()) copy(original, clone, BOWELS);
         } finally {
             original.invalidateCaps();
         }
