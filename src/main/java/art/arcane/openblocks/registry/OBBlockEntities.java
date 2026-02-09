@@ -2,6 +2,7 @@ package art.arcane.openblocks.registry;
 
 import art.arcane.openblocks.OpenBlocks;
 import art.arcane.openblocks.block.entity.OBGraveBlockEntity;
+import art.arcane.openblocks.block.entity.OBHealBlockEntity;
 import art.arcane.openblocks.block.entity.OBPlaceholderBlockEntity;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -21,7 +22,7 @@ public final class OBBlockEntities {
     public static final RegistryObject<BlockEntityType<OBPlaceholderBlockEntity>> GUIDE = register("guide", OBBlocks.GUIDE);
     public static final RegistryObject<BlockEntityType<OBPlaceholderBlockEntity>> BUILDER_GUIDE = register("builder_guide", OBBlocks.BUILDER_GUIDE);
     public static final RegistryObject<BlockEntityType<OBPlaceholderBlockEntity>> ELEVATOR_ROTATING = register("elevator_rotating", OBBlocks.ELEVATOR_ROTATING);
-    public static final RegistryObject<BlockEntityType<OBPlaceholderBlockEntity>> HEAL = register("heal", OBBlocks.HEAL);
+    public static final RegistryObject<BlockEntityType<OBHealBlockEntity>> HEAL = registerHeal("heal", OBBlocks.HEAL);
     public static final RegistryObject<BlockEntityType<OBPlaceholderBlockEntity>> TARGET = register("target", OBBlocks.TARGET);
     public static final RegistryObject<BlockEntityType<OBGraveBlockEntity>> GRAVE = registerGrave("grave", OBBlocks.GRAVE);
     public static final RegistryObject<BlockEntityType<OBPlaceholderBlockEntity>> FLAG = register("flag", OBBlocks.FLAG);
@@ -69,6 +70,16 @@ public final class OBBlockEntities {
                 resolveBlocks(blocks)).build(null));
         ALL.add((RegistryObject) holder[0]);
         return holder[0];
+    }
+
+    @SafeVarargs
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    private static RegistryObject<BlockEntityType<OBHealBlockEntity>> registerHeal(final String id, final RegistryObject<Block>... blocks) {
+        final RegistryObject<BlockEntityType<OBHealBlockEntity>> holder = BLOCK_ENTITY_TYPES.register(
+                id,
+                () -> BlockEntityType.Builder.of(OBHealBlockEntity::new, resolveBlocks(blocks)).build(null));
+        ALL.add((RegistryObject) holder);
+        return holder;
     }
 
     @SafeVarargs

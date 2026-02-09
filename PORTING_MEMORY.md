@@ -258,6 +258,33 @@
     - `ender_chest` (plus any serialized sub-inventory keys present in dump data)
   - Expanded restore behavior:
     - restore now reapplies ender chest contents from serialized sub-inventory payloads.
+- Block functionality sweep follow-up (2026-02-09):
+  - Added dedicated block behavior classes:
+    - `src/main/java/art/arcane/openblocks/block/OBHealBlock.java`
+    - `src/main/java/art/arcane/openblocks/block/entity/OBHealBlockEntity.java`
+    - `src/main/java/art/arcane/openblocks/block/OBPathBlock.java`
+    - `src/main/java/art/arcane/openblocks/block/OBSpongeBlock.java`
+  - Registry wiring updates:
+    - `src/main/java/art/arcane/openblocks/registry/OBBlocks.java`
+      - `heal` now uses `OBHealBlock`
+      - `path` now uses `OBPathBlock`
+      - `sponge` now uses `OBSpongeBlock`
+    - `src/main/java/art/arcane/openblocks/registry/OBBlockEntities.java`
+      - `heal` block entity type is now real (`OBHealBlockEntity`) instead of placeholder.
+  - Current behavior parity added:
+    - `heal`:
+      - server-side ticking aura every 20 ticks
+      - applies regeneration + saturation to nearby non-creative players
+    - `path`:
+      - requires sturdy support below
+      - drops itself when support below is removed
+    - `sponge`:
+      - clears liquids in radius 3 on place/neighbor change/periodic tick
+      - burns itself (fire fallback) when lava is consumed
+      - schedules border fluid ticks on removal so surrounding liquids unfreeze/flow again
+  - Validation:
+    - `./gradlew compileJava` succeeds.
+    - `./gradlew compileJava runData` succeeds after block sweep pass (2026-02-09).
   - Death dump integration:
     - on player death, inventory is now dumped automatically using type `death` into command-readable `inventory-*.dat` files.
   - Current parity gap:

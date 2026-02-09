@@ -103,6 +103,7 @@ Validation log:
 - [-] Deepened grave parity from backup-only to place+claim baseline: added dedicated grave block/entity wiring (`OBGraveBlock`, `OBGraveBlockEntity`), upgraded `OBGraveHooks` to search/place graves and bind dump IDs on death, and extended `OBInventoryStore` with grave-claim helpers (`readDroppedItems`, `deleteDump`); successful grave placement now clears world drops and grave interaction now restores stored loot + removes the grave, validated with `./gradlew compileJava runData` on 2026-02-09.
 - [-] Deepened grave parity with action-filter + interaction pass: added legacy-style `OBGraveDropsEvent` (`STORE`/`DROP`/`DELETE`) and wired `OBGraveHooks` to post/filter drop actions before storage/placement, plus grave interaction now shows stored death message on normal use and requires shovel-action interaction to claim loot from placed graves, validated with `./gradlew compileJava runData` on 2026-02-09.
 - [x] Fixed client-side fluid texture crash path for `open_blocks:xpjuice` by wiring explicit `IClientFluidTypeExtensions` still/flowing texture keys in `OBFluidTypes` (prevents null texture lookups in third-party tank item renderers such as Mekanism creative fluid tanks), validated with `./gradlew compileJava runData` on 2026-02-09.
+- [-] Started block-functionality depth sweep for legacy non-GUI blocks: `heal` now uses a dedicated ticking block entity aura (`OBHealBlock` + `OBHealBlockEntity`) that applies regeneration/saturation to nearby non-creative players every second, `path` now enforces support-below survival and self-drops when support is removed (`OBPathBlock`), and `sponge` now performs periodic radius liquid cleanup with lava burn fallback and border-fluid wake-up on removal (`OBSpongeBlock`), validated with `./gradlew compileJava runData` on 2026-02-09.
 
 ## Phase 3: Systems Skeleton (Breadth Gameplay Pass)
 Goal: recreate cross-cutting systems in thin form before deep feature parity.
@@ -126,7 +127,7 @@ Goal: move from "exists" to "works correctly".
 
 Suggested order:
 - [ ] Transportation/domain: elevators, rope ladder, hang glider, crane/magnet
-- [ ] Storage/domain: tanks, xp systems, vacuum hopper, donation station
+- [-] Storage/domain: tanks, xp systems, vacuum hopper, donation station
 - [ ] Utility/domain: block breaker/placer/dropper, auto anvil/enchantment table
 - [ ] Visual/domain: canvas/paint/stencil/glyph/projector/sky block
 - [ ] Entity/domain: luggage/cartographer/mini-me/golden eye/etc
@@ -172,3 +173,8 @@ Checklist:
   - replace temporary hooks with legacy-accurate trigger sources (`brick_dropped` from boo/brick action path, `dev_null_stacked` from nested dev-null inventory depth)
 - [ ] Finish legacy recipe migration for skipped recipe files:
   - revisit metadata-collapsed conversions to restore accurate color/subtype behavior where needed (generic/meta items, paintbrush variants, elevator/flag color outputs, etc.)
+- [ ] Continue block functionality sweep (depth pass order):
+  - elevator/elevator_rotating: recolor support + teleport action path (player movement trigger + color match + distance/block-pass limits)
+  - rope_ladder/scaffolding/ladder: placement/survival parity (support rules, extension/stack behavior, climb/collision edge cases)
+  - xp_drain/xp_shower/xp_bottler + tank: fluid/xp transfer behavior and interaction flow
+  - block_breaker/block_placer/item_dropper + auto_anvil/auto_enchantment_table: tick/work cycles and inventory IO
