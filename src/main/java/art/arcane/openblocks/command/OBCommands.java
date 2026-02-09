@@ -26,25 +26,6 @@ import net.minecraftforge.fml.common.Mod;
 @Mod.EventBusSubscriber(modid = art.arcane.openblocks.OpenBlocks.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public final class OBCommands {
 
-    private static final List<String> LEGACY_FLIM_FLAM_EFFECTS = List.of(
-            "inventory-shuffle",
-            "useless-tool",
-            "bane",
-            "epic-lore",
-            "living-rename",
-            "squid",
-            "sheep-dye",
-            "invisible-mobs",
-            "sound",
-            "snowballs",
-            "teleport",
-            "mount",
-            "encase",
-            "creepers",
-            "disarm",
-            "effect",
-            "skyblock");
-
     private OBCommands() {}
 
     @SubscribeEvent
@@ -135,22 +116,31 @@ public final class OBCommands {
     private static int runFlimFlam(final CommandContext<CommandSourceStack> ctx, final ServerPlayer player, final String effectName) {
         final String chosenEffect;
         if (effectName == null) {
-            chosenEffect = LEGACY_FLIM_FLAM_EFFECTS.get(player.getRandom().nextInt(LEGACY_FLIM_FLAM_EFFECTS.size()));
+            chosenEffect = OBFlimFlamEffects.randomEffectName(player);
+            if (chosenEffect.isEmpty()) {
+                ctx.getSource().sendFailure(Component.literal("No flimflam effects are registered."));
+                return 0;
+            }
         } else {
             chosenEffect = effectName.toLowerCase(Locale.ROOT);
-            if (!LEGACY_FLIM_FLAM_EFFECTS.contains(chosenEffect)) {
+            if (!OBFlimFlamEffects.hasEffect(chosenEffect)) {
                 ctx.getSource().sendFailure(Component.literal("Unknown flimflam effect: " + effectName));
                 return 0;
             }
         }
 
+        final boolean result = OBFlimFlamEffects.execute(chosenEffect, player);
+        if (!result) {
+            ctx.getSource().sendFailure(Component.literal(
+                    "Flimflam '" + chosenEffect + "' failed for " + player.getGameProfile().getName() + "."));
+            return 0;
+        }
+
         ctx.getSource().sendSuccess(() -> Component.literal(
-                "Triggered flimflam '" + chosenEffect + "' on " + player.getGameProfile().getName()
-                        + " (placeholder: behavior port pending)."), true);
+                "Triggered flimflam '" + chosenEffect + "' on " + player.getGameProfile().getName() + "."), true);
 
         if (!player.equals(ctx.getSource().getEntity())) {
-            player.sendSystemMessage(Component.literal(
-                    "You were flimflammed with '" + chosenEffect + "' (placeholder: behavior port pending)."));
+            player.sendSystemMessage(Component.literal("You were flimflammed with '" + chosenEffect + "'."));
         }
 
         return 1;
@@ -159,7 +149,7 @@ public final class OBCommands {
     private static CompletableFuture<Suggestions> suggestFlimFlamEffects(
             final CommandContext<CommandSourceStack> ctx,
             final SuggestionsBuilder builder) {
-        return SharedSuggestionProvider.suggest(LEGACY_FLIM_FLAM_EFFECTS, builder);
+        return SharedSuggestionProvider.suggest(OBFlimFlamEffects.effectNames(), builder);
     }
 
     private static CompletableFuture<Suggestions> suggestInventoryIds(

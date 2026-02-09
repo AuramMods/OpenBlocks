@@ -165,7 +165,7 @@
     - Important: `OBCommands` uses `@Mod.EventBusSubscriber(bus = FORGE)` auto-subscription; do not additionally register the class on `MinecraftForge.EVENT_BUS` to avoid duplicate handlers.
   - Current command status:
     - `luck` supports simple query/adjust operations via `open_blocks:luck` capability-backed storage.
-    - `flimflam` supports legacy effect-name argument parsing/suggestions and emits placeholder execution messages (actual effect execution still pending).
+    - `flimflam` supports legacy effect-name argument parsing/suggestions and now executes a breadth-stage action registry for all legacy command effect IDs.
     - `ob_inventory` now supports a breadth-stage file-backed main inventory flow (`store`, `restore`, `spawn`) through `OBInventoryStore` with world `data/inventory-*.dat` dumps.
   - Added custom advancement trigger registration and classes:
     - `src/main/java/art/arcane/openblocks/advancement/OBCriterions.java`
@@ -237,6 +237,14 @@
     - legacy sub-inventory payloads and death/gravestone dump integration are not yet wired.
   - Validation:
     - `./gradlew compileJava runData` succeeds after backend wiring (2026-02-09).
+- Flimflam command backend follow-up (2026-02-09):
+  - Added `src/main/java/art/arcane/openblocks/command/OBFlimFlamEffects.java`.
+  - Updated `src/main/java/art/arcane/openblocks/command/OBCommands.java` to execute real effect actions through the registry instead of placeholder chat output.
+  - All 17 legacy command effect IDs are wired (`inventory-shuffle`, `useless-tool`, `bane`, `epic-lore`, `living-rename`, `squid`, `sheep-dye`, `invisible-mobs`, `sound`, `snowballs`, `teleport`, `mount`, `encase`, `creepers`, `disarm`, `effect`, `skyblock`).
+  - Current parity gap:
+    - behavior is intentionally breadth-stage and not yet cost/weight/luck/blacklist-accurate to legacy flim-flam internals.
+  - Validation:
+    - `./gradlew compileJava runData` succeeds after flimflam backend wiring (2026-02-09).
 
 ## Critical Architecture Facts
 - Main entrypoint is `old-1.12.2/src/main/java/openblocks/OpenBlocks.java`.
@@ -298,7 +306,7 @@
 ## Next Breadth Step (Planned)
 - Continue Phase 2 breadth: expand recipe coverage beyond current custom-recipe placeholders.
 - Move Phase 3 command/trigger work from placeholders to hooked gameplay paths:
-  - connect `flimflam` command to real effect execution
+  - deepen `flimflam` from current breadth-stage effects to legacy cost/weight/luck/blacklist behavior
   - deepen `ob_inventory` beyond main-only support (legacy sub-inventories + death/grave dump parity)
   - replace temporary trigger hooks with legacy-accurate sources (boo/brick action and nested dev-null depth logic)
 - Move Phase 3 capability work from placeholders to hooked gameplay paths:

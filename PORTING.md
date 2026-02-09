@@ -88,7 +88,7 @@ Validation log:
 - [x] Added legacy ID compatibility remap hook in `OBMissingMappings` (namespace remap `openblocks`/`OpenBlocks` -> `open_blocks`, plus legacy alias paths including camelCase/lowercase variants) and revalidated with `./gradlew compileJava runData` on 2026-02-08.
 - [-] Added a mechanical legacy-recipe conversion baseline: 185 shaped/shapeless legacy recipes from `old-1.12.2/assets/openblocks/recipes` now ported to `src/main/resources/data/open_blocks/recipes/legacy` (metadata collapsed to 1.20-safe item IDs and ore-dict ingredients translated to `open_blocks:legacy_ore_dict/*` item tags backed by baseline vanilla values); `openmods:enchanting` recipes are now handled by the dedicated `flim_flam_book` custom serializer path, validated with `./gradlew compileJava runData` on 2026-02-08.
 - [x] Replaced legacy `openmods:enchanting` flim-flam recipe family with a 1.20 custom crafting recipe serializer (`open_blocks:flim_flam_book`) that recreates level scaling from emerald count (1-4), validated with `./gradlew compileJava runData` on 2026-02-08.
-- [-] Added systems skeleton for legacy command IDs (`flimflam`, `luck`, `ob_inventory`) and custom advancement triggers (`open_blocks:brick_dropped`, `open_blocks:dev_null_stacked`) with 1.20 wiring; `luck` is capability-backed and `ob_inventory` now has a file-backed main inventory store/restore/spawn baseline, while `flimflam` remains placeholder behavior, validated with `./gradlew compileJava runData` on 2026-02-09.
+- [-] Added systems skeleton for legacy command IDs (`flimflam`, `luck`, `ob_inventory`) and custom advancement triggers (`open_blocks:brick_dropped`, `open_blocks:dev_null_stacked`) with 1.20 wiring; `luck` is capability-backed, `ob_inventory` has a file-backed main inventory store/restore/spawn baseline, and `flimflam` now executes a breadth-stage effect registry for all 17 legacy IDs, validated with `./gradlew compileJava runData` on 2026-02-09.
 - [-] Added capability skeleton for legacy player capability IDs (`open_blocks:luck`, `open_blocks:pedometer_state`, `open_blocks:bowels`) with registration + attach + clone-copy persistence, and switched `/luck` command state to capability-backed storage, validated with `./gradlew compileJava runData` on 2026-02-09.
 - [x] Expanded legacy ore-dict compatibility tags in `src/main/resources/data/open_blocks/tags/items/legacy_ore_dict` from single-item placeholders to broader `forge`/`minecraft` tag membership across 34 files, validated with `./gradlew compileJava runData` on 2026-02-09.
 - [-] Added initial gameplay event hooks for custom triggers/capability bridge in `OBAdvancementHooks` (`tasty_clay` consume -> bowels +1, brick toss -> `brick_dropped` with bowels decrement, periodic dev-null depth approximation -> `dev_null_stacked`), and updated item properties for parity (`tasty_clay` edible, `dev_null`/`generic_unstackable` unstackable), validated with `./gradlew compileJava runData` on 2026-02-09.
@@ -96,6 +96,7 @@ Validation log:
 - [-] Added initial pedometer movement sampling hook: `OBAdvancementHooks` now ticks `OBCapabilities.PedometerState` on server player ticks when a pedometer exists in hotbar while tracking is active, and `OBItems.PEDOMETER` is now unstackable for baseline parity, validated with `./gradlew compileJava runData` on 2026-02-09.
 - [-] Added explicit pedometer item-flow scaffold via new `OBPedometerItem` (right-click starts tracking, sneak-right-click resets, right-click while running prints report lines), expanded `OBCapabilities.PedometerState` report math helpers, switched pedometer sampling to run only while state is running, and added legacy pedometer message keys to `en_us.json`, validated with `./gradlew compileJava runData` on 2026-02-09.
 - [-] Replaced `/ob_inventory` placeholder responses with a working breadth-stage dump backend (`OBInventoryStore`): `store` writes compressed `inventory-*.dat` files under world `data/`, `restore` loads main inventory data back to players, and `spawn` drops stored main inventory stacks (with optional slot), validated with `./gradlew compileJava runData` on 2026-02-09.
+- [-] Replaced `/flimflam` placeholder responses with executable breadth-stage effect actions via new `OBFlimFlamEffects` (all legacy command effect IDs wired to thin server-side behaviors: inventory shuffle/disarm, potion/sound/entity prank effects, encase/skyblock, etc.), validated with `./gradlew compileJava runData` on 2026-02-09.
 
 ## Phase 3: Systems Skeleton (Breadth Gameplay Pass)
 Goal: recreate cross-cutting systems in thin form before deep feature parity.
@@ -147,8 +148,9 @@ Checklist:
 ## Immediate Next Task
 - [ ] Have user run a quick in-game visual sweep (no `runClient` on agent side) to confirm the latest transparency/collision changes removed purple-black model regressions and face-culling issues.
 - [ ] Extend recipe coverage beyond custom special recipe placeholders (core craft paths for major blocks/items).
-- [ ] Replace command placeholders with real behavior:
-  - `flimflam`: hook effect execution to ported flim-flam registry/actions
+- [ ] Deepen `/flimflam` parity beyond current breadth-stage action wiring:
+  - reconnect legacy luck/cost/weight and safe/blacklist gating behavior
+  - tune per-effect details from thin stubs toward legacy-accurate behavior
 - [ ] Deepen `/ob_inventory` parity beyond current main-inventory baseline:
   - restore legacy sub-inventory payload handling
   - reconnect death/gravestone inventory dump flow to command-consumable dumps

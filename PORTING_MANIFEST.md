@@ -32,6 +32,7 @@ Current registry classes:
   - `src/main/java/art/arcane/openblocks/item/OBPedometerItem.java`
 - Command registration (Forge bus): `src/main/java/art/arcane/openblocks/command/OBCommands.java`
 - Command inventory dump backend: `src/main/java/art/arcane/openblocks/command/OBInventoryStore.java`
+- Command flimflam effect registry: `src/main/java/art/arcane/openblocks/command/OBFlimFlamEffects.java`
 - Capability registration/attachment:
   - `src/main/java/art/arcane/openblocks/capability/OBCapabilities.java`
 - Custom advancement trigger bootstrap:
@@ -109,9 +110,10 @@ Current validation status:
 - Systems skeleton note:
   - `src/main/java/art/arcane/openblocks/command/OBCommands.java` now registers the three legacy command IDs in Brigadier form (`flimflam`, `luck`, `ob_inventory`).
   - `src/main/java/art/arcane/openblocks/command/OBInventoryStore.java` now provides the breadth-stage inventory dump backend used by `/ob_inventory`.
+  - `src/main/java/art/arcane/openblocks/command/OBFlimFlamEffects.java` now provides executable breadth-stage actions for all legacy `/flimflam` effect IDs.
   - Current command parity:
     - `luck` reads/writes `open_blocks:luck` capability state.
-    - `flimflam` still uses placeholder execution messaging (effect logic pending).
+    - `flimflam` now executes a 17-effect action map with legacy ID names preserved; deeper legacy parity (luck/cost/weight/blacklist semantics and exact per-effect behavior) remains pending.
     - `ob_inventory` now supports main inventory file dump/restore/spawn:
       - dumps written to `<world>/data/inventory-*.dat`,
       - restore loads stored main inventory onto target player,
