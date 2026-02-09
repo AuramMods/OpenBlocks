@@ -8,19 +8,19 @@
   ],
   "key": {
     "r": {
-      "item": "minecraft:redstone"
+      "tag": "open_blocks:legacy_ore_dict/dust_redstone"
     },
     "s": {
       "item": "minecraft:smooth_stone_slab"
     },
     "g": {
-      "item": "minecraft:glowstone_dust"
+      "tag": "open_blocks:legacy_ore_dict/dust_glowstone"
     },
     "i": {
-      "item": "minecraft:iron_ingot"
+      "tag": "open_blocks:legacy_ore_dict/ingot_iron"
     },
     "l": {
-      "item": "minecraft:lapis_lazuli"
+      "tag": "open_blocks:legacy_ore_dict/gem_lapis"
     }
   },
   "result": {

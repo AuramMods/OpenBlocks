@@ -11,10 +11,10 @@
       "item": "minecraft:anvil"
     },
     "r": {
-      "item": "minecraft:redstone"
+      "tag": "open_blocks:legacy_ore_dict/dust_redstone"
     },
     "i": {
-      "item": "minecraft:iron_ingot"
+      "tag": "open_blocks:legacy_ore_dict/ingot_iron"
     }
   },
   "result": {

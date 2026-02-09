@@ -123,17 +123,20 @@ Source: `old-1.12.2/src/main/resources/assets/openblocks/recipes`
 - Existing 1.20 scaffold recipes currently present:
   - `src/main/resources/data/open_blocks/recipes` (7 custom serializer placeholders from `CustomRecipesSetup`)
 - Mechanical conversion output now present:
-  - `src/main/resources/data/open_blocks/recipes/legacy` (54 converted crafting recipes)
+  - `src/main/resources/data/open_blocks/recipes/legacy` (185 converted crafting recipes)
+  - `src/main/resources/data/open_blocks/tags/items/legacy_ore_dict` (35 compatibility item-tag files for former ore-dict names)
   - Converted types:
     - `forge:ore_shaped` -> `minecraft:crafting_shaped`
     - `forge:ore_shapeless` -> `minecraft:crafting_shapeless`
+  - Conversion baseline details:
+    - legacy `openblocks:*` IDs remapped to `open_blocks:*`
+    - legacy metadata (`data`) collapsed to modern single-ID forms for breadth coverage
+    - ore dictionary entries translated to `open_blocks:legacy_ore_dict/*` tags (currently populated with baseline vanilla item values)
   - Current skipped set from legacy corpus:
-    - 91 recipes with non-zero `result.data`
-    - 40 recipes with non-zero ingredient `data`
     - 4 recipes of type `openmods:enchanting`
 - Known conversion blockers (breadth-pass):
   - Ore dictionary ingredient conversion (`forge:ore_dict` -> modern tags).
-  - Metadata-based result variants (`data` field) for color/state items.
+  - Metadata-based result variants (`data` field) for color/state/meta-item fidelity.
   - OpenMods-specific recipe wrapper (`openmods:enchanting`) requiring new 1.20 equivalent.
 
 ## Blocks (`OpenBlocks.Blocks`)

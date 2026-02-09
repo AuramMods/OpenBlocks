@@ -11,7 +11,7 @@
       "item": "open_blocks:sponge"
     },
     "w": {
-      "item": "minecraft:stick"
+      "tag": "open_blocks:legacy_ore_dict/stick_wood"
     }
   },
   "result": {

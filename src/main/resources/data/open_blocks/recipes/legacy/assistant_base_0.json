@@ -7,13 +7,13 @@
   ],
   "key": {
     "r": {
-      "item": "minecraft:redstone"
+      "tag": "open_blocks:legacy_ore_dict/dust_redstone"
     },
     "e": {
       "item": "minecraft:ender_pearl"
     },
     "i": {
-      "item": "minecraft:iron_ingot"
+      "tag": "open_blocks:legacy_ore_dict/ingot_iron"
     }
   },
   "result": {

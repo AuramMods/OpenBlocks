@@ -3,10 +3,10 @@
   "group": "open_blocks:path",
   "ingredients": [
     {
-      "item": "minecraft:stone"
+      "tag": "open_blocks:legacy_ore_dict/stone"
     },
     {
-      "item": "minecraft:cobblestone"
+      "tag": "open_blocks:legacy_ore_dict/cobblestone"
     }
   ],
   "result": {

@@ -3,7 +3,7 @@
   "group": "open_blocks:imaginary",
   "ingredients": [
     {
-      "item": "minecraft:magenta_dye"
+      "tag": "open_blocks:legacy_ore_dict/dye_magenta"
     },
     {
       "item": "minecraft:paper"
@@ -12,7 +12,7 @@
       "item": "minecraft:ender_eye"
     },
     {
-      "item": "minecraft:slime_ball"
+      "tag": "open_blocks:legacy_ore_dict/slimeball"
     }
   ],
   "result": {

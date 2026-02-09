@@ -8,10 +8,10 @@
   ],
   "key": {
     "r": {
-      "item": "minecraft:redstone"
+      "tag": "open_blocks:legacy_ore_dict/dust_redstone"
     },
     "g": {
-      "item": "minecraft:gold_nugget"
+      "tag": "open_blocks:legacy_ore_dict/nugget_gold"
     }
   },
   "result": {

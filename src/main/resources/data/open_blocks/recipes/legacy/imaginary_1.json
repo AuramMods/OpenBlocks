@@ -6,13 +6,13 @@
       "item": "minecraft:charcoal"
     },
     {
-      "item": "minecraft:stick"
+      "tag": "open_blocks:legacy_ore_dict/stick_wood"
     },
     {
       "item": "minecraft:ender_eye"
     },
     {
-      "item": "minecraft:slime_ball"
+      "tag": "open_blocks:legacy_ore_dict/slimeball"
     }
   ],
   "result": {

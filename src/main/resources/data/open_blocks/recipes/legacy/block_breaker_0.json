@@ -8,16 +8,16 @@
   ],
   "key": {
     "r": {
-      "item": "minecraft:redstone"
+      "tag": "open_blocks:legacy_ore_dict/dust_redstone"
     },
     "c": {
-      "item": "minecraft:cobblestone"
+      "tag": "open_blocks:legacy_ore_dict/cobblestone"
     },
     "s": {
       "item": "minecraft:diamond_pickaxe"
     },
     "i": {
-      "item": "minecraft:iron_ingot"
+      "tag": "open_blocks:legacy_ore_dict/ingot_iron"
     }
   },
   "result": {

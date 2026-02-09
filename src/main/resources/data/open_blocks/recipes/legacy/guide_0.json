@@ -8,13 +8,13 @@
   ],
   "key": {
     "r": {
-      "item": "minecraft:redstone"
+      "tag": "open_blocks:legacy_ore_dict/dust_redstone"
     },
     "t": {
       "item": "minecraft:torch"
     },
     "g": {
-      "item": "minecraft:glass"
+      "tag": "open_blocks:legacy_ore_dict/block_glass"
     }
   },
   "result": {

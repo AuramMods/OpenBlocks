@@ -11,7 +11,7 @@
       "item": "minecraft:porkchop"
     },
     "c": {
-      "item": "minecraft:chest"
+      "tag": "open_blocks:legacy_ore_dict/chest_wood"
     }
   },
   "result": {

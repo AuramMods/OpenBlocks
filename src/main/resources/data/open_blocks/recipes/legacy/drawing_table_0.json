@@ -8,10 +8,10 @@
   ],
   "key": {
     "p": {
-      "item": "minecraft:oak_planks"
+      "tag": "open_blocks:legacy_ore_dict/plank_wood"
     },
     "c": {
-      "item": "minecraft:crafting_table"
+      "tag": "open_blocks:legacy_ore_dict/crafting_table_wood"
     },
     "s": {
       "item": "open_blocks:generic"

@@ -8,13 +8,13 @@
   ],
   "key": {
     "c": {
-      "item": "minecraft:cobblestone"
+      "tag": "open_blocks:legacy_ore_dict/cobblestone"
     },
     "e": {
-      "item": "minecraft:emerald"
+      "tag": "open_blocks:legacy_ore_dict/gem_emerald"
     },
     "w": {
-      "item": "minecraft:oak_planks"
+      "tag": "open_blocks:legacy_ore_dict/plank_wood"
     }
   },
   "result": {

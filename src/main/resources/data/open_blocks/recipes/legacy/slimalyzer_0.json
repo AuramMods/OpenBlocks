@@ -8,16 +8,16 @@
   ],
   "key": {
     "r": {
-      "item": "minecraft:redstone"
+      "tag": "open_blocks:legacy_ore_dict/dust_redstone"
     },
     "s": {
-      "item": "minecraft:slime_ball"
+      "tag": "open_blocks:legacy_ore_dict/slimeball"
     },
     "g": {
-      "item": "minecraft:glass_pane"
+      "tag": "open_blocks:legacy_ore_dict/pane_glass"
     },
     "i": {
-      "item": "minecraft:iron_ingot"
+      "tag": "open_blocks:legacy_ore_dict/ingot_iron"
     }
   },
   "result": {

@@ -6,10 +6,10 @@
       "item": "open_blocks:elevator"
     },
     {
-      "item": "minecraft:iron_ingot"
+      "tag": "open_blocks:legacy_ore_dict/ingot_iron"
     },
     {
-      "item": "minecraft:iron_ingot"
+      "tag": "open_blocks:legacy_ore_dict/ingot_iron"
     }
   ],
   "result": {

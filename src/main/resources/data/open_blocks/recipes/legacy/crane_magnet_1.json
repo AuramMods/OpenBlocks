@@ -7,16 +7,16 @@
   ],
   "key": {
     "r": {
-      "item": "minecraft:redstone"
+      "tag": "open_blocks:legacy_ore_dict/dust_redstone"
     },
     "b": {
-      "item": "minecraft:black_dye"
+      "tag": "open_blocks:legacy_ore_dict/dye_black"
     },
     "i": {
-      "item": "minecraft:iron_ingot"
+      "tag": "open_blocks:legacy_ore_dict/ingot_iron"
     },
     "y": {
-      "item": "minecraft:yellow_dye"
+      "tag": "open_blocks:legacy_ore_dict/dye_yellow"
     }
   },
   "result": {

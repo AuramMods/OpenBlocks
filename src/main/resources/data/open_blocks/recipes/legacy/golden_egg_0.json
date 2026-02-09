@@ -11,7 +11,7 @@
       "item": "minecraft:egg"
     },
     "g": {
-      "item": "minecraft:gold_ingot"
+      "tag": "open_blocks:legacy_ore_dict/ingot_gold"
     }
   },
   "result": {

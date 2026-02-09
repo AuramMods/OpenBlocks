@@ -6,7 +6,7 @@
       "item": "open_blocks:paintbrush"
     },
     {
-      "item": "minecraft:green_dye"
+      "tag": "open_blocks:legacy_ore_dict/dye_green"
     }
   ],
   "result": {

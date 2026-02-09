@@ -8,7 +8,7 @@
   ],
   "key": {
     "r": {
-      "item": "minecraft:redstone_block"
+      "tag": "open_blocks:legacy_ore_dict/block_redstone"
     },
     "d": {
       "item": "minecraft:dispenser"
@@ -17,7 +17,7 @@
       "item": "minecraft:iron_bars"
     },
     "i": {
-      "item": "minecraft:iron_ingot"
+      "tag": "open_blocks:legacy_ore_dict/ingot_iron"
     }
   },
   "result": {

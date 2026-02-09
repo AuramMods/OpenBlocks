@@ -8,7 +8,7 @@
   ],
   "key": {
     "g": {
-      "item": "minecraft:glass_pane"
+      "tag": "open_blocks:legacy_ore_dict/pane_glass"
     },
     "o": {
       "item": "minecraft:obsidian"

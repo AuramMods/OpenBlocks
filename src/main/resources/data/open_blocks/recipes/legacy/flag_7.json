@@ -11,7 +11,7 @@
       "item": "minecraft:gray_carpet"
     },
     "s": {
-      "item": "minecraft:stick"
+      "tag": "open_blocks:legacy_ore_dict/stick_wood"
     }
   },
   "result": {

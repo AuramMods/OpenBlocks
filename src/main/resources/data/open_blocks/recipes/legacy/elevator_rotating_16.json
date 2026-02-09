@@ -14,7 +14,7 @@
       "item": "minecraft:light_gray_wool"
     },
     "i": {
-      "item": "minecraft:iron_ingot"
+      "tag": "open_blocks:legacy_ore_dict/ingot_iron"
     }
   },
   "result": {

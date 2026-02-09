@@ -8,13 +8,13 @@
   ],
   "key": {
     "s": {
-      "item": "minecraft:stick"
+      "tag": "open_blocks:legacy_ore_dict/stick_wood"
     },
     "c": {
-      "item": "minecraft:chest"
+      "tag": "open_blocks:legacy_ore_dict/chest_wood"
     },
     "d": {
-      "item": "minecraft:diamond"
+      "tag": "open_blocks:legacy_ore_dict/gem_diamond"
     }
   },
   "result": {
