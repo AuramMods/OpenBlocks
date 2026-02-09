@@ -166,7 +166,7 @@
   - Current command status:
     - `luck` supports simple query/adjust operations via `open_blocks:luck` capability-backed storage.
     - `flimflam` supports legacy effect-name argument parsing/suggestions and now executes a breadth-stage action registry for all legacy command effect IDs.
-    - `ob_inventory` now supports a breadth-stage file-backed main + built-in sub-inventory flow (`store`, `restore`, `spawn`) through `OBInventoryStore` with world `data/inventory-*.dat` dumps.
+    - `ob_inventory` now supports a breadth-stage file-backed main + built-in sub-inventory flow (`store`, `restore`, `spawn`) through `OBInventoryStore` with world `data/inventory-*.dat` dumps, plus a legacy-style subsystem event bridge (`OBInventoryEvent.Store`/`Load`) for arbitrary sub-inventory payload IDs.
   - Added custom advancement trigger registration and classes:
     - `src/main/java/art/arcane/openblocks/advancement/OBCriterions.java`
     - `src/main/java/art/arcane/openblocks/advancement/OBBrickDroppedTrigger.java`
@@ -256,6 +256,22 @@
     - legacy arbitrary subsystem sub-inventories and gravestone/backend integrations are still pending.
   - Validation:
     - `./gradlew compileJava runData` succeeds after sub-inventory + death-dump wiring (2026-02-09).
+- Inventory command parity follow-up (2026-02-09, third pass):
+  - Added `src/main/java/art/arcane/openblocks/api/OBInventoryEvent.java` with legacy-style store/load event shape:
+    - `OBInventoryEvent.Store` for subsystem payload producers.
+    - `OBInventoryEvent.Load` for restore-time subsystem payload consumers.
+    - `OBInventoryEvent.SubInventory` slot-map container mirroring legacy `InventoryEvent.SubInventory` intent.
+  - Updated `src/main/java/art/arcane/openblocks/command/OBInventoryStore.java`:
+    - `store` now posts `OBInventoryEvent.Store` and serializes any emitted subsystem payloads under dump `SubInventories`.
+    - dump root now also records `Location` metadata (`X`,`Y`,`Z`,`Dimension`) for future grave/backend restore workflows.
+    - `restore` now decodes all serialized sub-inventory payloads and posts `OBInventoryEvent.Load` with the decoded map.
+    - `/ob_inventory spawn` and target suggestions now include any serialized subsystem keys in addition to built-ins.
+    - `ender_chest` target now always appears in suggestions and uses stable 27-slot decoding for slot-index spawn queries.
+  - Current parity gap:
+    - no concrete subsystem producers/consumers are wired to this event bridge yet (schema support exists, integrations still pending).
+    - gravestone/backend reuse of the dump pipeline remains pending.
+  - Validation:
+    - `./gradlew compileJava runData` succeeds after event-bridge wiring (2026-02-09).
 - Flimflam command backend follow-up (2026-02-09):
   - Added `src/main/java/art/arcane/openblocks/command/OBFlimFlamEffects.java`.
   - Updated `src/main/java/art/arcane/openblocks/command/OBCommands.java` to execute real effect actions through the registry instead of placeholder chat output.
@@ -326,7 +342,7 @@
 - Continue Phase 2 breadth: expand recipe coverage beyond current custom-recipe placeholders.
 - Move Phase 3 command/trigger work from placeholders to hooked gameplay paths:
   - deepen `flimflam` from current breadth-stage effects to legacy cost/weight/luck/blacklist behavior
-  - deepen `ob_inventory` from current built-in sub targets + death dumps to legacy arbitrary subsystem payloads + grave/backend parity
+  - deepen `ob_inventory` from current built-in targets + event-bridge payload schema to concrete subsystem integrations + grave/backend parity
   - replace temporary trigger hooks with legacy-accurate sources (boo/brick action and nested dev-null depth logic)
 - Move Phase 3 capability work from placeholders to hooked gameplay paths:
   - expand pedometer from current explicit start/reset/report baseline to deeper parity (legacy unit formatting, client-side speed property behavior, polish on readout cadence)

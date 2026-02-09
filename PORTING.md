@@ -98,6 +98,7 @@ Validation log:
 - [-] Replaced `/ob_inventory` placeholder responses with a working breadth-stage dump backend (`OBInventoryStore`): `store` writes compressed `inventory-*.dat` files under world `data/`, `restore` loads main inventory data back to players, and `spawn` drops stored main inventory stacks (with optional slot), validated with `./gradlew compileJava runData` on 2026-02-09.
 - [-] Replaced `/flimflam` placeholder responses with executable breadth-stage effect actions via new `OBFlimFlamEffects` (all legacy command effect IDs wired to thin server-side behaviors: inventory shuffle/disarm, potion/sound/entity prank effects, encase/skyblock, etc.), validated with `./gradlew compileJava runData` on 2026-02-09.
 - [-] Expanded `/ob_inventory` breadth parity: dumps now include sub-inventory payloads (`armor`, `offhand`, `ender_chest`) with target-aware spawn/restore handling, and added automatic death-time inventory dump storage via `OBInventoryHooks` to command-consumable `inventory-*.dat` files, validated with `./gradlew compileJava runData` on 2026-02-09.
+- [-] Added legacy-style inventory subsystem event bridge (`OBInventoryEvent`): `/ob_inventory store` now captures arbitrary event-provided sub-inventory payloads into dump `SubInventories`, `/ob_inventory restore` now publishes the decoded payload map back to listeners, and command target suggestions/spawn support now include serialized dynamic subsystem keys, validated with `./gradlew compileJava runData` on 2026-02-09.
 
 ## Phase 3: Systems Skeleton (Breadth Gameplay Pass)
 Goal: recreate cross-cutting systems in thin form before deep feature parity.
@@ -152,8 +153,8 @@ Checklist:
 - [ ] Deepen `/flimflam` parity beyond current breadth-stage action wiring:
   - reconnect legacy luck/cost/weight and safe/blacklist gating behavior
   - tune per-effect details from thin stubs toward legacy-accurate behavior
-- [ ] Deepen `/ob_inventory` parity beyond current main-inventory baseline:
-  - extend from current built-in sub targets (`armor`, `offhand`, `ender_chest`) to legacy-style arbitrary subsystem payloads
+- [ ] Deepen `/ob_inventory` parity beyond current built-in + event-bridge baseline:
+  - add first concrete subsystem consumers/producers for `OBInventoryEvent` payloads (legacy-style arbitrary subsystem parity in practice, not just schema support)
   - reconnect gravestone/inventory-backend integrations to reuse the dump pipeline
 - [ ] Replace capability placeholders with gameplay hooks:
   - `pedometer_state`: expand from current explicit start/reset/report baseline to deeper parity (client-side speed property behavior + legacy unit/readout polish)

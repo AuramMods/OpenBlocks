@@ -1,5 +1,6 @@
 package art.arcane.openblocks.command;
 
+import art.arcane.openblocks.api.OBInventoryEvent;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -7,9 +8,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 import net.minecraft.nbt.CompoundTag;
@@ -21,6 +24,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.LevelResource;
+import net.minecraftforge.common.MinecraftForge;
 
 public final class OBInventoryStore {
 
@@ -35,6 +39,11 @@ public final class OBInventoryStore {
     private static final String TAG_TYPE = "Type";
     private static final String TAG_PLAYER_NAME = "PlayerName";
     private static final String TAG_PLAYER_UUID = "PlayerUUID";
+    private static final String TAG_LOCATION = "Location";
+    private static final String TAG_LOCATION_X = "X";
+    private static final String TAG_LOCATION_Y = "Y";
+    private static final String TAG_LOCATION_Z = "Z";
+    private static final String TAG_LOCATION_DIMENSION = "Dimension";
     private static final String TAG_INVENTORY = "Inventory";
     private static final String TAG_SUB_INVENTORIES = "SubInventories";
     private static final String TAG_SLOT = "Slot";
@@ -54,6 +63,7 @@ public final class OBInventoryStore {
     public static String storePlayerInventory(final ServerPlayer player, final String type) throws IOException {
         final String safePlayerName = sanitize(player.getGameProfile().getName());
         final Path dumpPath = createDumpPath(player.serverLevel(), safePlayerName, sanitize(type));
+        final Map<String, OBInventoryEvent.SubInventory> subInventories = collectSubInventories(player);
 
         final CompoundTag root = new CompoundTag();
         final ListTag inventoryData = player.getInventory().save(new ListTag());
@@ -62,7 +72,8 @@ public final class OBInventoryStore {
         root.putString(TAG_TYPE, type);
         root.putString(TAG_PLAYER_NAME, player.getGameProfile().getName());
         root.putString(TAG_PLAYER_UUID, player.getUUID().toString());
-        root.put(TAG_SUB_INVENTORIES, encodeSubInventories(player));
+        root.put(TAG_LOCATION, encodePlayerLocation(player));
+        root.put(TAG_SUB_INVENTORIES, encodeSubInventories(subInventories));
 
         Files.createDirectories(dumpPath.getParent());
         NbtIo.writeCompressed(root, dumpPath.toFile());
@@ -75,14 +86,24 @@ public final class OBInventoryStore {
 
         final ListTag inventoryData = root.getList(TAG_INVENTORY, Tag.TAG_COMPOUND);
         player.getInventory().load(inventoryData);
+        final CompoundTag encodedSubInventories = root.contains(TAG_SUB_INVENTORIES, Tag.TAG_COMPOUND)
+                ? root.getCompound(TAG_SUB_INVENTORIES)
+                : new CompoundTag();
+        final Map<String, OBInventoryEvent.SubInventory> subInventories = decodeSubInventories(encodedSubInventories);
 
-        if (root.contains(TAG_SUB_INVENTORIES, Tag.TAG_COMPOUND)) {
-            final CompoundTag subInventories = root.getCompound(TAG_SUB_INVENTORIES);
-            applyIndexedStacks(player.getInventory().armor, getSubInventory(subInventories, ID_ARMOR_INVENTORY));
-            applyIndexedStacks(player.getInventory().offhand, getSubInventory(subInventories, ID_OFFHAND_INVENTORY));
-            applyContainer(player.getEnderChestInventory(), getSubInventory(subInventories, ID_ENDER_CHEST_INVENTORY));
+        final ListTag armorSubInventory = findSubInventory(encodedSubInventories, ID_ARMOR_INVENTORY);
+        if (armorSubInventory != null) applyIndexedStacks(player.getInventory().armor, armorSubInventory);
+
+        final ListTag offhandSubInventory = findSubInventory(encodedSubInventories, ID_OFFHAND_INVENTORY);
+        if (offhandSubInventory != null) applyIndexedStacks(player.getInventory().offhand, offhandSubInventory);
+
+        final ListTag enderChestSubInventory = findSubInventory(encodedSubInventories, ID_ENDER_CHEST_INVENTORY);
+        if (enderChestSubInventory != null) {
+            applyContainer(player.getEnderChestInventory(), enderChestSubInventory);
             player.getEnderChestInventory().setChanged();
         }
+
+        MinecraftForge.EVENT_BUS.post(new OBInventoryEvent.Load(player, subInventories));
 
         player.inventoryMenu.broadcastChanges();
         player.containerMenu.broadcastChanges();
@@ -116,6 +137,11 @@ public final class OBInventoryStore {
                 if (key != null) yield decodeIndexedStacks(getSubInventory(subInventories, key), OFFHAND_SLOT_COUNT);
                 yield mainSections.offhand();
             }
+            case ID_ENDER_CHEST_INVENTORY -> {
+                final String key = resolveSubInventoryKey(subInventories, ID_ENDER_CHEST_INVENTORY);
+                if (key == null) throw new IllegalArgumentException("Unsupported sub inventory: " + target);
+                yield decodeIndexedStacks(getSubInventory(subInventories, key), 27);
+            }
             default -> {
                 final String key = resolveSubInventoryKey(subInventories, normalizedTarget);
                 if (key == null) throw new IllegalArgumentException("Unsupported sub inventory: " + target);
@@ -147,6 +173,7 @@ public final class OBInventoryStore {
             targets.add(ID_MAIN_INVENTORY);
             targets.add(ID_ARMOR_INVENTORY);
             targets.add(ID_OFFHAND_INVENTORY);
+            targets.add(ID_ENDER_CHEST_INVENTORY);
 
             if (root.contains(TAG_SUB_INVENTORIES, Tag.TAG_COMPOUND)) {
                 final CompoundTag subInventories = root.getCompound(TAG_SUB_INVENTORIES);
@@ -209,38 +236,107 @@ public final class OBInventoryStore {
         return level.getServer().getWorldPath(LevelResource.ROOT).resolve("data");
     }
 
-    private static CompoundTag encodeSubInventories(final ServerPlayer player) {
-        final CompoundTag subInventories = new CompoundTag();
-        subInventories.put(ID_ARMOR_INVENTORY, encodeIndexedStacks(player.getInventory().armor));
-        subInventories.put(ID_OFFHAND_INVENTORY, encodeIndexedStacks(player.getInventory().offhand));
-        subInventories.put(ID_ENDER_CHEST_INVENTORY, encodeContainer(player.getEnderChestInventory()));
+    private static CompoundTag encodePlayerLocation(final ServerPlayer player) {
+        final CompoundTag location = new CompoundTag();
+        location.putDouble(TAG_LOCATION_X, player.getX());
+        location.putDouble(TAG_LOCATION_Y, player.getY());
+        location.putDouble(TAG_LOCATION_Z, player.getZ());
+        location.putString(TAG_LOCATION_DIMENSION, player.level().dimension().location().toString());
+        return location;
+    }
+
+    private static CompoundTag encodeSubInventories(final Map<String, OBInventoryEvent.SubInventory> subInventories) {
+        final CompoundTag encoded = new CompoundTag();
+        for (final Map.Entry<String, OBInventoryEvent.SubInventory> entry : subInventories.entrySet()) {
+            final String id = entry.getKey();
+            final OBInventoryEvent.SubInventory subInventory = entry.getValue();
+            if (id == null || id.isBlank() || subInventory == null) continue;
+            encoded.put(id, encodeSubInventory(subInventory));
+        }
+        return encoded;
+    }
+
+    private static Map<String, OBInventoryEvent.SubInventory> decodeSubInventories(final CompoundTag subInventoriesTag) {
+        final Map<String, OBInventoryEvent.SubInventory> subInventories = new LinkedHashMap<>();
+        for (final String key : subInventoriesTag.getAllKeys()) {
+            if (!subInventoriesTag.contains(key, Tag.TAG_LIST)) continue;
+            final ListTag encoded = subInventoriesTag.getList(key, Tag.TAG_COMPOUND);
+            subInventories.put(key, decodeSubInventory(encoded));
+        }
         return subInventories;
     }
 
-    private static ListTag encodeIndexedStacks(final List<ItemStack> inventory) {
-        final ListTag result = new ListTag();
-        for (int slot = 0; slot < inventory.size(); slot++) {
-            final ItemStack stack = inventory.get(slot);
-            if (stack.isEmpty()) continue;
+    private static Map<String, OBInventoryEvent.SubInventory> collectSubInventories(final ServerPlayer player) {
+        final Map<String, OBInventoryEvent.SubInventory> result = new LinkedHashMap<>();
+        result.put(ID_ARMOR_INVENTORY, createSubInventory(player.getInventory().armor));
+        result.put(ID_OFFHAND_INVENTORY, createSubInventory(player.getInventory().offhand));
+        result.put(ID_ENDER_CHEST_INVENTORY, createSubInventory(player.getEnderChestInventory()));
 
-            final CompoundTag stackTag = stack.save(new CompoundTag());
-            stackTag.putInt(TAG_SLOT, slot);
-            result.add(stackTag);
+        final OBInventoryEvent.Store event = new OBInventoryEvent.Store(player);
+        MinecraftForge.EVENT_BUS.post(event);
+        for (final Map.Entry<String, OBInventoryEvent.SubInventory> entry : event.getSubInventories().entrySet()) {
+            result.putIfAbsent(entry.getKey(), entry.getValue());
         }
+
         return result;
     }
 
-    private static ListTag encodeContainer(final Container inventory) {
-        final ListTag result = new ListTag();
+    private static OBInventoryEvent.SubInventory createSubInventory(final List<ItemStack> inventory) {
+        final OBInventoryEvent.SubInventory subInventory = new OBInventoryEvent.SubInventory();
+        for (int slot = 0; slot < inventory.size(); slot++) {
+            final ItemStack stack = inventory.get(slot);
+            if (stack.isEmpty()) continue;
+            subInventory.addItemStack(slot, stack);
+        }
+
+        return subInventory;
+    }
+
+    private static OBInventoryEvent.SubInventory createSubInventory(final Container inventory) {
+        final OBInventoryEvent.SubInventory subInventory = new OBInventoryEvent.SubInventory();
         for (int slot = 0; slot < inventory.getContainerSize(); slot++) {
             final ItemStack stack = inventory.getItem(slot);
             if (stack.isEmpty()) continue;
+            subInventory.addItemStack(slot, stack);
+        }
+        return subInventory;
+    }
+
+    private static ListTag encodeSubInventory(final OBInventoryEvent.SubInventory subInventory) {
+        final ListTag encoded = new ListTag();
+        for (final Map.Entry<Integer, ItemStack> entry : subInventory.asMap().entrySet()) {
+            final int slot = entry.getKey();
+            if (slot < 0) continue;
+
+            final ItemStack stack = entry.getValue();
+            if (stack == null || stack.isEmpty()) continue;
 
             final CompoundTag stackTag = stack.save(new CompoundTag());
             stackTag.putInt(TAG_SLOT, slot);
-            result.add(stackTag);
+            encoded.add(stackTag);
         }
-        return result;
+        return encoded;
+    }
+
+    private static OBInventoryEvent.SubInventory decodeSubInventory(final ListTag encodedSubInventory) {
+        final OBInventoryEvent.SubInventory subInventory = new OBInventoryEvent.SubInventory();
+        for (int i = 0; i < encodedSubInventory.size(); i++) {
+            final CompoundTag stackTag = encodedSubInventory.getCompound(i);
+            final int slot = readSlotIndex(stackTag);
+            if (slot < 0) continue;
+
+            final ItemStack stack = ItemStack.of(stackTag);
+            if (stack.isEmpty()) continue;
+
+            subInventory.addItemStack(slot, stack);
+        }
+        return subInventory;
+    }
+
+    private static ListTag findSubInventory(final CompoundTag subInventories, final String key) {
+        final String resolved = resolveSubInventoryKey(subInventories, key);
+        if (resolved == null) return null;
+        return subInventories.getList(resolved, Tag.TAG_COMPOUND);
     }
 
     private static void applyIndexedStacks(final List<ItemStack> target, final ListTag inventoryData) {
