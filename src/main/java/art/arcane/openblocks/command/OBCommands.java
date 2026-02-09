@@ -1,5 +1,6 @@
 package art.arcane.openblocks.command;
 
+import art.arcane.openblocks.capability.OBCapabilities;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
@@ -13,7 +14,6 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.commands.arguments.EntityArgument;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.event.RegisterCommandsEvent;
@@ -22,8 +22,6 @@ import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(modid = art.arcane.openblocks.OpenBlocks.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public final class OBCommands {
-
-    private static final String LUCK_TAG_KEY = "open_blocks_luck";
 
     private static final List<String> LEGACY_FLIM_FLAM_EFFECTS = List.of(
             "inventory-shuffle",
@@ -149,14 +147,10 @@ public final class OBCommands {
     }
 
     private static int getLuck(final ServerPlayer player) {
-        return player.getPersistentData().getInt(LUCK_TAG_KEY);
+        return OBCapabilities.getLuck(player);
     }
 
     private static int addLuck(final ServerPlayer player, final int amount) {
-        final CompoundTag data = player.getPersistentData();
-        final int current = data.getInt(LUCK_TAG_KEY);
-        final int updated = current + amount;
-        data.putInt(LUCK_TAG_KEY, updated);
-        return updated;
+        return OBCapabilities.addLuck(player, amount);
     }
 }

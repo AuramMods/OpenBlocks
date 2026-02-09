@@ -29,6 +29,8 @@ Current registry classes:
 - Menu register: `src/main/java/art/arcane/openblocks/registry/OBMenuTypes.java`
 - Recipe serializer register: `src/main/java/art/arcane/openblocks/registry/OBRecipeSerializers.java`
 - Command registration (Forge bus): `src/main/java/art/arcane/openblocks/command/OBCommands.java`
+- Capability registration/attachment:
+  - `src/main/java/art/arcane/openblocks/capability/OBCapabilities.java`
 - Custom advancement trigger bootstrap:
   - `src/main/java/art/arcane/openblocks/advancement/OBCriterions.java`
   - `src/main/java/art/arcane/openblocks/advancement/OBBrickDroppedTrigger.java`
@@ -56,6 +58,7 @@ Current scaffold counts:
 - Menu types registered: 14
 - Recipe serializers registered: 8
 - Command roots wired: 3 (`flimflam`, `luck`, `ob_inventory`)
+- Custom capabilities wired: 3 (`open_blocks:luck`, `open_blocks:pedometer_state`, `open_blocks:bowels`)
 - Custom advancement triggers wired: 2 (`open_blocks:brick_dropped`, `open_blocks:dev_null_stacked`)
 
 Current asset coverage:
@@ -84,6 +87,8 @@ Current validation status:
 - `./gradlew runData` now executes `Loot Tables` provider and writes 41 block loot tables.
 - `./gradlew runData` now also executes `Tags for minecraft:block mod id open_blocks` and writes 3 baseline block tag files.
 - Custom recipe placeholder JSONs for all 7 legacy custom recipe IDs load with current datagen/compile loop.
+- Capability scaffold note:
+  - Legacy player capability IDs are now registered/attached under `open_blocks` namespace and clone-copied on respawn (`luck`, `pedometer_state`, `bowels`).
 - Build rule note: `build.gradle` skips optional jars from `extra-mods-1.20.1` when task names include `runData`/`datagen`, so datagen is not blocked by unrelated runtime mods.
 - Client asset note: model texture paths must use `open_blocks:block/...` and `open_blocks:item/...` (not plural `blocks/items`) for 1.20 atlas resolution.
 - Run-log note: `run/logs/latest.log` had a concrete missing texture warning for `open_blocks:paint_mixer` (`open_blocks:model/paint_mixer`).
@@ -98,6 +103,8 @@ Current validation status:
     - fluid: `liquidxp` -> `xpjuice`
 - Systems skeleton note:
   - `src/main/java/art/arcane/openblocks/command/OBCommands.java` now registers the three legacy command IDs in Brigadier form (`flimflam`, `luck`, `ob_inventory`) with breadth-stage placeholder behavior for unported backends.
+  - `/luck` state storage now reads/writes through `OBCapabilities` (`open_blocks:luck`) rather than ad-hoc player persistent data.
+  - `src/main/java/art/arcane/openblocks/capability/OBCapabilities.java` now registers and attaches legacy player capability IDs (`open_blocks:luck`, `open_blocks:pedometer_state`, `open_blocks:bowels`) and copies them during `PlayerEvent.Clone`.
   - `src/main/java/art/arcane/openblocks/advancement/OBCriterions.java` now registers custom trigger IDs `open_blocks:brick_dropped` and `open_blocks:dev_null_stacked` for advancement compatibility baseline.
 
 ## Top-Level Entry Points

@@ -172,6 +172,24 @@
     - `src/main/resources/data/open_blocks/advancements/tma2.json`
   - Validation:
     - `./gradlew compileJava runData` succeeds after command + trigger additions (2026-02-09).
+- Capability skeleton expansion (2026-02-09, follow-up):
+  - Added central capability manager and providers:
+    - `src/main/java/art/arcane/openblocks/capability/OBCapabilities.java`
+    - Registers/attaches/copies legacy capability IDs:
+      - `open_blocks:luck`
+      - `open_blocks:pedometer_state`
+      - `open_blocks:bowels`
+  - Integration wiring:
+    - `src/main/java/art/arcane/openblocks/OpenBlocks.java` now registers capability classes on the MOD bus (`RegisterCapabilitiesEvent` listener).
+    - `OBCapabilities` is subscribed on Forge bus for `AttachCapabilitiesEvent<Entity>` and `PlayerEvent.Clone`.
+  - Command integration:
+    - `src/main/java/art/arcane/openblocks/command/OBCommands.java` `/luck` command now reads/writes through `OBCapabilities` instead of player persistent NBT.
+  - Current scope of capability scaffold:
+    - Persistence: yes (CompoundTag serialization).
+    - Clone/respawn carry-over: yes (copy on `PlayerEvent.Clone`).
+    - Gameplay hook parity: not yet (pedometer/bowels/flim-flam logic paths still pending).
+  - Validation:
+    - `./gradlew compileJava runData` succeeds after capability additions (2026-02-09).
 
 ## Critical Architecture Facts
 - Main entrypoint is `old-1.12.2/src/main/java/openblocks/OpenBlocks.java`.
@@ -236,4 +254,8 @@
   - connect `flimflam` command to real effect execution
   - connect `ob_inventory` commands to inventory dump/restore backend
   - fire `brick_dropped` and `dev_null_stacked` triggers from the relevant gameplay events
+- Move Phase 3 capability work from placeholders to hooked gameplay paths:
+  - feed pedometer movement sampling into `open_blocks:pedometer_state`
+  - connect brick/bowels behavior to `open_blocks:bowels`
+  - restore luck cooldown/forced-trigger behavior for `open_blocks:luck`
 - Draft legacy compatibility/remap mapping plan (`openblocks` namespace + legacy alias IDs -> `open_blocks` canonical IDs).

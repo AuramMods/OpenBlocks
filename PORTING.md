@@ -89,13 +89,14 @@ Validation log:
 - [-] Added a mechanical legacy-recipe conversion baseline: 185 shaped/shapeless legacy recipes from `old-1.12.2/assets/openblocks/recipes` now ported to `src/main/resources/data/open_blocks/recipes/legacy` (metadata collapsed to 1.20-safe item IDs and ore-dict ingredients translated to `open_blocks:legacy_ore_dict/*` item tags backed by baseline vanilla values); `openmods:enchanting` recipes are now handled by the dedicated `flim_flam_book` custom serializer path, validated with `./gradlew compileJava runData` on 2026-02-08.
 - [x] Replaced legacy `openmods:enchanting` flim-flam recipe family with a 1.20 custom crafting recipe serializer (`open_blocks:flim_flam_book`) that recreates level scaling from emerald count (1-4), validated with `./gradlew compileJava runData` on 2026-02-08.
 - [-] Added systems skeleton for legacy command IDs (`flimflam`, `luck`, `ob_inventory`) and custom advancement triggers (`open_blocks:brick_dropped`, `open_blocks:dev_null_stacked`) with 1.20 wiring + placeholder behavior, validated with `./gradlew compileJava runData` on 2026-02-09.
+- [-] Added capability skeleton for legacy player capability IDs (`open_blocks:luck`, `open_blocks:pedometer_state`, `open_blocks:bowels`) with registration + attach + clone-copy persistence, and switched `/luck` command state to capability-backed storage, validated with `./gradlew compileJava runData` on 2026-02-09.
 
 ## Phase 3: Systems Skeleton (Breadth Gameplay Pass)
 Goal: recreate cross-cutting systems in thin form before deep feature parity.
 
 Checklist:
 - [ ] Replace old GUI/container flow with modern menu/screen flow.
-- [ ] Rebuild capability equivalents (player/entity state).
+- [-] Rebuild capability equivalents (player/entity state).
 - [ ] Rebuild networking layer for events/RPC replacements.
 - [-] Rebuild advancement trigger plumbing.
 - [-] Rebuild command registration.
@@ -143,6 +144,10 @@ Checklist:
 - [ ] Replace command placeholders with real behavior:
   - `flimflam`: hook effect execution to ported flim-flam registry/actions
   - `ob_inventory`: reconnect to inventory dump/restore storage backend
+- [ ] Replace capability placeholders with gameplay hooks:
+  - `pedometer_state`: reconnect movement update/read paths used by pedometer item flow
+  - `bowels`: reconnect brick drop / death drop behavior
+  - `luck`: reconnect full flim-flam cooldown and forced-trigger logic (currently just raw value storage)
 - [ ] Wire custom advancement triggers into gameplay events:
   - `brick_dropped` on brick-drop event path
   - `dev_null_stacked` when dev null stack depth thresholds are reached
