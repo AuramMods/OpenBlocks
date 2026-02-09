@@ -28,7 +28,10 @@ Current registry classes:
 - Enchantment register: `src/main/java/art/arcane/openblocks/registry/OBEnchantments.java`
 - Menu register: `src/main/java/art/arcane/openblocks/registry/OBMenuTypes.java`
 - Recipe serializer register: `src/main/java/art/arcane/openblocks/registry/OBRecipeSerializers.java`
+- Custom pedometer item behavior:
+  - `src/main/java/art/arcane/openblocks/item/OBPedometerItem.java`
 - Command registration (Forge bus): `src/main/java/art/arcane/openblocks/command/OBCommands.java`
+- Command inventory dump backend: `src/main/java/art/arcane/openblocks/command/OBInventoryStore.java`
 - Capability registration/attachment:
   - `src/main/java/art/arcane/openblocks/capability/OBCapabilities.java`
 - Custom advancement trigger bootstrap:
@@ -104,21 +107,34 @@ Current validation status:
     - items: `hangglider`, `sonicglasses`, `pencilGlasses`, `crayonGlasses`, `technicolorGlasses`, `seriousGlasses`, `craneControl`, `craneBackpack`, `filledbucket`, `sleepingBag`, `paintBrush`, `heightMap`, `emptyMap`, `tastyClay`, `goldenEye`, `genericUnstackable`, `infoBook`, `devnull`, `spongeonastick`, `epicEraser`
     - fluid: `liquidxp` -> `xpjuice`
 - Systems skeleton note:
-  - `src/main/java/art/arcane/openblocks/command/OBCommands.java` now registers the three legacy command IDs in Brigadier form (`flimflam`, `luck`, `ob_inventory`) with breadth-stage placeholder behavior for unported backends.
+  - `src/main/java/art/arcane/openblocks/command/OBCommands.java` now registers the three legacy command IDs in Brigadier form (`flimflam`, `luck`, `ob_inventory`).
+  - `src/main/java/art/arcane/openblocks/command/OBInventoryStore.java` now provides the breadth-stage inventory dump backend used by `/ob_inventory`.
+  - Current command parity:
+    - `luck` reads/writes `open_blocks:luck` capability state.
+    - `flimflam` still uses placeholder execution messaging (effect logic pending).
+    - `ob_inventory` now supports main inventory file dump/restore/spawn:
+      - dumps written to `<world>/data/inventory-*.dat`,
+      - restore loads stored main inventory onto target player,
+      - spawn drops stored main inventory stacks (or selected slot) at command source.
+    - legacy sub-inventory payload parity remains pending.
   - `/luck` state storage now reads/writes through `OBCapabilities` (`open_blocks:luck`) rather than ad-hoc player persistent data.
   - `src/main/java/art/arcane/openblocks/capability/OBCapabilities.java` now registers and attaches legacy player capability IDs (`open_blocks:luck`, `open_blocks:pedometer_state`, `open_blocks:bowels`) and copies them during `PlayerEvent.Clone` (except `bowels` on death clones, to avoid duplicate death-drop state).
-  - `OBCapabilities.PedometerState` now includes baseline runtime methods for server-side sampling (`start`, `tick`, `stop`) while preserving serialized movement fields.
+  - `OBCapabilities.PedometerState` now includes runtime/report helpers (`reset`, `start`, `tick`, `stop`, `createReport`) and report DTO data used by pedometer messaging.
   - `src/main/java/art/arcane/openblocks/advancement/OBCriterions.java` now registers custom trigger IDs `open_blocks:brick_dropped` and `open_blocks:dev_null_stacked` for advancement compatibility baseline.
   - `src/main/java/art/arcane/openblocks/advancement/OBAdvancementHooks.java` now wires initial trigger/capability gameplay hooks:
     - `tasty_clay` consume increments bowels count,
     - brick toss conditionally fires `brick_dropped` and decrements bowels for survival players,
     - `LivingDropsEvent` emits up to 16 brick drops from bowels count and clears stored bowels state,
-    - `PlayerTickEvent` now performs baseline pedometer sampling while a pedometer is present in hotbar,
+    - `PlayerTickEvent` now performs baseline pedometer sampling while a pedometer is present in hotbar and tracking is active,
     - periodic placeholder inventory scan approximates dev-null depth and fires `dev_null_stacked`.
   - `src/main/java/art/arcane/openblocks/registry/OBItems.java` now sets parity-critical item properties:
     - `tasty_clay` is edible,
     - `dev_null` and `generic_unstackable` are stack size 1.
     - `pedometer` is stack size 1.
+  - `src/main/java/art/arcane/openblocks/item/OBPedometerItem.java` now provides explicit pedometer interaction flow:
+    - right-click starts tracking,
+    - sneak-right-click resets tracking,
+    - right-click while running prints report lines using legacy pedometer lang keys.
 
 ## Top-Level Entry Points
 - Mod entrypoint and major registration flow:

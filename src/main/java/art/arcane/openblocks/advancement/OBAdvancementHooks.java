@@ -80,10 +80,8 @@ public final class OBAdvancementHooks {
 
     private static void tickPedometer(final ServerPlayer player) {
         player.getCapability(OBCapabilities.PEDOMETER_STATE).ifPresent((state) -> {
-            if (hasPedometerInHotbar(player)) {
+            if (hasPedometerInHotbar(player) && state.isRunning()) {
                 state.tick(player);
-            } else if (state.isRunning()) {
-                state.stop();
             }
         });
     }

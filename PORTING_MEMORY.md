@@ -164,9 +164,9 @@
     - Commands registered: `flimflam`, `luck`, `ob_inventory`
     - Important: `OBCommands` uses `@Mod.EventBusSubscriber(bus = FORGE)` auto-subscription; do not additionally register the class on `MinecraftForge.EVENT_BUS` to avoid duplicate handlers.
   - Current command status:
-    - `luck` supports simple query/adjust operations via player persistent NBT (`open_blocks_luck`) as a temporary breadth-stage store.
+    - `luck` supports simple query/adjust operations via `open_blocks:luck` capability-backed storage.
     - `flimflam` supports legacy effect-name argument parsing/suggestions and emits placeholder execution messages (actual effect execution still pending).
-    - `ob_inventory` exposes legacy subcommand surface (`store`, `restore`, `spawn`) with placeholder responses (inventory dump backend not ported yet).
+    - `ob_inventory` now supports a breadth-stage file-backed main inventory flow (`store`, `restore`, `spawn`) through `OBInventoryStore` with world `data/inventory-*.dat` dumps.
   - Added custom advancement trigger registration and classes:
     - `src/main/java/art/arcane/openblocks/advancement/OBCriterions.java`
     - `src/main/java/art/arcane/openblocks/advancement/OBBrickDroppedTrigger.java`
@@ -204,8 +204,12 @@
     - `tasty_clay` consumption increments `open_blocks:bowels` count.
     - Brick item toss triggers `open_blocks:brick_dropped` when allowed (creative or positive bowels count, with decrement for non-creative).
     - Player death now drops up to 16 bricks based on bowels count and clears bowels state.
-    - Server player tick now updates `open_blocks:pedometer_state` movement sampling when the player has a pedometer in the hotbar (auto start/stop + distance accumulation).
+    - Server player tick now updates `open_blocks:pedometer_state` movement sampling when the player has a pedometer in the hotbar and tracking is active.
     - Periodic placeholder dev-null depth approximation from inventory count triggers `open_blocks:dev_null_stacked`.
+    - New explicit pedometer item flow is wired in `src/main/java/art/arcane/openblocks/item/OBPedometerItem.java`:
+      - right-click starts tracking,
+      - sneak-right-click resets tracking,
+      - right-click while running prints report lines.
   - Clone behavior update:
     - `src/main/java/art/arcane/openblocks/capability/OBCapabilities.java` now avoids copying `open_blocks:bowels` on death clones to prevent duplicated death-drop bricks.
   - Related item property parity updates in:
@@ -213,9 +217,26 @@
     - `tasty_clay` is now edible.
     - `dev_null` and `generic_unstackable` are now stack size 1.
     - `pedometer` is now stack size 1.
+  - Pedometer state/report update:
+    - `OBCapabilities.PedometerState` now includes explicit runtime/report helpers (`reset`, `start`, `tick`, `createReport`) and a report DTO used by item messaging.
+  - Lang update:
+    - `src/main/resources/assets/open_blocks/lang/en_us.json` now includes legacy pedometer status/report translation keys (`openblocks.misc.pedometer.*`) used by the new item flow.
   - Validation:
     - `./gradlew compileJava runData` succeeds after hook/property additions (2026-02-09).
     - quick grep scans show no model/texture warnings in `run/logs/latest.log` and no recipe/tag load errors in `run-data/logs/latest.log`.
+- Inventory command backend follow-up (2026-02-09):
+  - Added `src/main/java/art/arcane/openblocks/command/OBInventoryStore.java`.
+  - Added file-backed command behavior in `src/main/java/art/arcane/openblocks/command/OBCommands.java`:
+    - `/ob_inventory store <player>`: writes compressed inventory dump files under `<world>/data/inventory-*.dat`.
+    - `/ob_inventory restore <player> <inventory_id>`: restores stored main inventory to target player.
+    - `/ob_inventory spawn <inventory_id> [main] [slot]`: drops stored main inventory stacks at command source position.
+  - Added command suggestions:
+    - inventory dump IDs are tab-completed from existing `inventory-*.dat` files.
+    - sub-inventory target suggestions currently return `main` only.
+  - Current parity gap:
+    - legacy sub-inventory payloads and death/gravestone dump integration are not yet wired.
+  - Validation:
+    - `./gradlew compileJava runData` succeeds after backend wiring (2026-02-09).
 
 ## Critical Architecture Facts
 - Main entrypoint is `old-1.12.2/src/main/java/openblocks/OpenBlocks.java`.
@@ -278,10 +299,10 @@
 - Continue Phase 2 breadth: expand recipe coverage beyond current custom-recipe placeholders.
 - Move Phase 3 command/trigger work from placeholders to hooked gameplay paths:
   - connect `flimflam` command to real effect execution
-  - connect `ob_inventory` commands to inventory dump/restore backend
+  - deepen `ob_inventory` beyond main-only support (legacy sub-inventories + death/grave dump parity)
   - replace temporary trigger hooks with legacy-accurate sources (boo/brick action and nested dev-null depth logic)
 - Move Phase 3 capability work from placeholders to hooked gameplay paths:
-  - expand pedometer from current auto-sampling baseline to legacy-like explicit item interactions (start/reset/report flow and user-facing readouts)
+  - expand pedometer from current explicit start/reset/report baseline to deeper parity (legacy unit formatting, client-side speed property behavior, polish on readout cadence)
   - expand brick/bowels behavior from current tasty-clay + brick toss + death-drop baseline to full legacy parity (keybound boo action path, whoops sound/stat behavior)
   - restore luck cooldown/forced-trigger behavior for `open_blocks:luck`
 - Draft legacy compatibility/remap mapping plan (`openblocks` namespace + legacy alias IDs -> `open_blocks` canonical IDs).

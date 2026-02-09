@@ -1,9 +1,11 @@
 package art.arcane.openblocks.registry;
 
 import art.arcane.openblocks.OpenBlocks;
+import art.arcane.openblocks.item.OBPedometerItem;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Supplier;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.food.FoodProperties;
@@ -91,7 +93,7 @@ public final class OBItems {
     public static final RegistryObject<Item> INFO_BOOK = registerItem("info_book");
     public static final RegistryObject<Item> DEV_NULL = registerItem("dev_null", new Item.Properties().stacksTo(1));
     public static final RegistryObject<Item> SPONGE_ON_A_STICK = registerItem("sponge_on_a_stick");
-    public static final RegistryObject<Item> PEDOMETER = registerItem("pedometer", new Item.Properties().stacksTo(1));
+    public static final RegistryObject<Item> PEDOMETER = registerItem("pedometer", OBPedometerItem::new);
     public static final RegistryObject<Item> EPIC_ERASER = registerItem("epic_eraser");
     public static final RegistryObject<Item> WRENCH = registerItem("wrench");
     public static final RegistryObject<Item> GLYPH = registerItem("glyph");
@@ -108,6 +110,12 @@ public final class OBItems {
 
     private static RegistryObject<Item> registerItem(final String id, final Item.Properties properties) {
         final RegistryObject<Item> item = ITEMS.register(id, () -> new Item(properties));
+        CREATIVE_ORDER.add(item);
+        return item;
+    }
+
+    private static RegistryObject<Item> registerItem(final String id, final Supplier<? extends Item> factory) {
+        final RegistryObject<Item> item = ITEMS.register(id, factory);
         CREATIVE_ORDER.add(item);
         return item;
     }

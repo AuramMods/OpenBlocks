@@ -70,5 +70,17 @@
   "item.open_blocks.pedometer": "Pedometer",
   "item.open_blocks.epic_eraser": "Epic Eraser",
   "item.open_blocks.wrench": "Wrench",
-  "item.open_blocks.glyph": "Glyph"
+  "item.open_blocks.glyph": "Glyph",
+  "openblocks.misc.pedometer.tracking_reset": "Tracking reset",
+  "openblocks.misc.pedometer.tracking_started": "Tracking started",
+  "openblocks.misc.pedometer.start_point": "Start point: %s",
+  "openblocks.misc.pedometer.speed": "Speed: %s",
+  "openblocks.misc.pedometer.avg_speed": "Average speed: %s",
+  "openblocks.misc.pedometer.total_distance": "Total distance: %s",
+  "openblocks.misc.pedometer.straght_line_distance": "Straight line distance: %s",
+  "openblocks.misc.pedometer.straigh_line_speed": "Straight line speed: %s",
+  "openblocks.misc.pedometer.last_check_distance": "Distance from last check: %s",
+  "openblocks.misc.pedometer.last_check_speed": "Last check speed: %s",
+  "openblocks.misc.pedometer.last_check_time": "Time from last check: %d ticks",
+  "openblocks.misc.pedometer.total_time": "Total time: %d ticks"
 }

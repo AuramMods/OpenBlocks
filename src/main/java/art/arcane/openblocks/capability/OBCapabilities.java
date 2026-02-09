@@ -204,6 +204,7 @@ public final class OBCapabilities {
     public static final class PedometerState implements INBTSerializable<CompoundTag>, Copyable<PedometerState> {
         private boolean running;
         private double totalDistance;
+        private double currentSpeed;
         private long startTicks;
         private double startX;
         private double startY;
@@ -229,6 +230,24 @@ public final class OBCapabilities {
             this.running = false;
         }
 
+        public void reset() {
+            this.running = false;
+            this.totalDistance = 0.0;
+            this.currentSpeed = 0.0;
+            this.startTicks = 0L;
+            this.startX = 0.0;
+            this.startY = 0.0;
+            this.startZ = 0.0;
+            this.prevX = 0.0;
+            this.prevY = 0.0;
+            this.prevZ = 0.0;
+            this.prevTickTime = 0L;
+            this.lastCheckX = 0.0;
+            this.lastCheckY = 0.0;
+            this.lastCheckZ = 0.0;
+            this.lastCheckTime = 0L;
+        }
+
         public void start(final Player player) {
             final long now = player.level().getGameTime();
             final double x = player.getX();
@@ -236,6 +255,8 @@ public final class OBCapabilities {
             final double z = player.getZ();
 
             this.running = true;
+            this.totalDistance = 0.0;
+            this.currentSpeed = 0.0;
             this.startTicks = now;
             this.startX = x;
             this.startY = y;
@@ -251,22 +272,21 @@ public final class OBCapabilities {
         }
 
         public void tick(final Player player) {
+            if (!running) return;
+
             final long now = player.level().getGameTime();
             final double x = player.getX();
             final double y = player.getY();
             final double z = player.getZ();
-
-            if (!running) {
-                start(player);
-                return;
-            }
 
             final long deltaTicks = now - prevTickTime;
             if (deltaTicks > 0L) {
                 final double dx = x - prevX;
                 final double dy = y - prevY;
                 final double dz = z - prevZ;
-                this.totalDistance += Math.sqrt((dx * dx) + (dy * dy) + (dz * dz));
+                final double distanceSinceLastTick = Math.sqrt((dx * dx) + (dy * dy) + (dz * dz));
+                this.totalDistance += distanceSinceLastTick;
+                this.currentSpeed = distanceSinceLastTick / (double)deltaTicks;
             }
 
             this.prevX = x;
@@ -275,11 +295,50 @@ public final class OBCapabilities {
             this.prevTickTime = now;
         }
 
+        public PedometerReport createReport(final Player player) {
+            if (!running) return null;
+
+            final long now = player.level().getGameTime();
+            final double x = player.getX();
+            final double y = player.getY();
+            final double z = player.getZ();
+
+            final long totalTime = Math.max(0L, now - startTicks);
+            final long lastTime = Math.max(0L, now - lastCheckTime);
+
+            final double fromStartX = x - startX;
+            final double fromStartY = y - startY;
+            final double fromStartZ = z - startZ;
+            final double straightLineDistance = Math.sqrt((fromStartX * fromStartX) + (fromStartY * fromStartY) + (fromStartZ * fromStartZ));
+
+            final double fromLastX = x - lastCheckX;
+            final double fromLastY = y - lastCheckY;
+            final double fromLastZ = z - lastCheckZ;
+            final double lastCheckDistance = Math.sqrt((fromLastX * fromLastX) + (fromLastY * fromLastY) + (fromLastZ * fromLastZ));
+
+            final PedometerReport report = new PedometerReport(
+                    startX, startY, startZ,
+                    totalTime,
+                    totalDistance,
+                    straightLineDistance,
+                    lastCheckDistance,
+                    lastTime,
+                    currentSpeed);
+
+            this.lastCheckX = x;
+            this.lastCheckY = y;
+            this.lastCheckZ = z;
+            this.lastCheckTime = now;
+
+            return report;
+        }
+
         @Override
         public CompoundTag serializeNBT() {
             final CompoundTag tag = new CompoundTag();
             tag.putBoolean("running", running);
             tag.putDouble("total_distance", totalDistance);
+            tag.putDouble("current_speed", currentSpeed);
             tag.putLong("start_ticks", startTicks);
             tag.putDouble("start_x", startX);
             tag.putDouble("start_y", startY);
@@ -299,6 +358,7 @@ public final class OBCapabilities {
         public void deserializeNBT(final CompoundTag tag) {
             this.running = tag.getBoolean("running");
             this.totalDistance = tag.getDouble("total_distance");
+            this.currentSpeed = tag.getDouble("current_speed");
             this.startTicks = tag.getLong("start_ticks");
             this.startX = tag.getDouble("start_x");
             this.startY = tag.getDouble("start_y");
@@ -317,6 +377,7 @@ public final class OBCapabilities {
         public void copyFrom(final PedometerState other) {
             this.running = other.running;
             this.totalDistance = other.totalDistance;
+            this.currentSpeed = other.currentSpeed;
             this.startTicks = other.startTicks;
             this.startX = other.startX;
             this.startY = other.startY;
@@ -329,6 +390,90 @@ public final class OBCapabilities {
             this.lastCheckY = other.lastCheckY;
             this.lastCheckZ = other.lastCheckZ;
             this.lastCheckTime = other.lastCheckTime;
+        }
+    }
+
+    public static final class PedometerReport {
+        private final double startX;
+        private final double startY;
+        private final double startZ;
+        private final long totalTime;
+        private final double totalDistance;
+        private final double straightLineDistance;
+        private final double lastCheckDistance;
+        private final long lastCheckTime;
+        private final double currentSpeed;
+
+        public PedometerReport(
+                final double startX,
+                final double startY,
+                final double startZ,
+                final long totalTime,
+                final double totalDistance,
+                final double straightLineDistance,
+                final double lastCheckDistance,
+                final long lastCheckTime,
+                final double currentSpeed) {
+            this.startX = startX;
+            this.startY = startY;
+            this.startZ = startZ;
+            this.totalTime = totalTime;
+            this.totalDistance = totalDistance;
+            this.straightLineDistance = straightLineDistance;
+            this.lastCheckDistance = lastCheckDistance;
+            this.lastCheckTime = lastCheckTime;
+            this.currentSpeed = currentSpeed;
+        }
+
+        public double startX() {
+            return startX;
+        }
+
+        public double startY() {
+            return startY;
+        }
+
+        public double startZ() {
+            return startZ;
+        }
+
+        public long totalTime() {
+            return totalTime;
+        }
+
+        public double totalDistance() {
+            return totalDistance;
+        }
+
+        public double straightLineDistance() {
+            return straightLineDistance;
+        }
+
+        public double lastCheckDistance() {
+            return lastCheckDistance;
+        }
+
+        public long lastCheckTime() {
+            return lastCheckTime;
+        }
+
+        public double currentSpeed() {
+            return currentSpeed;
+        }
+
+        public double averageSpeed() {
+            if (totalTime <= 0L) return 0.0;
+            return totalDistance / (double)totalTime;
+        }
+
+        public double straightLineSpeed() {
+            if (totalTime <= 0L) return 0.0;
+            return straightLineDistance / (double)totalTime;
+        }
+
+        public double lastCheckSpeed() {
+            if (lastCheckTime <= 0L) return 0.0;
+            return lastCheckDistance / (double)lastCheckTime;
         }
     }
 
