@@ -3,7 +3,9 @@ package art.arcane.openblocks.registry;
 import art.arcane.openblocks.OpenBlocks;
 import art.arcane.openblocks.block.OBGraveBlock;
 import art.arcane.openblocks.block.OBHealBlock;
+import art.arcane.openblocks.block.OBLadderBlock;
 import art.arcane.openblocks.block.OBPathBlock;
+import art.arcane.openblocks.block.OBRopeLadderBlock;
 import art.arcane.openblocks.block.OBShapeBlock;
 import art.arcane.openblocks.block.OBSpongeBlock;
 import java.util.ArrayList;
@@ -124,6 +126,8 @@ public final class OBBlocks {
                 ? BlockBehaviour.Properties.copy(Blocks.STONE).noOcclusion()
                 : BlockBehaviour.Properties.copy(Blocks.STONE);
 
+        if ("ladder".equals(id)) return new OBLadderBlock(properties, shape, collisionShape);
+        if ("rope_ladder".equals(id)) return new OBRopeLadderBlock(properties, shape, collisionShape);
         if ("heal".equals(id)) return new OBHealBlock(properties);
         if ("path".equals(id)) return new OBPathBlock(properties, shape, collisionShape);
         if ("sponge".equals(id)) return new OBSpongeBlock(BlockBehaviour.Properties.copy(Blocks.SPONGE));

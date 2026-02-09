@@ -42,7 +42,9 @@ Current registry classes:
 - Block functionality sweep classes:
   - `src/main/java/art/arcane/openblocks/block/OBHealBlock.java`
   - `src/main/java/art/arcane/openblocks/block/entity/OBHealBlockEntity.java`
+  - `src/main/java/art/arcane/openblocks/block/OBLadderBlock.java`
   - `src/main/java/art/arcane/openblocks/block/OBPathBlock.java`
+  - `src/main/java/art/arcane/openblocks/block/OBRopeLadderBlock.java`
   - `src/main/java/art/arcane/openblocks/block/OBSpongeBlock.java`
 - Game rule registration: `src/main/java/art/arcane/openblocks/world/OBGameRules.java`
 - Command flimflam effect registry: `src/main/java/art/arcane/openblocks/command/OBFlimFlamEffects.java`
@@ -112,6 +114,7 @@ Current validation status:
 - Latest `./gradlew compileJava runData` pass (2026-02-09) still succeeds after wiring grave drop-action filtering + interaction follow-up (`OBGraveDropsEvent`, updated `OBGraveHooks`, and shovel-gated grave claim/death-message interaction in `OBGraveBlock` + `OBGraveBlockEntity`).
 - Latest `./gradlew compileJava runData` pass (2026-02-09) still succeeds after fixing `open_blocks:xpjuice` client fluid texture extensions in `OBFluidTypes` to prevent null-sprite crashes in third-party fluid-item renderers.
 - Latest `./gradlew compileJava runData` pass (2026-02-09) still succeeds after starting a first non-GUI block depth sweep (`OBHealBlock`/`OBHealBlockEntity`, `OBPathBlock`, `OBSpongeBlock`, plus `OBBlocks`/`OBBlockEntities` wiring updates).
+- Latest `./gradlew compileJava runData` pass (2026-02-09) still succeeds after ladder-domain sweep additions (`OBLadderBlock`, `OBRopeLadderBlock`, and `OBBlocks` wiring) for support/chain/auto-extension behavior.
 - Capability scaffold note:
   - Legacy player capability IDs are now registered/attached under `open_blocks` namespace and clone-copied on respawn (`luck`, `pedometer_state`, `bowels`).
 - Build rule note: `build.gradle` skips optional jars from `extra-mods-1.20.1` when task names include `runData`/`datagen`, so datagen is not blocked by unrelated runtime mods.
@@ -136,7 +139,9 @@ Current validation status:
   - `src/main/java/art/arcane/openblocks/world/OBGameRules.java` now registers legacy grave gamerule key `openblocks:spawn_graves` (default `true`).
   - `src/main/java/art/arcane/openblocks/block/OBGraveBlock.java` + `src/main/java/art/arcane/openblocks/block/entity/OBGraveBlockEntity.java` now provide placeable grave state with persisted dump metadata, death message display on normal interaction, and shovel-gated loot claim behavior.
   - `src/main/java/art/arcane/openblocks/block/OBHealBlock.java` + `src/main/java/art/arcane/openblocks/block/entity/OBHealBlockEntity.java` now provide periodic server-side healing/saturation aura behavior for nearby non-creative players.
+  - `src/main/java/art/arcane/openblocks/block/OBLadderBlock.java` now enforces north-face support survival for `open_blocks:ladder`.
   - `src/main/java/art/arcane/openblocks/block/OBPathBlock.java` now enforces support-below survival and drops itself when support is removed.
+  - `src/main/java/art/arcane/openblocks/block/OBRopeLadderBlock.java` now supports chain survival, survival-mode downward auto-extension on placement, and cascading chain removal.
   - `src/main/java/art/arcane/openblocks/block/OBSpongeBlock.java` now performs periodic liquid cleanup, lava burn fallback, and border-fluid wake-up scheduling on removal.
   - `src/main/java/art/arcane/openblocks/grave/OBGraveHooks.java` now writes grave backup dumps, posts/consumes `OBGraveDropsEvent` action filtering, searches for valid placement nearby, places grave blocks on successful death handling, and clears only stored grave drops when grave placement succeeds.
   - `src/main/java/art/arcane/openblocks/command/OBFlimFlamEffects.java` now provides executable breadth-stage actions for all legacy `/flimflam` effect IDs.

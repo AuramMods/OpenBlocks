@@ -285,6 +285,29 @@
   - Validation:
     - `./gradlew compileJava` succeeds.
     - `./gradlew compileJava runData` succeeds after block sweep pass (2026-02-09).
+- Ladder/rope ladder functionality follow-up (2026-02-09):
+  - Added:
+    - `src/main/java/art/arcane/openblocks/block/OBLadderBlock.java`
+    - `src/main/java/art/arcane/openblocks/block/OBRopeLadderBlock.java`
+  - Updated:
+    - `src/main/java/art/arcane/openblocks/registry/OBBlocks.java`
+      - `ladder` now instantiates `OBLadderBlock`
+      - `rope_ladder` now instantiates `OBRopeLadderBlock`
+  - Current behavior parity added:
+    - `ladder`:
+      - requires sturdy support on north-side attachment face
+      - self-drops when support is lost
+    - `rope_ladder`:
+      - survives with either north-side support or a ladder block directly above (chain behavior)
+      - auto-places downward on initial placement while consuming held stack count in survival
+      - removing one segment cascades removal to lower connected segments
+  - Current parity gap:
+    - no facing/orientation blockstate yet (current survival support is north-face fixed to match existing static model)
+    - old collision special-casing by entity facing is not yet ported
+    - scaffolding-domain behavior parity still pending
+  - Validation:
+    - `./gradlew compileJava` succeeds.
+    - `./gradlew compileJava runData` succeeds after ladder/rope-ladder pass (2026-02-09).
   - Death dump integration:
     - on player death, inventory is now dumped automatically using type `death` into command-readable `inventory-*.dat` files.
   - Current parity gap:
