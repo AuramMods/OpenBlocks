@@ -135,6 +135,20 @@
     - 78 `forge:ore_shapeless`
     - 4 `openmods:enchanting`
   - Main conversion blockers for a breadth-pass port are ore-dict/tag translation and metadata-based outputs (color/state variants).
+- Recipe breadth-pass conversion now in place:
+  - Added `src/main/resources/data/open_blocks/recipes/legacy` with 54 converted crafting recipes.
+  - Conversion shape:
+    - `forge:ore_shaped` -> `minecraft:crafting_shaped`
+    - `forge:ore_shapeless` -> `minecraft:crafting_shapeless`
+    - namespace remap `openblocks:*` -> `open_blocks:*`
+  - Temporary compromise used for ore dictionary ingredients: mapped to concrete vanilla items (not final tag-based parity yet).
+  - Skipped files currently:
+    - 91 with non-zero `result.data`
+    - 40 with non-zero ingredient `data`
+    - 4 `openmods:enchanting`
+  - Validation:
+    - `./gradlew compileJava runData` succeeds after adding these 54 recipes.
+    - `run-data/logs/latest.log` scan showed no recipe parse/load errors in datagen run.
 
 ## Critical Architecture Facts
 - Main entrypoint is `old-1.12.2/src/main/java/openblocks/OpenBlocks.java`.

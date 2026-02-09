@@ -86,6 +86,7 @@ Validation log:
 - [x] Added baseline block tags via datagen (`minecraft:mineable/pickaxe`, `minecraft:needs_stone_tool`, and `minecraft:climbable` for ladder/rope_ladder/scaffolding) and revalidated with `./gradlew compileJava` + `./gradlew runData` on 2026-02-08.
 - [x] Added placeholder JSON definitions for all 7 legacy custom recipes under `src/main/resources/data/open_blocks/recipes` (types only; behavior parity still pending) and revalidated with `./gradlew compileJava runData` on 2026-02-08.
 - [x] Added legacy ID compatibility remap hook in `OBMissingMappings` (namespace remap `openblocks`/`OpenBlocks` -> `open_blocks`, plus legacy alias paths including camelCase/lowercase variants) and revalidated with `./gradlew compileJava runData` on 2026-02-08.
+- [-] Added a mechanical legacy-recipe conversion baseline: 54 recipes from `old-1.12.2/assets/openblocks/recipes` now ported to `src/main/resources/data/open_blocks/recipes/legacy` (ore-dict ingredients mapped to temporary concrete vanilla items; metadata-heavy and `openmods:enchanting` recipes still pending), validated with `./gradlew compileJava runData` on 2026-02-08.
 
 ## Phase 3: Systems Skeleton (Breadth Gameplay Pass)
 Goal: recreate cross-cutting systems in thin form before deep feature parity.
@@ -137,4 +138,7 @@ Checklist:
 ## Immediate Next Task
 - [ ] Have user run a quick in-game visual sweep (no `runClient` on agent side) to confirm the latest transparency/collision changes removed purple-black model regressions and face-culling issues.
 - [ ] Extend recipe coverage beyond custom special recipe placeholders (core craft paths for major blocks/items).
-- [ ] Build a mechanical conversion pass for legacy recipe JSONs (`old-1.12.2/assets/openblocks/recipes`) into 1.20-compatible formats/tags, then split unsupported recipe types (`openmods:enchanting`, metadata-heavy variants) into explicit follow-up tasks.
+- [ ] Finish legacy recipe migration for skipped recipe files:
+  - metadata-encoded variants (`result.data` / ingredient `data`) that require modern item/tag/NBT strategy
+  - `openmods:enchanting` equivalents for flim-flam enchanted-book recipes
+  - replace temporary ore-dict -> fixed-item substitutions with robust tag-based ingredients where practical

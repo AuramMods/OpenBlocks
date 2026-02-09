@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "open_blocks:crane_backpack",
+  "ingredients": [
+    {
+      "item": "open_blocks:generic"
+    },
+    {
+      "item": "open_blocks:generic"
+    },
+    {
+      "item": "open_blocks:generic"
+    },
+    {
+      "item": "open_blocks:generic"
+    },
+    {
+      "item": "open_blocks:generic"
+    },
+    {
+      "item": "open_blocks:generic"
+    },
+    {
+      "item": "open_blocks:generic"
+    },
+    {
+      "item": "minecraft:leather"
+    }
+  ],
+  "result": {
+    "item": "open_blocks:crane_backpack"
+  }
+}

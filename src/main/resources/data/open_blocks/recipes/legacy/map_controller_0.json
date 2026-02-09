@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "open_blocks:map_controller",
+  "pattern": [
+    " r ",
+    "rgr",
+    " r "
+  ],
+  "key": {
+    "r": {
+      "item": "minecraft:redstone"
+    },
+    "g": {
+      "item": "minecraft:gold_ingot"
+    }
+  },
+  "result": {
+    "item": "open_blocks:generic"
+  }
+}

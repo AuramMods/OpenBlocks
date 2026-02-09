@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "open_blocks:map_memory",
+  "pattern": [
+    "rg",
+    "rg",
+    "rg"
+  ],
+  "key": {
+    "r": {
+      "item": "minecraft:redstone"
+    },
+    "g": {
+      "item": "minecraft:gold_nugget"
+    }
+  },
+  "result": {
+    "item": "open_blocks:generic"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "open_blocks:elevator_rotating",
+  "ingredients": [
+    {
+      "item": "open_blocks:elevator"
+    },
+    {
+      "item": "minecraft:iron_ingot"
+    },
+    {
+      "item": "minecraft:iron_ingot"
+    }
+  ],
+  "result": {
+    "item": "open_blocks:elevator_rotating"
+  }
+}

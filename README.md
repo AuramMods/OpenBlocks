@@ -64,6 +64,7 @@ From current manifest inventory:
 Current breadth scaffolding highlights:
 - Legacy missing-mapping compatibility is wired (`openblocks`/`OpenBlocks` -> `open_blocks` + legacy alias IDs).
 - Model/texture/lang scaffolding is in place for all currently registered block/item IDs.
+- A first recipe breadth-pass is in place: 54 legacy crafting recipes are mechanically converted under `src/main/resources/data/open_blocks/recipes/legacy`.
 - Datagen loop is stable with `./gradlew compileJava runData`.
 
 ## Directory Map
