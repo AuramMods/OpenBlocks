@@ -105,10 +105,12 @@ Current validation status:
 - Latest `./gradlew compileJava runData` pass (2026-02-09) still succeeds after adding grave gamerule + drop-backup dump wiring (`OBGameRules` + `OBGraveHooks`).
 - Latest `./gradlew compileJava runData` pass (2026-02-09) still succeeds after deepening grave flow to place+claim baseline (`OBGraveBlock`, `OBGraveBlockEntity`, `OBGraveHooks`, and `OBInventoryStore` grave helpers).
 - Latest `./gradlew compileJava runData` pass (2026-02-09) still succeeds after wiring grave drop-action filtering + interaction follow-up (`OBGraveDropsEvent`, updated `OBGraveHooks`, and shovel-gated grave claim/death-message interaction in `OBGraveBlock` + `OBGraveBlockEntity`).
+- Latest `./gradlew compileJava runData` pass (2026-02-09) still succeeds after fixing `open_blocks:xpjuice` client fluid texture extensions in `OBFluidTypes` to prevent null-sprite crashes in third-party fluid-item renderers.
 - Capability scaffold note:
   - Legacy player capability IDs are now registered/attached under `open_blocks` namespace and clone-copied on respawn (`luck`, `pedometer_state`, `bowels`).
 - Build rule note: `build.gradle` skips optional jars from `extra-mods-1.20.1` when task names include `runData`/`datagen`, so datagen is not blocked by unrelated runtime mods.
 - Client asset note: model texture paths must use `open_blocks:block/...` and `open_blocks:item/...` (not plural `blocks/items`) for 1.20 atlas resolution.
+- Fluid client-extension note: third-party renderers that query `IClientFluidTypeExtensions` directly require non-null still/flowing texture keys; `OBFluidTypes` now explicitly supplies `open_blocks:block/xp_juice_still` and `open_blocks:block/xp_juice_flowing` for `open_blocks:xpjuice`.
 - Run-log note: `run/logs/latest.log` had a concrete missing texture warning for `open_blocks:paint_mixer` (`open_blocks:model/paint_mixer`).
   - Fixed by switching to atlas-safe `open_blocks:block/paint_mixer_model` and adding `textures/block/paint_mixer_model.png`.
 - Legacy remap note:

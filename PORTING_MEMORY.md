@@ -158,6 +158,14 @@
   - Validation:
     - `./gradlew compileJava runData` succeeds.
     - `run-data/logs/latest.log` shows no tag/recipe parse failures.
+- Fluid client-render compatibility follow-up (2026-02-09):
+  - Updated `src/main/java/art/arcane/openblocks/registry/OBFluidTypes.java`:
+    - `open_blocks:xpjuice` fluid type now provides explicit client extension texture keys via `initializeClient(...)`:
+      - still: `open_blocks:block/xp_juice_still`
+      - flowing: `open_blocks:block/xp_juice_flowing`
+    - this closes a null texture-key crash path when third-party renderers request fluid sprites directly from fluid type client extensions (observed in Mekanism creative fluid tank item rendering).
+  - Validation:
+    - `./gradlew compileJava runData` succeeds after fluid texture extension wiring (2026-02-09).
 - Systems skeleton expansion (2026-02-09):
   - Added command wiring for legacy command IDs in:
     - `src/main/java/art/arcane/openblocks/command/OBCommands.java`
