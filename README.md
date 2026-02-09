@@ -65,6 +65,7 @@ Current breadth scaffolding highlights:
 - Legacy missing-mapping compatibility is wired (`openblocks`/`OpenBlocks` -> `open_blocks` + legacy alias IDs).
 - Model/texture/lang scaffolding is in place for all currently registered block/item IDs.
 - A first recipe breadth-pass is in place: 185 legacy shaped/shapeless recipes are mechanically converted under `src/main/resources/data/open_blocks/recipes/legacy`, with legacy ore-dict names routed through `src/main/resources/data/open_blocks/tags/items/legacy_ore_dict`.
+- Legacy flim-flam enchanting recipes are replaced by a custom 1.20 recipe serializer (`open_blocks:flim_flam_book`) that preserves level scaling from emerald cost.
 - Datagen loop is stable with `./gradlew compileJava runData`.
 
 ## Directory Map

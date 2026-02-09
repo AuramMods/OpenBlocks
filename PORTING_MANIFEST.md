@@ -49,7 +49,7 @@ Current scaffold counts:
 - Sound events registered: 19
 - Enchantments registered: 3
 - Menu types registered: 14
-- Recipe serializers registered: 7
+- Recipe serializers registered: 8
 
 Current asset coverage:
 - Blockstates: `src/main/resources/assets/open_blocks/blockstates` (41 files)
@@ -121,7 +121,7 @@ Source: `old-1.12.2/src/main/resources/assets/openblocks/recipes`
   - `forge:ore_shapeless`: 78
   - `openmods:enchanting`: 4
 - Existing 1.20 scaffold recipes currently present:
-  - `src/main/resources/data/open_blocks/recipes` (7 custom serializer placeholders from `CustomRecipesSetup`)
+  - `src/main/resources/data/open_blocks/recipes` (7 custom serializer placeholders from `CustomRecipesSetup` + 1 custom flim-flam replacement recipe)
 - Mechanical conversion output now present:
   - `src/main/resources/data/open_blocks/recipes/legacy` (185 converted crafting recipes)
   - `src/main/resources/data/open_blocks/tags/items/legacy_ore_dict` (35 compatibility item-tag files for former ore-dict names)
@@ -132,12 +132,14 @@ Source: `old-1.12.2/src/main/resources/assets/openblocks/recipes`
     - legacy `openblocks:*` IDs remapped to `open_blocks:*`
     - legacy metadata (`data`) collapsed to modern single-ID forms for breadth coverage
     - ore dictionary entries translated to `open_blocks:legacy_ore_dict/*` tags (currently populated with baseline vanilla item values)
-  - Current skipped set from legacy corpus:
-    - 4 recipes of type `openmods:enchanting`
+  - Legacy `openmods:enchanting` replacements:
+    - `open_blocks:flim_flam_book` custom crafting recipe implemented in:
+      - `src/main/java/art/arcane/openblocks/recipe/OBFlimFlamBookRecipe.java`
+      - `src/main/resources/data/open_blocks/recipes/flim_flam_book.json`
 - Known conversion blockers (breadth-pass):
   - Ore dictionary ingredient conversion (`forge:ore_dict` -> modern tags).
   - Metadata-based result variants (`data` field) for color/state/meta-item fidelity.
-  - OpenMods-specific recipe wrapper (`openmods:enchanting`) requiring new 1.20 equivalent.
+  - Metadata/meta-item fidelity for converted legacy recipes still needs a depth pass.
 
 ## Blocks (`OpenBlocks.Blocks`)
 Source: `old-1.12.2/src/main/java/openblocks/OpenBlocks.java`

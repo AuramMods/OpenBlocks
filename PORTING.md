@@ -38,7 +38,7 @@ Goal: all major registry objects exist in 1.20.1 with canonical IDs, even if beh
 
 Checklist:
 - [x] Create/verify central mod bootstrap wiring in current 1.20.1 project.
-- [ ] Create deferred registers (or equivalent) for:
+- [x] Create deferred registers (or equivalent) for:
   - [x] Blocks
   - [x] Items
   - [x] Creative mode tab
@@ -87,6 +87,7 @@ Validation log:
 - [x] Added placeholder JSON definitions for all 7 legacy custom recipes under `src/main/resources/data/open_blocks/recipes` (types only; behavior parity still pending) and revalidated with `./gradlew compileJava runData` on 2026-02-08.
 - [x] Added legacy ID compatibility remap hook in `OBMissingMappings` (namespace remap `openblocks`/`OpenBlocks` -> `open_blocks`, plus legacy alias paths including camelCase/lowercase variants) and revalidated with `./gradlew compileJava runData` on 2026-02-08.
 - [-] Added a mechanical legacy-recipe conversion baseline: 185 shaped/shapeless legacy recipes from `old-1.12.2/assets/openblocks/recipes` now ported to `src/main/resources/data/open_blocks/recipes/legacy` (metadata collapsed to 1.20-safe item IDs and ore-dict ingredients translated to `open_blocks:legacy_ore_dict/*` item tags backed by baseline vanilla values); only 4 `openmods:enchanting` recipes remain unported, validated with `./gradlew compileJava runData` on 2026-02-08.
+- [x] Replaced legacy `openmods:enchanting` flim-flam recipe family with a 1.20 custom crafting recipe serializer (`open_blocks:flim_flam_book`) that recreates level scaling from emerald count (1-4), validated with `./gradlew compileJava runData` on 2026-02-08.
 
 ## Phase 3: Systems Skeleton (Breadth Gameplay Pass)
 Goal: recreate cross-cutting systems in thin form before deep feature parity.
@@ -139,6 +140,5 @@ Checklist:
 - [ ] Have user run a quick in-game visual sweep (no `runClient` on agent side) to confirm the latest transparency/collision changes removed purple-black model regressions and face-culling issues.
 - [ ] Extend recipe coverage beyond custom special recipe placeholders (core craft paths for major blocks/items).
 - [ ] Finish legacy recipe migration for skipped recipe files:
-  - `openmods:enchanting` equivalents for flim-flam enchanted-book recipes (4 remaining recipe files)
   - review and expand `open_blocks:legacy_ore_dict/*` tag membership so cross-mod ingredients are accepted where practical
   - revisit metadata-collapsed conversions to restore accurate color/subtype behavior where needed (generic/meta items, paintbrush variants, elevator/flag color outputs, etc.)

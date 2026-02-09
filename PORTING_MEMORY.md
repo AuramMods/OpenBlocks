@@ -144,8 +144,10 @@
     - namespace remap `openblocks:*` -> `open_blocks:*`
   - Temporary compromise used for ore dictionary ingredients: translated to `open_blocks:legacy_ore_dict/*` tags that currently map to baseline vanilla item values.
   - Legacy metadata (`data`) is currently collapsed to modern single-ID items for breadth coverage (color/subtype fidelity still pending depth pass).
-  - Skipped files currently:
-    - 4 `openmods:enchanting`
+  - Legacy `openmods:enchanting` flim-flam recipes are now replaced by a dedicated 1.20 custom serializer/recipe path:
+    - `src/main/java/art/arcane/openblocks/recipe/OBFlimFlamBookRecipe.java`
+    - `src/main/resources/data/open_blocks/recipes/flim_flam_book.json`
+    - behavior: exactly 1 book + 1..4 emeralds -> enchanted book with `open_blocks:flim_flam` level 1..4
   - Validation:
     - `./gradlew compileJava runData` succeeds after adding these 185 recipes.
     - `run-data/logs/latest.log` scan showed no recipe parse/load errors in datagen run.
