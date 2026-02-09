@@ -166,7 +166,7 @@
   - Current command status:
     - `luck` supports simple query/adjust operations via `open_blocks:luck` capability-backed storage.
     - `flimflam` supports legacy effect-name argument parsing/suggestions and now executes a breadth-stage action registry for all legacy command effect IDs.
-    - `ob_inventory` now supports a breadth-stage file-backed main inventory flow (`store`, `restore`, `spawn`) through `OBInventoryStore` with world `data/inventory-*.dat` dumps.
+    - `ob_inventory` now supports a breadth-stage file-backed main + built-in sub-inventory flow (`store`, `restore`, `spawn`) through `OBInventoryStore` with world `data/inventory-*.dat` dumps.
   - Added custom advancement trigger registration and classes:
     - `src/main/java/art/arcane/openblocks/advancement/OBCriterions.java`
     - `src/main/java/art/arcane/openblocks/advancement/OBBrickDroppedTrigger.java`
@@ -237,6 +237,25 @@
     - legacy sub-inventory payloads and death/gravestone dump integration are not yet wired.
   - Validation:
     - `./gradlew compileJava runData` succeeds after backend wiring (2026-02-09).
+- Inventory command parity follow-up (2026-02-09, second pass):
+  - Added `src/main/java/art/arcane/openblocks/command/OBInventoryHooks.java` (Forge-bus death hook).
+  - Expanded `OBInventoryStore` dump schema with `SubInventories` payloads for:
+    - `armor`
+    - `offhand`
+    - `ender_chest`
+  - Expanded `/ob_inventory spawn` targets:
+    - `main`
+    - `armor`
+    - `offhand`
+    - `ender_chest` (plus any serialized sub-inventory keys present in dump data)
+  - Expanded restore behavior:
+    - restore now reapplies ender chest contents from serialized sub-inventory payloads.
+  - Death dump integration:
+    - on player death, inventory is now dumped automatically using type `death` into command-readable `inventory-*.dat` files.
+  - Current parity gap:
+    - legacy arbitrary subsystem sub-inventories and gravestone/backend integrations are still pending.
+  - Validation:
+    - `./gradlew compileJava runData` succeeds after sub-inventory + death-dump wiring (2026-02-09).
 - Flimflam command backend follow-up (2026-02-09):
   - Added `src/main/java/art/arcane/openblocks/command/OBFlimFlamEffects.java`.
   - Updated `src/main/java/art/arcane/openblocks/command/OBCommands.java` to execute real effect actions through the registry instead of placeholder chat output.
@@ -307,7 +326,7 @@
 - Continue Phase 2 breadth: expand recipe coverage beyond current custom-recipe placeholders.
 - Move Phase 3 command/trigger work from placeholders to hooked gameplay paths:
   - deepen `flimflam` from current breadth-stage effects to legacy cost/weight/luck/blacklist behavior
-  - deepen `ob_inventory` beyond main-only support (legacy sub-inventories + death/grave dump parity)
+  - deepen `ob_inventory` from current built-in sub targets + death dumps to legacy arbitrary subsystem payloads + grave/backend parity
   - replace temporary trigger hooks with legacy-accurate sources (boo/brick action and nested dev-null depth logic)
 - Move Phase 3 capability work from placeholders to hooked gameplay paths:
   - expand pedometer from current explicit start/reset/report baseline to deeper parity (legacy unit formatting, client-side speed property behavior, polish on readout cadence)

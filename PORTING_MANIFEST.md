@@ -32,6 +32,7 @@ Current registry classes:
   - `src/main/java/art/arcane/openblocks/item/OBPedometerItem.java`
 - Command registration (Forge bus): `src/main/java/art/arcane/openblocks/command/OBCommands.java`
 - Command inventory dump backend: `src/main/java/art/arcane/openblocks/command/OBInventoryStore.java`
+- Command inventory death-dump hook: `src/main/java/art/arcane/openblocks/command/OBInventoryHooks.java`
 - Command flimflam effect registry: `src/main/java/art/arcane/openblocks/command/OBFlimFlamEffects.java`
 - Capability registration/attachment:
   - `src/main/java/art/arcane/openblocks/capability/OBCapabilities.java`
@@ -110,15 +111,17 @@ Current validation status:
 - Systems skeleton note:
   - `src/main/java/art/arcane/openblocks/command/OBCommands.java` now registers the three legacy command IDs in Brigadier form (`flimflam`, `luck`, `ob_inventory`).
   - `src/main/java/art/arcane/openblocks/command/OBInventoryStore.java` now provides the breadth-stage inventory dump backend used by `/ob_inventory`.
+  - `src/main/java/art/arcane/openblocks/command/OBInventoryHooks.java` now stores command-consumable inventory dumps on player death.
   - `src/main/java/art/arcane/openblocks/command/OBFlimFlamEffects.java` now provides executable breadth-stage actions for all legacy `/flimflam` effect IDs.
   - Current command parity:
     - `luck` reads/writes `open_blocks:luck` capability state.
     - `flimflam` now executes a 17-effect action map with legacy ID names preserved; deeper legacy parity (luck/cost/weight/blacklist semantics and exact per-effect behavior) remains pending.
-    - `ob_inventory` now supports main inventory file dump/restore/spawn:
+    - `ob_inventory` now supports main + built-in sub-inventory dump/restore/spawn:
       - dumps written to `<world>/data/inventory-*.dat`,
       - restore loads stored main inventory onto target player,
-      - spawn drops stored main inventory stacks (or selected slot) at command source.
-    - legacy sub-inventory payload parity remains pending.
+      - restore also reapplies serialized ender chest payload when present,
+      - spawn drops target inventory stacks (or selected slot) at command source for `main`, `armor`, `offhand`, and `ender_chest`.
+    - legacy arbitrary subsystem sub-inventory payload parity remains pending.
   - `/luck` state storage now reads/writes through `OBCapabilities` (`open_blocks:luck`) rather than ad-hoc player persistent data.
   - `src/main/java/art/arcane/openblocks/capability/OBCapabilities.java` now registers and attaches legacy player capability IDs (`open_blocks:luck`, `open_blocks:pedometer_state`, `open_blocks:bowels`) and copies them during `PlayerEvent.Clone` (except `bowels` on death clones, to avoid duplicate death-drop state).
   - `OBCapabilities.PedometerState` now includes runtime/report helpers (`reset`, `start`, `tick`, `stop`, `createReport`) and report DTO data used by pedometer messaging.
