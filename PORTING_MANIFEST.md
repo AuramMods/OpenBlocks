@@ -10,7 +10,7 @@
 - Main code root: `old-1.12.2/src/main/java/openblocks`
 - Main assets root: `old-1.12.2/src/main/resources/assets/openblocks`
 
-## Current 1.20.1 Port Snapshot (2026-02-08)
+## Current 1.20.1 Port Snapshot (2026-02-09)
 Current source roots:
 - Java root: `src/main/java/art/arcane/openblocks`
 - Assets root: `src/main/resources/assets/open_blocks`
@@ -28,6 +28,11 @@ Current registry classes:
 - Enchantment register: `src/main/java/art/arcane/openblocks/registry/OBEnchantments.java`
 - Menu register: `src/main/java/art/arcane/openblocks/registry/OBMenuTypes.java`
 - Recipe serializer register: `src/main/java/art/arcane/openblocks/registry/OBRecipeSerializers.java`
+- Command registration (Forge bus): `src/main/java/art/arcane/openblocks/command/OBCommands.java`
+- Custom advancement trigger bootstrap:
+  - `src/main/java/art/arcane/openblocks/advancement/OBCriterions.java`
+  - `src/main/java/art/arcane/openblocks/advancement/OBBrickDroppedTrigger.java`
+  - `src/main/java/art/arcane/openblocks/advancement/OBDevNullStackTrigger.java`
 - Non-full shape helper block: `src/main/java/art/arcane/openblocks/block/OBShapeBlock.java`
 - Client render-layer setup: `src/main/java/art/arcane/openblocks/client/OBClientRenderLayers.java`
 - Datagen entrypoint: `src/main/java/art/arcane/openblocks/datagen/OBDataGenerators.java`
@@ -50,6 +55,8 @@ Current scaffold counts:
 - Enchantments registered: 3
 - Menu types registered: 14
 - Recipe serializers registered: 8
+- Command roots wired: 3 (`flimflam`, `luck`, `ob_inventory`)
+- Custom advancement triggers wired: 2 (`open_blocks:brick_dropped`, `open_blocks:dev_null_stacked`)
 
 Current asset coverage:
 - Blockstates: `src/main/resources/assets/open_blocks/blockstates` (41 files)
@@ -58,6 +65,9 @@ Current asset coverage:
 - Language file: `src/main/resources/assets/open_blocks/lang/en_us.json`
 - Sound definitions: `src/main/resources/assets/open_blocks/sounds.json`
 - Sound assets: `src/main/resources/assets/open_blocks/sounds` (legacy OpenBlocks `.ogg` set copied)
+- Advancement JSON scaffolding:
+  - `src/main/resources/data/open_blocks/advancements/oops.json`
+  - `src/main/resources/data/open_blocks/advancements/tma2.json`
 - Custom recipe placeholder JSONs: `src/main/resources/data/open_blocks/recipes` (7 files)
 - Generated block loot tables: `src/generated/resources/data/open_blocks/loot_tables/blocks` (41 files)
 - Generated block tags:
@@ -86,6 +96,9 @@ Current validation status:
     - blocks: `vacuumhopper`, `bigbutton`, `xpbottler`, `autoanvil`, `autoenchantmenttable`, `xpdrain`, `blockbreaker`, `blockPlacer`, `itemDropper`, `ropeladder`, `donationStation`, `paintmixer`, `paintcan`, `canvasglass`, `drawingtable`, `xpshower`, `goldenegg`
     - items: `hangglider`, `sonicglasses`, `pencilGlasses`, `crayonGlasses`, `technicolorGlasses`, `seriousGlasses`, `craneControl`, `craneBackpack`, `filledbucket`, `sleepingBag`, `paintBrush`, `heightMap`, `emptyMap`, `tastyClay`, `goldenEye`, `genericUnstackable`, `infoBook`, `devnull`, `spongeonastick`, `epicEraser`
     - fluid: `liquidxp` -> `xpjuice`
+- Systems skeleton note:
+  - `src/main/java/art/arcane/openblocks/command/OBCommands.java` now registers the three legacy command IDs in Brigadier form (`flimflam`, `luck`, `ob_inventory`) with breadth-stage placeholder behavior for unported backends.
+  - `src/main/java/art/arcane/openblocks/advancement/OBCriterions.java` now registers custom trigger IDs `open_blocks:brick_dropped` and `open_blocks:dev_null_stacked` for advancement compatibility baseline.
 
 ## Top-Level Entry Points
 - Mod entrypoint and major registration flow:

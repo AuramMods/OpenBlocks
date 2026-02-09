@@ -60,12 +60,15 @@ From current manifest inventory:
 - 11 entities
 - 35 block entities (tile entity equivalents)
 - 7 custom recipe registrations
+- 3 legacy command IDs now wired in Brigadier form (`flimflam`, `luck`, `ob_inventory`)
+- 2 custom advancement triggers scaffolded (`open_blocks:brick_dropped`, `open_blocks:dev_null_stacked`)
 
 Current breadth scaffolding highlights:
 - Legacy missing-mapping compatibility is wired (`openblocks`/`OpenBlocks` -> `open_blocks` + legacy alias IDs).
 - Model/texture/lang scaffolding is in place for all currently registered block/item IDs.
 - A first recipe breadth-pass is in place: 185 legacy shaped/shapeless recipes are mechanically converted under `src/main/resources/data/open_blocks/recipes/legacy`, with legacy ore-dict names routed through `src/main/resources/data/open_blocks/tags/items/legacy_ore_dict`.
 - Legacy flim-flam enchanting recipes are replaced by a custom 1.20 recipe serializer (`open_blocks:flim_flam_book`) that preserves level scaling from emerald cost.
+- Legacy command and trigger IDs now exist in 1.20.1 scaffolding, so world/server content referencing those IDs has baseline continuity while deeper behavior is ported.
 - Datagen loop is stable with `./gradlew compileJava runData`.
 
 ## Directory Map

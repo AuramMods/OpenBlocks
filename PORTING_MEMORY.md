@@ -151,6 +151,27 @@
   - Validation:
     - `./gradlew compileJava runData` succeeds after adding these 185 recipes.
     - `run-data/logs/latest.log` scan showed no recipe parse/load errors in datagen run.
+- Systems skeleton expansion (2026-02-09):
+  - Added command wiring for legacy command IDs in:
+    - `src/main/java/art/arcane/openblocks/command/OBCommands.java`
+    - Commands registered: `flimflam`, `luck`, `ob_inventory`
+    - Important: `OBCommands` uses `@Mod.EventBusSubscriber(bus = FORGE)` auto-subscription; do not additionally register the class on `MinecraftForge.EVENT_BUS` to avoid duplicate handlers.
+  - Current command status:
+    - `luck` supports simple query/adjust operations via player persistent NBT (`open_blocks_luck`) as a temporary breadth-stage store.
+    - `flimflam` supports legacy effect-name argument parsing/suggestions and emits placeholder execution messages (actual effect execution still pending).
+    - `ob_inventory` exposes legacy subcommand surface (`store`, `restore`, `spawn`) with placeholder responses (inventory dump backend not ported yet).
+  - Added custom advancement trigger registration and classes:
+    - `src/main/java/art/arcane/openblocks/advancement/OBCriterions.java`
+    - `src/main/java/art/arcane/openblocks/advancement/OBBrickDroppedTrigger.java`
+    - `src/main/java/art/arcane/openblocks/advancement/OBDevNullStackTrigger.java`
+    - Trigger IDs preserved in 1.20 namespace:
+      - `open_blocks:brick_dropped`
+      - `open_blocks:dev_null_stacked`
+  - Added advancement JSON scaffolding:
+    - `src/main/resources/data/open_blocks/advancements/oops.json`
+    - `src/main/resources/data/open_blocks/advancements/tma2.json`
+  - Validation:
+    - `./gradlew compileJava runData` succeeds after command + trigger additions (2026-02-09).
 
 ## Critical Architecture Facts
 - Main entrypoint is `old-1.12.2/src/main/java/openblocks/OpenBlocks.java`.
@@ -211,4 +232,8 @@
 
 ## Next Breadth Step (Planned)
 - Continue Phase 2 breadth: expand recipe coverage beyond current custom-recipe placeholders.
+- Move Phase 3 command/trigger work from placeholders to hooked gameplay paths:
+  - connect `flimflam` command to real effect execution
+  - connect `ob_inventory` commands to inventory dump/restore backend
+  - fire `brick_dropped` and `dev_null_stacked` triggers from the relevant gameplay events
 - Draft legacy compatibility/remap mapping plan (`openblocks` namespace + legacy alias IDs -> `open_blocks` canonical IDs).

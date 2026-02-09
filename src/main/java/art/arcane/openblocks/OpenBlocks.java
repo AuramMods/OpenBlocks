@@ -1,5 +1,6 @@
 package art.arcane.openblocks;
 
+import art.arcane.openblocks.advancement.OBCriterions;
 import art.arcane.openblocks.registry.OBBlocks;
 import art.arcane.openblocks.registry.OBBlockEntities;
 import art.arcane.openblocks.registry.OBCreativeTabs;
@@ -37,5 +38,7 @@ public class OpenBlocks {
         OBEnchantments.ENCHANTMENTS.register(modEventBus);
         OBMenuTypes.MENU_TYPES.register(modEventBus);
         OBRecipeSerializers.RECIPE_SERIALIZERS.register(modEventBus);
+
+        OBCriterions.bootstrap();
     }
 }

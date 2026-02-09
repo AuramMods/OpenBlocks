@@ -86,8 +86,9 @@ Validation log:
 - [x] Added baseline block tags via datagen (`minecraft:mineable/pickaxe`, `minecraft:needs_stone_tool`, and `minecraft:climbable` for ladder/rope_ladder/scaffolding) and revalidated with `./gradlew compileJava` + `./gradlew runData` on 2026-02-08.
 - [x] Added placeholder JSON definitions for all 7 legacy custom recipes under `src/main/resources/data/open_blocks/recipes` (types only; behavior parity still pending) and revalidated with `./gradlew compileJava runData` on 2026-02-08.
 - [x] Added legacy ID compatibility remap hook in `OBMissingMappings` (namespace remap `openblocks`/`OpenBlocks` -> `open_blocks`, plus legacy alias paths including camelCase/lowercase variants) and revalidated with `./gradlew compileJava runData` on 2026-02-08.
-- [-] Added a mechanical legacy-recipe conversion baseline: 185 shaped/shapeless legacy recipes from `old-1.12.2/assets/openblocks/recipes` now ported to `src/main/resources/data/open_blocks/recipes/legacy` (metadata collapsed to 1.20-safe item IDs and ore-dict ingredients translated to `open_blocks:legacy_ore_dict/*` item tags backed by baseline vanilla values); only 4 `openmods:enchanting` recipes remain unported, validated with `./gradlew compileJava runData` on 2026-02-08.
+- [-] Added a mechanical legacy-recipe conversion baseline: 185 shaped/shapeless legacy recipes from `old-1.12.2/assets/openblocks/recipes` now ported to `src/main/resources/data/open_blocks/recipes/legacy` (metadata collapsed to 1.20-safe item IDs and ore-dict ingredients translated to `open_blocks:legacy_ore_dict/*` item tags backed by baseline vanilla values); `openmods:enchanting` recipes are now handled by the dedicated `flim_flam_book` custom serializer path, validated with `./gradlew compileJava runData` on 2026-02-08.
 - [x] Replaced legacy `openmods:enchanting` flim-flam recipe family with a 1.20 custom crafting recipe serializer (`open_blocks:flim_flam_book`) that recreates level scaling from emerald count (1-4), validated with `./gradlew compileJava runData` on 2026-02-08.
+- [-] Added systems skeleton for legacy command IDs (`flimflam`, `luck`, `ob_inventory`) and custom advancement triggers (`open_blocks:brick_dropped`, `open_blocks:dev_null_stacked`) with 1.20 wiring + placeholder behavior, validated with `./gradlew compileJava runData` on 2026-02-09.
 
 ## Phase 3: Systems Skeleton (Breadth Gameplay Pass)
 Goal: recreate cross-cutting systems in thin form before deep feature parity.
@@ -96,8 +97,8 @@ Checklist:
 - [ ] Replace old GUI/container flow with modern menu/screen flow.
 - [ ] Rebuild capability equivalents (player/entity state).
 - [ ] Rebuild networking layer for events/RPC replacements.
-- [ ] Rebuild advancement trigger plumbing.
-- [ ] Rebuild command registration.
+- [-] Rebuild advancement trigger plumbing.
+- [-] Rebuild command registration.
 - [ ] Rebuild loot injection strategy.
 - [ ] Rebuild villager/trade registration strategy.
 - [ ] Rebuild game rule registration strategy.
@@ -139,6 +140,12 @@ Checklist:
 ## Immediate Next Task
 - [ ] Have user run a quick in-game visual sweep (no `runClient` on agent side) to confirm the latest transparency/collision changes removed purple-black model regressions and face-culling issues.
 - [ ] Extend recipe coverage beyond custom special recipe placeholders (core craft paths for major blocks/items).
+- [ ] Replace command placeholders with real behavior:
+  - `flimflam`: hook effect execution to ported flim-flam registry/actions
+  - `ob_inventory`: reconnect to inventory dump/restore storage backend
+- [ ] Wire custom advancement triggers into gameplay events:
+  - `brick_dropped` on brick-drop event path
+  - `dev_null_stacked` when dev null stack depth thresholds are reached
 - [ ] Finish legacy recipe migration for skipped recipe files:
   - review and expand `open_blocks:legacy_ore_dict/*` tag membership so cross-mod ingredients are accepted where practical
   - revisit metadata-collapsed conversions to restore accurate color/subtype behavior where needed (generic/meta items, paintbrush variants, elevator/flag color outputs, etc.)

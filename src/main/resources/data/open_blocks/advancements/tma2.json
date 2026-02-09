@@ -1,0 +1,26 @@
+{
+  "display": {
+    "icon": {
+      "item": "minecraft:nether_star"
+    },
+    "title": {
+      "text": "The More You Accumulate"
+    },
+    "description": {
+      "text": "Reach stack depth 5 in a dev null."
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "parent": "minecraft:adventure/root",
+  "criteria": {
+    "reached_the_limit": {
+      "trigger": "open_blocks:dev_null_stacked",
+      "conditions": {
+        "depth": 5
+      }
+    }
+  }
+}

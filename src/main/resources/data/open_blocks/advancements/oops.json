@@ -1,0 +1,23 @@
+{
+  "display": {
+    "icon": {
+      "item": "minecraft:brick"
+    },
+    "title": {
+      "text": "Oops"
+    },
+    "description": {
+      "text": "Drop a brick. Literally."
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "parent": "minecraft:adventure/root",
+  "criteria": {
+    "literally": {
+      "trigger": "open_blocks:brick_dropped"
+    }
+  }
+}
