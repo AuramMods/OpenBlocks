@@ -20,19 +20,50 @@ Current registry classes:
 - Blocks register: `src/main/java/art/arcane/openblocks/registry/OBBlocks.java`
 - Items register: `src/main/java/art/arcane/openblocks/registry/OBItems.java`
 - Creative tab register: `src/main/java/art/arcane/openblocks/registry/OBCreativeTabs.java`
+- Fluid type register: `src/main/java/art/arcane/openblocks/registry/OBFluidTypes.java`
+- Fluid/block register: `src/main/java/art/arcane/openblocks/registry/OBFluids.java`
+- Block entity register: `src/main/java/art/arcane/openblocks/registry/OBBlockEntities.java`
+- Entity register: `src/main/java/art/arcane/openblocks/registry/OBEntities.java`
+- Sound register: `src/main/java/art/arcane/openblocks/registry/OBSounds.java`
+- Enchantment register: `src/main/java/art/arcane/openblocks/registry/OBEnchantments.java`
+- Menu register: `src/main/java/art/arcane/openblocks/registry/OBMenuTypes.java`
+- Recipe serializer register: `src/main/java/art/arcane/openblocks/registry/OBRecipeSerializers.java`
 - Non-full shape helper block: `src/main/java/art/arcane/openblocks/block/OBShapeBlock.java`
 - Client render-layer setup: `src/main/java/art/arcane/openblocks/client/OBClientRenderLayers.java`
+- Datagen entrypoint: `src/main/java/art/arcane/openblocks/datagen/OBDataGenerators.java`
+- Datagen loot providers:
+  - `src/main/java/art/arcane/openblocks/datagen/OBLootTableProvider.java`
+  - `src/main/java/art/arcane/openblocks/datagen/OBBlockLootSubProvider.java`
+- Datagen tag provider:
+  - `src/main/java/art/arcane/openblocks/datagen/OBBlockTagsProvider.java`
 
 Current scaffold counts:
 - Block IDs registered: 41
 - Item IDs registered: 71 (41 block items + 30 standalone)
 - Creative tabs registered: 1 (`open_blocks:main`)
+- Fluid types registered: 1 (`xpjuice`)
+- Fluids registered: 2 (`xpjuice`, `flowing_xpjuice`)
+- Fluid blocks registered: 1 (`xpjuice`)
+- Block entity types registered: 35
+- Entity types registered: 11
+- Sound events registered: 19
+- Enchantments registered: 3
+- Menu types registered: 14
+- Recipe serializers registered: 7
 
 Current asset coverage:
 - Blockstates: `src/main/resources/assets/open_blocks/blockstates` (41 files)
 - Block models: `src/main/resources/assets/open_blocks/models/block` (41 files)
 - Item models: `src/main/resources/assets/open_blocks/models/item` (71 files)
 - Language file: `src/main/resources/assets/open_blocks/lang/en_us.json`
+- Sound definitions: `src/main/resources/assets/open_blocks/sounds.json`
+- Sound assets: `src/main/resources/assets/open_blocks/sounds` (legacy OpenBlocks `.ogg` set copied)
+- Custom recipe placeholder JSONs: `src/main/resources/data/open_blocks/recipes` (7 files)
+- Generated block loot tables: `src/generated/resources/data/open_blocks/loot_tables/blocks` (41 files)
+- Generated block tags:
+  - `src/generated/resources/data/minecraft/tags/blocks/mineable/pickaxe.json`
+  - `src/generated/resources/data/minecraft/tags/blocks/needs_stone_tool.json`
+  - `src/generated/resources/data/minecraft/tags/blocks/climbable.json`
 - Imported legacy textures:
   - `src/main/resources/assets/open_blocks/textures/block`
   - `src/main/resources/assets/open_blocks/textures/item`
@@ -40,6 +71,9 @@ Current asset coverage:
 Current validation status:
 - `./gradlew compileJava` passes.
 - `./gradlew compileJava runData` passes.
+- `./gradlew runData` now executes `Loot Tables` provider and writes 41 block loot tables.
+- `./gradlew runData` now also executes `Tags for minecraft:block mod id open_blocks` and writes 3 baseline block tag files.
+- Custom recipe placeholder JSONs for all 7 legacy custom recipe IDs load with current datagen/compile loop.
 - Build rule note: `build.gradle` skips optional jars from `extra-mods-1.20.1` when task names include `runData`/`datagen`, so datagen is not blocked by unrelated runtime mods.
 - Client asset note: model texture paths must use `open_blocks:block/...` and `open_blocks:item/...` (not plural `blocks/items`) for 1.20 atlas resolution.
 - Run-log note: `run/logs/latest.log` had a concrete missing texture warning for `open_blocks:paint_mixer` (`open_blocks:model/paint_mixer`).

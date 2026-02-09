@@ -42,25 +42,25 @@ Checklist:
   - [x] Blocks
   - [x] Items
   - [x] Creative mode tab
-  - [ ] Fluids + fluid type + bucket
-  - [ ] BlockEntityType
-  - [ ] EntityType
-  - [ ] SoundEvent
-  - [ ] Enchantment
-  - [ ] MenuType
-  - [ ] RecipeSerializer (custom recipes)
+  - [x] Fluids + fluid type + bucket
+  - [x] BlockEntityType
+  - [x] EntityType
+  - [x] SoundEvent
+  - [x] Enchantment
+  - [x] MenuType
+  - [x] RecipeSerializer (custom recipes)
 - [x] Recreate all legacy block IDs (from manifest) as stubs/placeholders where needed.
 - [x] Recreate all legacy item IDs (including meta-item strategy replacement plan).
-- [ ] Recreate all legacy entity IDs as registered entity types.
-- [ ] Recreate all legacy sound IDs in code/data.
+- [x] Recreate all legacy entity IDs as registered entity types.
+- [x] Recreate all legacy sound IDs in code/data.
 - [ ] Establish compatibility mapping plan for old IDs/legacy names.
 - [x] Generate asset scaffolding for blockstates/models/lang so registry visibility can be verified quickly.
 - [x] Replace placeholder stone/iron assets with legacy texture-backed block/item models for all currently registered IDs.
 - [x] Ensure datagen run path works for this project workflow (`./gradlew compileJava runData`).
 
 Exit criteria:
-- [ ] Project compiles with all primary registries present.
-- [ ] No missing references for canonical IDs in code.
+- [x] Project compiles with all primary registries present.
+- [x] No missing references for canonical IDs in code.
 
 ## Phase 2: Data Asset Skeleton (Breadth Data Pass)
 Goal: every registered object has minimum data assets so the game loads cleanly.
@@ -69,10 +69,10 @@ Checklist:
 - [x] Blockstates for all registered blocks.
 - [x] Item models for all registered items.
 - [x] Language entries for all objects.
-- [ ] Sound definitions (`sounds.json`) aligned with code registrations.
-- [ ] Basic loot tables where required.
-- [ ] Basic recipes (or temporary placeholders) for each craftable feature.
-- [ ] Tags needed for gameplay parity and compatibility.
+- [x] Sound definitions (`sounds.json`) aligned with code registrations.
+- [x] Basic loot tables where required.
+- [-] Basic recipes (or temporary placeholders) for each craftable feature.
+- [x] Tags needed for gameplay parity and compatibility.
 - [x] Cross-check that each registered block/item ID has matching model/lang assets.
 
 Exit criteria:
@@ -82,6 +82,9 @@ Validation log:
 - [x] `./gradlew compileJava` succeeds after registry + asset changes.
 - [x] `./gradlew compileJava runData` succeeds (as of 2026-02-08) after isolating datagen runs from optional `extra-mods-1.20.1` jars.
 - [x] Added initial non-full-block render/collision parity pass for legacy-style models (cutout/translucent setup + custom voxel/collision shapes) and revalidated with `./gradlew compileJava runData` on 2026-02-08.
+- [x] Added datagen wiring and generated 41 self-drop block loot tables under `src/generated/resources/data/open_blocks/loot_tables/blocks` (validated with `./gradlew compileJava` and `./gradlew runData` on 2026-02-08).
+- [x] Added baseline block tags via datagen (`minecraft:mineable/pickaxe`, `minecraft:needs_stone_tool`, and `minecraft:climbable` for ladder/rope_ladder/scaffolding) and revalidated with `./gradlew compileJava` + `./gradlew runData` on 2026-02-08.
+- [x] Added placeholder JSON definitions for all 7 legacy custom recipes under `src/main/resources/data/open_blocks/recipes` (types only; behavior parity still pending) and revalidated with `./gradlew compileJava runData` on 2026-02-08.
 
 ## Phase 3: Systems Skeleton (Breadth Gameplay Pass)
 Goal: recreate cross-cutting systems in thin form before deep feature parity.
@@ -132,4 +135,5 @@ Checklist:
 
 ## Immediate Next Task
 - [ ] Have user run a quick in-game visual sweep (no `runClient` on agent side) to confirm the latest transparency/collision changes removed purple-black model regressions and face-culling issues.
-- [ ] Continue Phase 1 breadth: add deferred-register skeletons for fluids/fluid types, block entities, entities, sounds, enchantments, menu types, and recipe serializers with legacy IDs preserved.
+- [ ] Extend recipe coverage beyond custom special recipe placeholders (core craft paths for major blocks/items).
+- [ ] Draft legacy ID compatibility/remap mapping plan (`openblocks` -> `open_blocks`, legacy camelCase IDs, and alternate aliases).

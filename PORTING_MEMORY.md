@@ -13,11 +13,19 @@
   - `PORTING_MANIFEST.md`
 
 ## 1.20.1 Progress Snapshot
-- Block/item registry baseline implemented in current project:
+- Registry skeleton implemented in current project:
   - `/Users/cyberpwn/development/workspace/AuramMods/OpenBlocks/src/main/java/art/arcane/openblocks/OpenBlocks.java`
   - `/Users/cyberpwn/development/workspace/AuramMods/OpenBlocks/src/main/java/art/arcane/openblocks/registry/OBBlocks.java`
   - `/Users/cyberpwn/development/workspace/AuramMods/OpenBlocks/src/main/java/art/arcane/openblocks/registry/OBItems.java`
   - `/Users/cyberpwn/development/workspace/AuramMods/OpenBlocks/src/main/java/art/arcane/openblocks/registry/OBCreativeTabs.java`
+  - `/Users/cyberpwn/development/workspace/AuramMods/OpenBlocks/src/main/java/art/arcane/openblocks/registry/OBFluidTypes.java`
+  - `/Users/cyberpwn/development/workspace/AuramMods/OpenBlocks/src/main/java/art/arcane/openblocks/registry/OBFluids.java`
+  - `/Users/cyberpwn/development/workspace/AuramMods/OpenBlocks/src/main/java/art/arcane/openblocks/registry/OBBlockEntities.java`
+  - `/Users/cyberpwn/development/workspace/AuramMods/OpenBlocks/src/main/java/art/arcane/openblocks/registry/OBEntities.java`
+  - `/Users/cyberpwn/development/workspace/AuramMods/OpenBlocks/src/main/java/art/arcane/openblocks/registry/OBSounds.java`
+  - `/Users/cyberpwn/development/workspace/AuramMods/OpenBlocks/src/main/java/art/arcane/openblocks/registry/OBEnchantments.java`
+  - `/Users/cyberpwn/development/workspace/AuramMods/OpenBlocks/src/main/java/art/arcane/openblocks/registry/OBMenuTypes.java`
+  - `/Users/cyberpwn/development/workspace/AuramMods/OpenBlocks/src/main/java/art/arcane/openblocks/registry/OBRecipeSerializers.java`
 - Registered in 1.20.1 scaffolding:
   - 41 block IDs (legacy names preserved)
   - 41 block items (one per block)
@@ -27,6 +35,8 @@
   - `/Users/cyberpwn/development/workspace/AuramMods/OpenBlocks/src/main/resources/assets/open_blocks/blockstates` (41)
   - `/Users/cyberpwn/development/workspace/AuramMods/OpenBlocks/src/main/resources/assets/open_blocks/models/block` (41)
   - `/Users/cyberpwn/development/workspace/AuramMods/OpenBlocks/src/main/resources/assets/open_blocks/models/item` (71)
+  - `/Users/cyberpwn/development/workspace/AuramMods/OpenBlocks/src/main/resources/assets/open_blocks/sounds.json`
+  - `/Users/cyberpwn/development/workspace/AuramMods/OpenBlocks/src/main/resources/assets/open_blocks/sounds` (legacy `.ogg` set copied)
   - `/Users/cyberpwn/development/workspace/AuramMods/OpenBlocks/src/main/resources/assets/open_blocks/lang/en_us.json`
   - `/Users/cyberpwn/development/workspace/AuramMods/OpenBlocks/src/main/resources/assets/open_blocks/textures/block` (legacy texture import, 1.20 atlas path)
   - `/Users/cyberpwn/development/workspace/AuramMods/OpenBlocks/src/main/resources/assets/open_blocks/textures/item` (legacy texture import, 1.20 atlas path)
@@ -38,6 +48,29 @@
 - Validation:
   - `./gradlew compileJava` succeeds after registry + asset changes.
   - `./gradlew compileJava runData` succeeds (2026-02-08).
+- Datagen baseline (server data) added:
+  - `/Users/cyberpwn/development/workspace/AuramMods/OpenBlocks/src/main/java/art/arcane/openblocks/datagen/OBDataGenerators.java`
+  - `/Users/cyberpwn/development/workspace/AuramMods/OpenBlocks/src/main/java/art/arcane/openblocks/datagen/OBLootTableProvider.java`
+  - `/Users/cyberpwn/development/workspace/AuramMods/OpenBlocks/src/main/java/art/arcane/openblocks/datagen/OBBlockLootSubProvider.java`
+  - `/Users/cyberpwn/development/workspace/AuramMods/OpenBlocks/src/main/java/art/arcane/openblocks/datagen/OBBlockTagsProvider.java`
+  - Generated 41 self-drop block loot tables under:
+    - `/Users/cyberpwn/development/workspace/AuramMods/OpenBlocks/src/generated/resources/data/open_blocks/loot_tables/blocks`
+  - Generated baseline vanilla block-tag injections:
+    - `/Users/cyberpwn/development/workspace/AuramMods/OpenBlocks/src/generated/resources/data/minecraft/tags/blocks/mineable/pickaxe.json`
+    - `/Users/cyberpwn/development/workspace/AuramMods/OpenBlocks/src/generated/resources/data/minecraft/tags/blocks/needs_stone_tool.json`
+    - `/Users/cyberpwn/development/workspace/AuramMods/OpenBlocks/src/generated/resources/data/minecraft/tags/blocks/climbable.json`
+  - Revalidated with:
+    - `./gradlew compileJava`
+    - `./gradlew runData`
+- Recipe placeholder baseline added:
+  - `src/main/resources/data/open_blocks/recipes/crayon_merge.json`
+  - `src/main/resources/data/open_blocks/recipes/crayon_mix.json`
+  - `src/main/resources/data/open_blocks/recipes/crayon_glasses.json`
+  - `src/main/resources/data/open_blocks/recipes/map_clone.json`
+  - `src/main/resources/data/open_blocks/recipes/map_resize.json`
+  - `src/main/resources/data/open_blocks/recipes/golden_eye_recharge.json`
+  - `src/main/resources/data/open_blocks/recipes/epic_eraser_action.json`
+  - These are temporary type-only placeholders for custom serializers; recipe logic parity remains a later depth pass.
 - Datagen runtime safety fix:
   - `build.gradle` now skips optional runtime jars from `extra-mods-1.20.1` when requested tasks include `runData`/`datagen`.
   - This prevents unrelated dev-runtime mods (AE2 etc.) from crashing datagen runs.
@@ -144,4 +177,5 @@
 5. `old-1.12.2/src/main/java/openblocks/Config.java`
 
 ## Next Breadth Step (Planned)
-- Continue Phase 1 breadth: add fluids/block entities/entities/sound/enchantment/menu/recipe serializer registries with placeholder implementations.
+- Continue Phase 2 breadth: expand recipe coverage beyond current custom-recipe placeholders.
+- Draft legacy compatibility/remap mapping plan (`openblocks` namespace + legacy alias IDs -> `open_blocks` canonical IDs).
