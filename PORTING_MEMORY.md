@@ -204,6 +204,7 @@
     - `tasty_clay` consumption increments `open_blocks:bowels` count.
     - Brick item toss triggers `open_blocks:brick_dropped` when allowed (creative or positive bowels count, with decrement for non-creative).
     - Player death now drops up to 16 bricks based on bowels count and clears bowels state.
+    - Server player tick now updates `open_blocks:pedometer_state` movement sampling when the player has a pedometer in the hotbar (auto start/stop + distance accumulation).
     - Periodic placeholder dev-null depth approximation from inventory count triggers `open_blocks:dev_null_stacked`.
   - Clone behavior update:
     - `src/main/java/art/arcane/openblocks/capability/OBCapabilities.java` now avoids copying `open_blocks:bowels` on death clones to prevent duplicated death-drop bricks.
@@ -211,6 +212,7 @@
     - `src/main/java/art/arcane/openblocks/registry/OBItems.java`
     - `tasty_clay` is now edible.
     - `dev_null` and `generic_unstackable` are now stack size 1.
+    - `pedometer` is now stack size 1.
   - Validation:
     - `./gradlew compileJava runData` succeeds after hook/property additions (2026-02-09).
     - quick grep scans show no model/texture warnings in `run/logs/latest.log` and no recipe/tag load errors in `run-data/logs/latest.log`.
@@ -279,7 +281,7 @@
   - connect `ob_inventory` commands to inventory dump/restore backend
   - replace temporary trigger hooks with legacy-accurate sources (boo/brick action and nested dev-null depth logic)
 - Move Phase 3 capability work from placeholders to hooked gameplay paths:
-  - feed pedometer movement sampling into `open_blocks:pedometer_state`
+  - expand pedometer from current auto-sampling baseline to legacy-like explicit item interactions (start/reset/report flow and user-facing readouts)
   - expand brick/bowels behavior from current tasty-clay + brick toss + death-drop baseline to full legacy parity (keybound boo action path, whoops sound/stat behavior)
   - restore luck cooldown/forced-trigger behavior for `open_blocks:luck`
 - Draft legacy compatibility/remap mapping plan (`openblocks` namespace + legacy alias IDs -> `open_blocks` canonical IDs).

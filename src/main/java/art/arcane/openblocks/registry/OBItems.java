@@ -91,7 +91,7 @@ public final class OBItems {
     public static final RegistryObject<Item> INFO_BOOK = registerItem("info_book");
     public static final RegistryObject<Item> DEV_NULL = registerItem("dev_null", new Item.Properties().stacksTo(1));
     public static final RegistryObject<Item> SPONGE_ON_A_STICK = registerItem("sponge_on_a_stick");
-    public static final RegistryObject<Item> PEDOMETER = registerItem("pedometer");
+    public static final RegistryObject<Item> PEDOMETER = registerItem("pedometer", new Item.Properties().stacksTo(1));
     public static final RegistryObject<Item> EPIC_ERASER = registerItem("epic_eraser");
     public static final RegistryObject<Item> WRENCH = registerItem("wrench");
     public static final RegistryObject<Item> GLYPH = registerItem("glyph");

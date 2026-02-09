@@ -217,6 +217,64 @@ public final class OBCapabilities {
         private double lastCheckZ;
         private long lastCheckTime;
 
+        public boolean isRunning() {
+            return running;
+        }
+
+        public double getTotalDistance() {
+            return totalDistance;
+        }
+
+        public void stop() {
+            this.running = false;
+        }
+
+        public void start(final Player player) {
+            final long now = player.level().getGameTime();
+            final double x = player.getX();
+            final double y = player.getY();
+            final double z = player.getZ();
+
+            this.running = true;
+            this.startTicks = now;
+            this.startX = x;
+            this.startY = y;
+            this.startZ = z;
+            this.prevX = x;
+            this.prevY = y;
+            this.prevZ = z;
+            this.prevTickTime = now;
+            this.lastCheckX = x;
+            this.lastCheckY = y;
+            this.lastCheckZ = z;
+            this.lastCheckTime = now;
+        }
+
+        public void tick(final Player player) {
+            final long now = player.level().getGameTime();
+            final double x = player.getX();
+            final double y = player.getY();
+            final double z = player.getZ();
+
+            if (!running) {
+                start(player);
+                return;
+            }
+
+            final long deltaTicks = now - prevTickTime;
+            if (deltaTicks > 0L) {
+                final double dx = x - prevX;
+                final double dy = y - prevY;
+                final double dz = z - prevZ;
+                this.totalDistance += Math.sqrt((dx * dx) + (dy * dy) + (dz * dz));
+            }
+
+            this.prevX = x;
+            this.prevY = y;
+            this.prevZ = z;
+            this.prevTickTime = now;
+        }
+
         @Override
         public CompoundTag serializeNBT() {
             final CompoundTag tag = new CompoundTag();

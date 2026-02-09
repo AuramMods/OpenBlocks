@@ -93,6 +93,7 @@ Validation log:
 - [x] Expanded legacy ore-dict compatibility tags in `src/main/resources/data/open_blocks/tags/items/legacy_ore_dict` from single-item placeholders to broader `forge`/`minecraft` tag membership across 34 files, validated with `./gradlew compileJava runData` on 2026-02-09.
 - [-] Added initial gameplay event hooks for custom triggers/capability bridge in `OBAdvancementHooks` (`tasty_clay` consume -> bowels +1, brick toss -> `brick_dropped` with bowels decrement, periodic dev-null depth approximation -> `dev_null_stacked`), and updated item properties for parity (`tasty_clay` edible, `dev_null`/`generic_unstackable` unstackable), validated with `./gradlew compileJava runData` on 2026-02-09.
 - [-] Expanded bowels parity hooks with death-drop behavior in `OBAdvancementHooks` (`LivingDropsEvent`: drop up to 16 bricks from stored bowels count, then clear), and updated clone behavior in `OBCapabilities` to not copy bowels on death clones, validated with `./gradlew compileJava runData` on 2026-02-09.
+- [-] Added initial pedometer movement sampling hook: `OBAdvancementHooks` now ticks `OBCapabilities.PedometerState` on server player ticks when a pedometer exists in hotbar (auto-start/stop + distance accumulation), and `OBItems.PEDOMETER` is now unstackable for baseline parity, validated with `./gradlew compileJava runData` on 2026-02-09.
 
 ## Phase 3: Systems Skeleton (Breadth Gameplay Pass)
 Goal: recreate cross-cutting systems in thin form before deep feature parity.
@@ -148,7 +149,7 @@ Checklist:
   - `flimflam`: hook effect execution to ported flim-flam registry/actions
   - `ob_inventory`: reconnect to inventory dump/restore storage backend
 - [ ] Replace capability placeholders with gameplay hooks:
-  - `pedometer_state`: reconnect movement update/read paths used by pedometer item flow
+  - `pedometer_state`: expand from current auto-sampling baseline to legacy-like item flow (explicit start/reset/report cadence and speed/readout outputs)
   - `bowels`: expand from current tasty-clay + brick-toss + death-drop hooks to full legacy behavior parity (keybound brick-drop path + sound/stat nuances)
   - `luck`: reconnect full flim-flam cooldown and forced-trigger logic (currently just raw value storage)
 - [ ] Wire custom advancement triggers into gameplay events:
