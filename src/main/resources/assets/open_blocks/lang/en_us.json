@@ -159,6 +159,6 @@
   "openblocks.misc.pedometer.straigh_line_speed": "Straight line speed: %s",
   "openblocks.misc.pedometer.last_check_distance": "Distance from last check: %s",
   "openblocks.misc.pedometer.last_check_speed": "Last check speed: %s",
-  "openblocks.misc.pedometer.last_check_time": "Time from last check: %d ticks",
-  "openblocks.misc.pedometer.total_time": "Total time: %d ticks"
+  "openblocks.misc.pedometer.last_check_time": "Time from last check: %s ticks",
+  "openblocks.misc.pedometer.total_time": "Total time: %s ticks"
 }

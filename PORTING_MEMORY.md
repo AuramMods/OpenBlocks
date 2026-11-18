@@ -90,7 +90,12 @@
 - Datagen and jar reobfuscation succeeded. All 101 standalone GameTests passed. The five new tests cover the recipe and its bucket remainder, eating at full hunger, sound and drop direction, the statistic and criterion, both modes, cancellation, and the death-drop cap.
 - In muted packaged Forge 47.4.10 multiplayer, two Tasty Clay stored two charges at full hunger. A normal Q toss earned nothing. B threw a brick behind the player and displayed Zoinks!. B typed in chat used a charge only with `doItWhileTyping` enabled, and the character still appeared in the chat field. Holding B in creative mode threw one brick and used no charge.
 - A dedicated-server restart preserved the remaining clay charge, the advancement, and the custom stat at three. Server Serious Mode blocked B while preserving that charge. Opting back in used the same saved charge and raised the stat to four.
-- Next, restore the Pedometer's tracking and readout behavior.
+- The Pedometer samples a running trip once per server tick from the hotbar or offhand. Either hand starts a trip, checks the last recorded sample, or resets with sneak-use. A stored Pedometer skips sampling in the backpack and resumes from the last sampled point. The original 0.1-block-per-tick model threshold drives the moving sprite.
+- Reports show whole meters, speed to two decimal places in m/tick, and numeric tick counts. The 1.20.1 capability retains its existing NBT fields and saved trips across restarts. Death and dimension changes clear the trip, matching the original player replacement behavior. [Original unit definitions](https://raw.githubusercontent.com/OpenMods/OpenModsLib/master/src/main/java/openmods/utils/Units.java)
+- Datagen and jar reobfuscation succeeded. All 105 standalone GameTests passed. Four new tests cover the recipe, hotbar and offhand sampling, round-trip compatibility with earlier saved data, route and checkpoint calculations, readout units, and lifecycle resets including capability invalidation and revival, death, and an End return.
+- In muted multiplayer, the original moving sprite animated during a walk and returned to the still model at rest. A right-angle route reported 26 m traveled, 19 m straight-line distance, and a 13 m checkpoint leg. Sampling paused with the meter in the backpack. Moving it to the offhand resumed sampling, and using it there displayed 41 m.
+- A dedicated-server restart reopened the 41 m trip with the meter still in the offhand. Sneak-use cleared it. On the final packaged jar, a Nether teleport cleared a new 22.6 m trip and the meter started again in the Nether. The player kept seven luck and one stored brick across the transfer. The `/luck` command raised the saved value to nine, and Be Silly spent the stored brick in survival. Dying and respawning cleared the new trip and kept the nine luck.
+- Next, port Luggage and its inventory. The current item, entity, and menu are placeholders. The original follows its owner, collects grounded items into 27 slots, grows to 54 after lightning, and carries its contents and name when picked up. Start with safe item-to-entity round trips and inventory transfers, then verify the two menu sizes and animated model in a muted client.
 
 ## Current Snapshot
 - Legacy codebase analyzed: `old-1.12.2`.
@@ -290,16 +295,14 @@
   - Current scope of capability scaffold:
     - Persistence: yes (CompoundTag serialization).
     - Clone/respawn carry-over: yes (copy on `PlayerEvent.Clone`).
-    - Gameplay hook parity: not yet (pedometer/bowels/flim-flam logic paths still pending).
+    - Flim-flam luck and cooldown behavior remains pending.
   - Validation:
     - `./gradlew compileJava runData` succeeds after capability additions (2026-02-09).
 - Trigger/capability gameplay hook follow-up (2026-02-09):
-  - Added event bridge hooks:
-    - `src/main/java/art/arcane/openblocks/advancement/OBAdvancementHooks.java`
   - Current hooks:
     - `OBBrickActions` handles Tasty Clay, Be Silly, and death drops with the server's Serious Mode setting.
     - A successful Be Silly drop awards `open_blocks:brick_dropped` and `open_blocks:bricks_dropped`.
-    - Server player tick now updates `open_blocks:pedometer_state` movement sampling when the player has a pedometer in the hotbar and tracking is active.
+    - `OBPedometerTracking` samples movement when an active Pedometer is in the hotbar or offhand.
     - The dev-null editor now triggers `open_blocks:dev_null_stacked` from the actual nested contents.
     - New explicit pedometer item flow is wired in `src/main/java/art/arcane/openblocks/item/OBPedometerItem.java`:
       - right-click starts tracking,
@@ -544,6 +547,5 @@
   - deepen `flimflam` from current breadth-stage effects to legacy cost/weight/luck/blacklist behavior
   - deepen `ob_inventory` from current built-in targets + event-bridge payload schema + grave placement/claim/action-filter baseline to concrete subsystem integrations + full grave/backend parity
 - Move Phase 3 capability work from placeholders to hooked gameplay paths:
-  - expand pedometer from current explicit start/reset/report baseline to deeper parity (legacy unit formatting, client-side speed property behavior, polish on readout cadence)
   - restore luck cooldown/forced-trigger behavior for `open_blocks:luck`
 - Draft legacy compatibility/remap mapping plan (`openblocks` namespace + legacy alias IDs -> `open_blocks` canonical IDs).

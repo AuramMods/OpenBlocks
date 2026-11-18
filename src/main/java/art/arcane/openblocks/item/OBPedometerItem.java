@@ -22,7 +22,6 @@ public final class OBPedometerItem extends Item {
     @Override
     public InteractionResultHolder<ItemStack> use(final Level level, final Player player, final InteractionHand hand) {
         final ItemStack stack = player.getItemInHand(hand);
-        if (hand != InteractionHand.MAIN_HAND) return InteractionResultHolder.pass(stack);
         if (!(player instanceof ServerPlayer serverPlayer)) return InteractionResultHolder.sidedSuccess(stack, level.isClientSide());
 
         level.playSound(null, serverPlayer.blockPosition(), OBSounds.PEDOMETER_USE.get(), SoundSource.PLAYERS, 1.0f, 1.0f);
@@ -39,10 +38,10 @@ public final class OBPedometerItem extends Item {
                 return;
             }
 
-            state.tick(serverPlayer);
             final OBCapabilities.PedometerReport report = state.createReport(serverPlayer);
             if (report == null) return;
 
+            serverPlayer.sendSystemMessage(Component.empty());
             send(serverPlayer, "openblocks.misc.pedometer.start_point", formatPoint(report.startX(), report.startY(), report.startZ()));
             send(serverPlayer, "openblocks.misc.pedometer.speed", formatSpeed(report.currentSpeed()));
             send(serverPlayer, "openblocks.misc.pedometer.avg_speed", formatSpeed(report.averageSpeed()));
@@ -67,10 +66,10 @@ public final class OBPedometerItem extends Item {
     }
 
     private static String formatDistance(final double distance) {
-        return String.format(Locale.ROOT, "%.3f m", distance);
+        return String.format(Locale.ROOT, "%.0f m", distance);
     }
 
     private static String formatSpeed(final double speed) {
-        return String.format(Locale.ROOT, "%.3f m/t", speed);
+        return String.format(Locale.ROOT, "%.2f m/tick", speed);
     }
 }

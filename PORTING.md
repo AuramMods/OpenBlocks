@@ -133,7 +133,7 @@ Suggested order:
 - [-] Utility/domain: block breaker/placer/dropper, auto anvil/enchantment table
 - [ ] Visual/domain: canvas/paint/stencil/glyph/projector/sky block
 - [ ] Entity/domain: luggage/cartographer/mini-me/golden eye/etc
-- [ ] Fun/domain: trophies, flim-flam, pedometer, sounds/effects
+- [ ] Fun/domain: trophies, flim-flam, sounds/effects
 
 Per-feature checklist template:
 - [ ] Registration complete
@@ -173,7 +173,6 @@ Checklist:
   - carry richer grave metadata/behavior (owner restrictions, richer death-message formatting, base-placement/facing details) into block/entity state
   - harden grave placement edge-cases (destructive fallback policy, cross-dimension guarantees, failure-path UX/messages)
 - [ ] Replace capability placeholders with gameplay hooks:
-  - `pedometer_state`: expand from current explicit start/reset/report baseline to deeper parity (client-side speed property behavior + legacy unit/readout polish)
   - `luck`: reconnect full flim-flam cooldown and forced-trigger logic (currently just raw value storage)
 - [ ] Finish legacy recipe migration for skipped recipe files:
   - revisit remaining metadata-collapsed conversions to restore accurate color and subtype behavior, including paintbrush variants
@@ -194,3 +193,4 @@ Checklist:
 - [x] Restore Flag mounts, turning, all carpet colors, and color-preserving drops. Restore both Sky Block polarities, the torch conversion, and live sky rendering.
 - [x] Restore the /dev/null inventory, world pickup filtering, overflow, forwarding block placement, and the true nesting advancement.
 - [x] Restore Tasty Clay digestion, the Be Silly key, brick drops, the Bricks dropped statistic, and the Zoinks! advancement.
+- [x] Restore Pedometer sampling, offhand use, route checks, original readout units, and its movement-driven item animation.

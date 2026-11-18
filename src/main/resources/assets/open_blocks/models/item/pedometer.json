@@ -2,5 +2,11 @@
   "parent": "minecraft:item/generated",
   "textures": {
     "layer0": "open_blocks:item/pedometer_still"
-  }
+  },
+  "overrides": [
+    {
+      "predicate": { "open_blocks:speed": 0.1 },
+      "model": "open_blocks:item/pedometer_moving"
+    }
+  ]
 }

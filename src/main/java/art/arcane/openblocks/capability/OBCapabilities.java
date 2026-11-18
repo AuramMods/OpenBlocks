@@ -8,6 +8,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.capabilities.CapabilityToken;
@@ -56,8 +57,10 @@ public final class OBCapabilities {
         original.reviveCaps();
         try {
             copy(original, clone, LUCK);
-            copy(original, clone, PEDOMETER_STATE);
-            if (!event.isWasDeath()) copy(original, clone, BOWELS);
+            if (!event.isWasDeath()) {
+                copy(original, clone, BOWELS);
+                if (original.level().dimension().equals(clone.level().dimension())) copy(original, clone, PEDOMETER_STATE);
+            }
         } finally {
             original.invalidateCaps();
         }
@@ -117,22 +120,26 @@ public final class OBCapabilities {
 
         private final Capability<T> capability;
         private final T instance;
-        private final LazyOptional<T> optional;
+        private LazyOptional<T> optional;
 
         private OBSerializableCapabilityProvider(final Capability<T> capability, final Supplier<T> factory) {
             this.capability = capability;
             this.instance = factory.get();
-            this.optional = LazyOptional.of(() -> instance);
         }
 
         private void invalidate() {
-            optional.invalidate();
+            if (optional == null) return;
+            final LazyOptional<T> invalidated = optional;
+            optional = null;
+            invalidated.invalidate();
         }
 
         @Override
         public <C> LazyOptional<C> getCapability(final Capability<C> capability, final Direction side) {
-            if (capability == this.capability) return optional.cast();
-            return LazyOptional.empty();
+            if (capability != this.capability) return LazyOptional.empty();
+            // Forge can revive the same player on a dimension change or while copying respawn data.
+            if (optional == null) optional = LazyOptional.of(() -> instance);
+            return optional.cast();
         }
 
         @Override
@@ -205,17 +212,11 @@ public final class OBCapabilities {
         private double totalDistance;
         private double currentSpeed;
         private long startTicks;
-        private double startX;
-        private double startY;
-        private double startZ;
-        private double prevX;
-        private double prevY;
-        private double prevZ;
-        private long prevTickTime;
-        private double lastCheckX;
-        private double lastCheckY;
-        private double lastCheckZ;
-        private long lastCheckTime;
+        private Vec3 start = Vec3.ZERO;
+        private Vec3 lastSample = Vec3.ZERO;
+        private long lastSampleTicks;
+        private Vec3 lastCheck = Vec3.ZERO;
+        private long lastCheckTicks;
 
         public boolean isRunning() {
             return running;
@@ -226,109 +227,50 @@ public final class OBCapabilities {
         }
 
         public void stop() {
-            this.running = false;
+            running = false;
         }
 
         public void reset() {
-            this.running = false;
-            this.totalDistance = 0.0;
-            this.currentSpeed = 0.0;
-            this.startTicks = 0L;
-            this.startX = 0.0;
-            this.startY = 0.0;
-            this.startZ = 0.0;
-            this.prevX = 0.0;
-            this.prevY = 0.0;
-            this.prevZ = 0.0;
-            this.prevTickTime = 0L;
-            this.lastCheckX = 0.0;
-            this.lastCheckY = 0.0;
-            this.lastCheckZ = 0.0;
-            this.lastCheckTime = 0L;
+            running = false;
+            totalDistance = 0;
+            currentSpeed = 0;
+            startTicks = 0;
+            start = Vec3.ZERO;
+            lastSample = Vec3.ZERO;
+            lastSampleTicks = 0;
+            lastCheck = Vec3.ZERO;
+            lastCheckTicks = 0;
         }
 
         public void start(final Player player) {
-            final long now = player.level().getGameTime();
-            final double x = player.getX();
-            final double y = player.getY();
-            final double z = player.getZ();
-
-            this.running = true;
-            this.totalDistance = 0.0;
-            this.currentSpeed = 0.0;
-            this.startTicks = now;
-            this.startX = x;
-            this.startY = y;
-            this.startZ = z;
-            this.prevX = x;
-            this.prevY = y;
-            this.prevZ = z;
-            this.prevTickTime = now;
-            this.lastCheckX = x;
-            this.lastCheckY = y;
-            this.lastCheckZ = z;
-            this.lastCheckTime = now;
+            start = lastSample = lastCheck = player.position();
+            startTicks = lastSampleTicks = lastCheckTicks = player.level().getGameTime();
+            totalDistance = 0;
+            currentSpeed = 0;
+            running = true;
         }
 
         public void tick(final Player player) {
-            if (!running) return;
-
             final long now = player.level().getGameTime();
-            final double x = player.getX();
-            final double y = player.getY();
-            final double z = player.getZ();
+            final long elapsed = now - lastSampleTicks;
+            if (!running || elapsed <= 0) return;
 
-            final long deltaTicks = now - prevTickTime;
-            if (deltaTicks > 0L) {
-                final double dx = x - prevX;
-                final double dy = y - prevY;
-                final double dz = z - prevZ;
-                final double distanceSinceLastTick = Math.sqrt((dx * dx) + (dy * dy) + (dz * dz));
-                this.totalDistance += distanceSinceLastTick;
-                this.currentSpeed = distanceSinceLastTick / (double)deltaTicks;
-            }
-
-            this.prevX = x;
-            this.prevY = y;
-            this.prevZ = z;
-            this.prevTickTime = now;
+            final Vec3 position = player.position();
+            final double distance = position.distanceTo(lastSample);
+            totalDistance += distance;
+            currentSpeed = distance / elapsed;
+            lastSample = position;
+            lastSampleTicks = now;
         }
 
         public PedometerReport createReport(final Player player) {
-            if (!running) return null;
+            // Always report the sampled route, even if the player moved after the last sample.
+            if (!running || lastSampleTicks <= startTicks) return null;
 
-            final long now = player.level().getGameTime();
-            final double x = player.getX();
-            final double y = player.getY();
-            final double z = player.getZ();
-
-            final long totalTime = Math.max(0L, now - startTicks);
-            final long lastTime = Math.max(0L, now - lastCheckTime);
-
-            final double fromStartX = x - startX;
-            final double fromStartY = y - startY;
-            final double fromStartZ = z - startZ;
-            final double straightLineDistance = Math.sqrt((fromStartX * fromStartX) + (fromStartY * fromStartY) + (fromStartZ * fromStartZ));
-
-            final double fromLastX = x - lastCheckX;
-            final double fromLastY = y - lastCheckY;
-            final double fromLastZ = z - lastCheckZ;
-            final double lastCheckDistance = Math.sqrt((fromLastX * fromLastX) + (fromLastY * fromLastY) + (fromLastZ * fromLastZ));
-
-            final PedometerReport report = new PedometerReport(
-                    startX, startY, startZ,
-                    totalTime,
-                    totalDistance,
-                    straightLineDistance,
-                    lastCheckDistance,
-                    lastTime,
-                    currentSpeed);
-
-            this.lastCheckX = x;
-            this.lastCheckY = y;
-            this.lastCheckZ = z;
-            this.lastCheckTime = now;
-
+            final var report = new PedometerReport(start.x, start.y, start.z, lastSampleTicks - startTicks, totalDistance,
+                    start.distanceTo(lastSample), lastCheck.distanceTo(lastSample), lastSampleTicks - lastCheckTicks, currentSpeed);
+            lastCheck = lastSample;
+            lastCheckTicks = lastSampleTicks;
             return report;
         }
 
@@ -339,140 +281,64 @@ public final class OBCapabilities {
             tag.putDouble("total_distance", totalDistance);
             tag.putDouble("current_speed", currentSpeed);
             tag.putLong("start_ticks", startTicks);
-            tag.putDouble("start_x", startX);
-            tag.putDouble("start_y", startY);
-            tag.putDouble("start_z", startZ);
-            tag.putDouble("prev_x", prevX);
-            tag.putDouble("prev_y", prevY);
-            tag.putDouble("prev_z", prevZ);
-            tag.putLong("prev_tick_time", prevTickTime);
-            tag.putDouble("last_check_x", lastCheckX);
-            tag.putDouble("last_check_y", lastCheckY);
-            tag.putDouble("last_check_z", lastCheckZ);
-            tag.putLong("last_check_time", lastCheckTime);
+            writePosition(tag, "start", start);
+            writePosition(tag, "prev", lastSample);
+            tag.putLong("prev_tick_time", lastSampleTicks);
+            writePosition(tag, "last_check", lastCheck);
+            tag.putLong("last_check_time", lastCheckTicks);
             return tag;
         }
 
         @Override
         public void deserializeNBT(final CompoundTag tag) {
-            this.running = tag.getBoolean("running");
-            this.totalDistance = tag.getDouble("total_distance");
-            this.currentSpeed = tag.getDouble("current_speed");
-            this.startTicks = tag.getLong("start_ticks");
-            this.startX = tag.getDouble("start_x");
-            this.startY = tag.getDouble("start_y");
-            this.startZ = tag.getDouble("start_z");
-            this.prevX = tag.getDouble("prev_x");
-            this.prevY = tag.getDouble("prev_y");
-            this.prevZ = tag.getDouble("prev_z");
-            this.prevTickTime = tag.getLong("prev_tick_time");
-            this.lastCheckX = tag.getDouble("last_check_x");
-            this.lastCheckY = tag.getDouble("last_check_y");
-            this.lastCheckZ = tag.getDouble("last_check_z");
-            this.lastCheckTime = tag.getLong("last_check_time");
+            running = tag.getBoolean("running");
+            totalDistance = tag.getDouble("total_distance");
+            currentSpeed = tag.getDouble("current_speed");
+            startTicks = tag.getLong("start_ticks");
+            start = readPosition(tag, "start");
+            lastSample = readPosition(tag, "prev");
+            lastSampleTicks = tag.getLong("prev_tick_time");
+            lastCheck = readPosition(tag, "last_check");
+            lastCheckTicks = tag.getLong("last_check_time");
+        }
+
+        private static void writePosition(final CompoundTag tag, final String prefix, final Vec3 position) {
+            tag.putDouble(prefix + "_x", position.x);
+            tag.putDouble(prefix + "_y", position.y);
+            tag.putDouble(prefix + "_z", position.z);
+        }
+
+        private static Vec3 readPosition(final CompoundTag tag, final String prefix) {
+            return new Vec3(tag.getDouble(prefix + "_x"), tag.getDouble(prefix + "_y"), tag.getDouble(prefix + "_z"));
         }
 
         @Override
         public void copyFrom(final PedometerState other) {
-            this.running = other.running;
-            this.totalDistance = other.totalDistance;
-            this.currentSpeed = other.currentSpeed;
-            this.startTicks = other.startTicks;
-            this.startX = other.startX;
-            this.startY = other.startY;
-            this.startZ = other.startZ;
-            this.prevX = other.prevX;
-            this.prevY = other.prevY;
-            this.prevZ = other.prevZ;
-            this.prevTickTime = other.prevTickTime;
-            this.lastCheckX = other.lastCheckX;
-            this.lastCheckY = other.lastCheckY;
-            this.lastCheckZ = other.lastCheckZ;
-            this.lastCheckTime = other.lastCheckTime;
+            running = other.running;
+            totalDistance = other.totalDistance;
+            currentSpeed = other.currentSpeed;
+            startTicks = other.startTicks;
+            start = other.start;
+            lastSample = other.lastSample;
+            lastSampleTicks = other.lastSampleTicks;
+            lastCheck = other.lastCheck;
+            lastCheckTicks = other.lastCheckTicks;
         }
     }
 
-    public static final class PedometerReport {
-        private final double startX;
-        private final double startY;
-        private final double startZ;
-        private final long totalTime;
-        private final double totalDistance;
-        private final double straightLineDistance;
-        private final double lastCheckDistance;
-        private final long lastCheckTime;
-        private final double currentSpeed;
-
-        public PedometerReport(
-                final double startX,
-                final double startY,
-                final double startZ,
-                final long totalTime,
-                final double totalDistance,
-                final double straightLineDistance,
-                final double lastCheckDistance,
-                final long lastCheckTime,
-                final double currentSpeed) {
-            this.startX = startX;
-            this.startY = startY;
-            this.startZ = startZ;
-            this.totalTime = totalTime;
-            this.totalDistance = totalDistance;
-            this.straightLineDistance = straightLineDistance;
-            this.lastCheckDistance = lastCheckDistance;
-            this.lastCheckTime = lastCheckTime;
-            this.currentSpeed = currentSpeed;
-        }
-
-        public double startX() {
-            return startX;
-        }
-
-        public double startY() {
-            return startY;
-        }
-
-        public double startZ() {
-            return startZ;
-        }
-
-        public long totalTime() {
-            return totalTime;
-        }
-
-        public double totalDistance() {
-            return totalDistance;
-        }
-
-        public double straightLineDistance() {
-            return straightLineDistance;
-        }
-
-        public double lastCheckDistance() {
-            return lastCheckDistance;
-        }
-
-        public long lastCheckTime() {
-            return lastCheckTime;
-        }
-
-        public double currentSpeed() {
-            return currentSpeed;
-        }
+    public record PedometerReport(double startX, double startY, double startZ, long totalTime, double totalDistance,
+            double straightLineDistance, double lastCheckDistance, long lastCheckTime, double currentSpeed) {
 
         public double averageSpeed() {
-            if (totalTime <= 0L) return 0.0;
-            return totalDistance / (double)totalTime;
+            return totalTime > 0 ? totalDistance / totalTime : 0;
         }
 
         public double straightLineSpeed() {
-            if (totalTime <= 0L) return 0.0;
-            return straightLineDistance / (double)totalTime;
+            return totalTime > 0 ? straightLineDistance / totalTime : 0;
         }
 
         public double lastCheckSpeed() {
-            if (lastCheckTime <= 0L) return 0.0;
-            return lastCheckDistance / (double)lastCheckTime;
+            return lastCheckTime > 0 ? lastCheckDistance / lastCheckTime : 0;
         }
     }
 

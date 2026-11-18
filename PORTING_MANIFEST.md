@@ -31,6 +31,8 @@ Current registry classes:
 - Recipe serializer register: `src/main/java/art/arcane/openblocks/registry/OBRecipeSerializers.java`
 - Custom pedometer item behavior:
   - `src/main/java/art/arcane/openblocks/item/OBPedometerItem.java`
+  - `src/main/java/art/arcane/openblocks/player/OBPedometerTracking.java`
+  - `src/main/java/art/arcane/openblocks/client/OBPedometerRendering.java`
 - Command registration (Forge bus): `src/main/java/art/arcane/openblocks/command/OBCommands.java`
 - Command inventory dump backend: `src/main/java/art/arcane/openblocks/command/OBInventoryStore.java`
 - Command inventory death-dump hook: `src/main/java/art/arcane/openblocks/command/OBInventoryHooks.java`
@@ -57,7 +59,6 @@ Current registry classes:
   - `src/main/java/art/arcane/openblocks/advancement/OBCriterions.java`
   - `src/main/java/art/arcane/openblocks/advancement/OBBrickDroppedTrigger.java`
   - `src/main/java/art/arcane/openblocks/advancement/OBDevNullStackTrigger.java`
-  - `src/main/java/art/arcane/openblocks/advancement/OBAdvancementHooks.java`
 - Non-full shape helper block: `src/main/java/art/arcane/openblocks/block/OBShapeBlock.java`
 - Client render-layer setup: `src/main/java/art/arcane/openblocks/client/OBClientRenderLayers.java`
 - Datagen entrypoint: `src/main/java/art/arcane/openblocks/datagen/OBDataGenerators.java`
@@ -88,7 +89,7 @@ Current scaffold counts:
 Current asset coverage:
 - Blockstates: `src/main/resources/assets/open_blocks/blockstates` (41 files)
 - Block models: `src/main/resources/assets/open_blocks/models/block` (41 files)
-- Item models: `src/main/resources/assets/open_blocks/models/item` (83 files)
+- Item models: `src/main/resources/assets/open_blocks/models/item` (84 files)
 - Language file: `src/main/resources/assets/open_blocks/lang/en_us.json`
 - Sound definitions: `src/main/resources/assets/open_blocks/sounds.json`
 - Sound assets: `src/main/resources/assets/open_blocks/sounds` (legacy OpenBlocks `.ogg` set copied)
@@ -121,7 +122,7 @@ Current validation status:
 - Latest `./gradlew compileJava runData` pass (2026-02-09) still succeeds after ladder-domain sweep additions (`OBLadderBlock`, `OBRopeLadderBlock`, and `OBBlocks` wiring) for support/chain/auto-extension behavior.
 - Latest `./gradlew compileJava runData` pass (2026-02-09) still succeeds after elevator-domain sweep additions (`OBElevatorBlock`, `OBElevatorRotatingBlock`, `OBBlocks` wiring, and rotating-elevator facing blockstate variants) for baseline bidirectional teleport behavior.
 - Capability scaffold note:
-  - Legacy player capability IDs are now registered/attached under `open_blocks` namespace and clone-copied on respawn (`luck`, `pedometer_state`, `bowels`).
+  - Legacy player capabilities use the `open_blocks` namespace. Luck transfers on respawn, while the Pedometer route and stored bricks reset on death. The Pedometer also resets on dimension changes.
 - Build rule note: `build.gradle` skips optional jars from `extra-mods-1.20.1` when task names include `runData`/`datagen`, so datagen is not blocked by unrelated runtime mods.
 - Client asset note: model texture paths must use `open_blocks:block/...` and `open_blocks:item/...` (not plural `blocks/items`) for 1.20 atlas resolution.
 - Fluid client-extension note: third-party renderers that query `IClientFluidTypeExtensions` directly require non-null still/flowing texture keys; `OBFluidTypes` now explicitly supplies `open_blocks:block/xp_juice_still` and `open_blocks:block/xp_juice_flowing` for `open_blocks:xpjuice`.
@@ -189,11 +190,11 @@ Current validation status:
       - grave backup dump writes/reads/deletes are now available via `OBInventoryStore.storeDroppedItems(...)`, `OBInventoryStore.readDroppedItems(...)`, and `OBInventoryStore.deleteDump(...)` and are consumed by the grave place/claim flow.
     - legacy arbitrary subsystem payload consumers/producers remain pending; grave parity now includes baseline drop-action filtering, but still lacks richer metadata/placement depth and concrete external grave event integrations.
   - `/luck` state storage now reads/writes through `OBCapabilities` (`open_blocks:luck`) rather than ad-hoc player persistent data.
-  - `src/main/java/art/arcane/openblocks/capability/OBCapabilities.java` now registers and attaches legacy player capability IDs (`open_blocks:luck`, `open_blocks:pedometer_state`, `open_blocks:bowels`) and copies them during `PlayerEvent.Clone` (except `bowels` on death clones, to avoid duplicate death-drop state).
-  - `OBCapabilities.PedometerState` now includes runtime/report helpers (`reset`, `start`, `tick`, `stop`, `createReport`) and report DTO data used by pedometer messaging.
+  - `OBCapabilities` registers `open_blocks:luck`, `open_blocks:pedometer_state`, and `open_blocks:bowels`. It carries luck through clones, preserves stored bricks on non-death clones, and preserves a Pedometer route on non-death clones within the same dimension.
+  - `OBCapabilities.PedometerState` keeps the sampled route and report data. The player capability provider restores access to the same data when Forge revives capabilities after a dimension change or during a respawn copy.
   - `src/main/java/art/arcane/openblocks/advancement/OBCriterions.java` now registers custom trigger IDs `open_blocks:brick_dropped` and `open_blocks:dev_null_stacked` for advancement compatibility baseline.
   - `OBBrickActions` handles Tasty Clay digestion, the Boo packet, and death drops when the server's `tomfoolery.weAreSeriousPeople` option is false. Only a successfully spawned Boo brick advances `brick_dropped` and the Bricks dropped statistic.
-  - `OBAdvancementHooks` performs baseline pedometer sampling while a pedometer is present in hotbar and tracking is active.
+  - `OBPedometerTracking` samples a running trip once per server tick while a Pedometer is in the hotbar or offhand. Reports use recorded samples and advance the last-check marker.
   - `OBDevNullMenu` fires `dev_null_stacked` from the stored item's actual nesting depth after inventory edits. `OBDevNullPickup` fills exact matching stacks on pickup before discarding overflow.
   - `src/main/java/art/arcane/openblocks/registry/OBItems.java` now sets parity-critical item properties:
     - `tasty_clay` is edible,
@@ -336,7 +337,7 @@ Source: `old-1.12.2/src/main/java/openblocks/OpenBlocks.java`
 | info_book | ItemInfoBook | `Items.infoBook` | `infoBook` |
 | dev_null | ItemDevNull | `Items.devNull` | `devnull`. The 1.20.1 port uses `OBDevNullItem`, with one stored stack in item NBT. |
 | sponge_on_a_stick | ItemSpongeOnAStick | `Items.spongeonastick` | `spongeonastick` |
-| pedometer | ItemPedometer | `Items.pedometer` | - |
+| pedometer | ItemPedometer | `Items.pedometer` | `OBPedometerItem` restores start, report, and sneak-reset in both hands. The `open_blocks:speed` predicate switches to the original moving model at 0.1 blocks per tick. |
 | epic_eraser | ItemEpicEraser | `Items.epicEraser` | `epicEraser` |
 | wrench | ItemWrench | `Items.wrench` | - |
 | glyph | ItemGlyph | `Items.glyph` | - |
