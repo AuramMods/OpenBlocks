@@ -1,6 +1,15 @@
 {
-  "parent": "minecraft:item/generated",
-  "textures": {
-    "layer0": "open_blocks:item/luggage"
-  }
+    "parent": "open_blocks:item/luggage_base",
+    "textures": {
+        "body": "open_blocks:item/luggage_normal_body",
+        "leg": "open_blocks:item/luggage_normal_leg"
+    },
+    "overrides": [
+        {
+            "predicate": {
+                "open_blocks:charged": 1
+            },
+            "model": "open_blocks:item/luggage_special"
+        }
+    ]
 }

@@ -112,6 +112,7 @@
   "message.open_blocks.cannon.out_of_range": "That block is out of cannon range",
   "item.open_blocks.generic": "Legacy Generic Component",
   "item.open_blocks.luggage": "Luggage",
+  "entity.open_blocks.luggage": "Luggage",
   "item.open_blocks.sonic_glasses": "Sonic Glasses",
   "item.open_blocks.pencil_glasses": "Pencil Glasses",
   "item.open_blocks.crayon_glasses": "Crayon Glasses",

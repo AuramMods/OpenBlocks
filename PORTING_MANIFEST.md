@@ -24,6 +24,10 @@ Current registry classes:
 - Fluid/block register: `src/main/java/art/arcane/openblocks/registry/OBFluids.java`
 - Block entity register: `src/main/java/art/arcane/openblocks/registry/OBBlockEntities.java`
 - Entity register: `src/main/java/art/arcane/openblocks/registry/OBEntities.java`
+- Luggage item, entity, and client presentation:
+  - `src/main/java/art/arcane/openblocks/item/OBLuggageItem.java`
+  - `src/main/java/art/arcane/openblocks/entity/OBLuggage.java`
+  - `src/main/java/art/arcane/openblocks/client/OBLuggageRendering.java`
 - Sound register: `src/main/java/art/arcane/openblocks/registry/OBSounds.java`
 - Custom statistic register for Bricks dropped: `src/main/java/art/arcane/openblocks/registry/OBStats.java`
 - Enchantment register: `src/main/java/art/arcane/openblocks/registry/OBEnchantments.java`
@@ -89,7 +93,7 @@ Current scaffold counts:
 Current asset coverage:
 - Blockstates: `src/main/resources/assets/open_blocks/blockstates` (41 files)
 - Block models: `src/main/resources/assets/open_blocks/models/block` (41 files)
-- Item models: `src/main/resources/assets/open_blocks/models/item` (84 files)
+- Item models: `src/main/resources/assets/open_blocks/models/item` (86 files)
 - Language file: `src/main/resources/assets/open_blocks/lang/en_us.json`
 - Sound definitions: `src/main/resources/assets/open_blocks/sounds.json`
 - Sound assets: `src/main/resources/assets/open_blocks/sounds` (legacy OpenBlocks `.ogg` set copied)
@@ -313,7 +317,7 @@ Source: `old-1.12.2/src/main/java/openblocks/OpenBlocks.java`
 |---|---|---|---|
 | hang_glider | ItemHangGlider | `Items.hangGlider` | `hangglider` |
 | generic | ItemOBGeneric | `Items.generic` | no default model; meta item holder |
-| luggage | ItemLuggage | `Items.luggage` | - |
+| luggage | ItemLuggage | `Items.luggage` | `OBLuggageItem` deploys from the main hand and restores the stored slots, custom name, and lightning upgrade. Packed drops resist damage and despawn. |
 | sonic_glasses | ItemSonicGlasses | `Items.sonicGlasses` | `sonicglasses` |
 | pencil_glasses | ItemImaginationGlasses | `Items.pencilGlasses` | `pencilGlasses`, unlocalized `glasses.pencil` |
 | crayon_glasses | ItemCrayonGlasses | `Items.crayonGlasses` | `crayonGlasses`, unlocalized `glasses.crayon` |
@@ -455,7 +459,7 @@ Additional keys present in `sounds.json` but not registered in code:
 Source: `old-1.12.2/src/main/java/openblocks/OpenBlocks.java`
 
 Registered mod entities:
-- `openblocks:luggage` -> `EntityLuggage` (legacy numeric ID constant `702`)
+- `openblocks:luggage` -> `EntityLuggage` (legacy numeric ID constant `702`). `open_blocks:luggage` uses `OBLuggage` with owner following, grounded item collection, 27 or 54 slots, and synchronized lightning charge.
 - `openblocks:xp_orb_no_fly` -> `EntityXPOrbNoFly` (`709`)
 - `openblocks:hang_glider` -> `EntityHangGlider` (`701`)
 - `openblocks:magnet` -> `EntityMagnet` (`703`)
@@ -525,7 +529,7 @@ Primary GUI source files:
 - `old-1.12.2/src/main/java/openblocks/client/gui/*`
 
 Non-tile GUI IDs via `OpenBlocksGuiHandler.GuiId`:
-- `luggage` -> `ContainerLuggage` / `GuiLuggage`
+- `luggage` -> `ContainerLuggage` / `GuiLuggage`. `open_blocks:luggage` uses the vanilla chest layout with three or six rows and server-synchronized slots.
 - `devNull` -> `ContainerDevNull` / `GuiDevNull`. The 1.20.1 port keeps the `open_blocks:dev_null` menu ID with `OBDevNullMenu` and `OBDevNullScreen`.
 
 Tile-based container/gui providers (via `IHasGui` in tile entities):

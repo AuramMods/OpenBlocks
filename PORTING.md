@@ -132,7 +132,7 @@ Suggested order:
 - [-] Storage/domain: tanks, xp systems, vacuum hopper, donation station
 - [-] Utility/domain: block breaker/placer/dropper, auto anvil/enchantment table
 - [ ] Visual/domain: canvas/paint/stencil/glyph/projector/sky block
-- [ ] Entity/domain: luggage/cartographer/mini-me/golden eye/etc
+- [-] Entity/domain: cartographer, mini-me, golden eye, and the remaining entities in the manifest
 - [ ] Fun/domain: trophies, flim-flam, sounds/effects
 
 Per-feature checklist template:
@@ -194,3 +194,4 @@ Checklist:
 - [x] Restore the /dev/null inventory, world pickup filtering, overflow, forwarding block placement, and the true nesting advancement.
 - [x] Restore Tasty Clay digestion, the Be Silly key, brick drops, the Bricks dropped statistic, and the Zoinks! advancement.
 - [x] Restore Pedometer sampling, offhand use, route checks, original readout units, and its movement-driven item animation.
+- [x] Restore Luggage deployment, owner following, item collection, packing, both inventory sizes, lightning upgrades, and the original animated models.

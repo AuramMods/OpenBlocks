@@ -6,6 +6,7 @@ import art.arcane.openblocks.item.OBCannonItem;
 import art.arcane.openblocks.item.OBDevNullItem;
 import art.arcane.openblocks.item.OBElevatorItem;
 import art.arcane.openblocks.item.OBFlagItem;
+import art.arcane.openblocks.item.OBLuggageItem;
 import art.arcane.openblocks.item.OBPedometerItem;
 import art.arcane.openblocks.item.OBPointerItem;
 import art.arcane.openblocks.item.OBScaffoldingItem;
@@ -98,7 +99,7 @@ public final class OBItems {
     public static final RegistryObject<Item> UNPREPARED_STENCIL = registerItem("unprepared_stencil");
     public static final RegistryObject<Item> SKETCHING_PENCIL = registerItem("sketching_pencil");
     public static final RegistryObject<Item> POINTER = registerItem("pointer", () -> new OBPointerItem(new Item.Properties().stacksTo(1)));
-    public static final RegistryObject<Item> LUGGAGE = registerItem("luggage");
+    public static final RegistryObject<Item> LUGGAGE = registerItem("luggage", OBLuggageItem::new);
     public static final RegistryObject<Item> SONIC_GLASSES = registerItem("sonic_glasses");
     public static final RegistryObject<Item> PENCIL_GLASSES = registerItem("pencil_glasses");
     public static final RegistryObject<Item> CRAYON_GLASSES = registerItem("crayon_glasses");
