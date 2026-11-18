@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "open_blocks:generic_unstackable"
+    }
+  ],
+  "result": {
+    "item": "open_blocks:pointer"
+  }
+}

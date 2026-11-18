@@ -7,14 +7,19 @@
     "  s"
   ],
   "key": {
-    "c": {
-      "item": "minecraft:coal"
-    },
+    "c": [
+      {
+        "item": "minecraft:coal"
+      },
+      {
+        "item": "minecraft:charcoal"
+      }
+    ],
     "s": {
       "tag": "open_blocks:legacy_ore_dict/stick_wood"
     }
   },
   "result": {
-    "item": "open_blocks:generic"
+    "item": "open_blocks:sketching_pencil"
   }
 }

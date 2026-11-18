@@ -9,7 +9,9 @@
 - The standalone Forge GameTest server reproduced five baseline regressions before the fixes. All five tests now pass, covering the canvas recipe, material and dye tags, mixed elevator rotation, waterlogged blocks near sponges, and drop handling when a grave cannot be placed.
 - Run `./gradlew -PopenBlocksStandalone runGameTestServer` for silent server checks. Pass `-PopenBlocksRunDir=/absolute/path` for a disposable run, with `eula=true` in its `gametest/eula.txt`. Optional Auram runtime mods are excluded in standalone mode. The test sources and fixture are excluded from the distribution jar.
 - Use `jar` for packaging during development. The `build` finalizer copies the jar into the configured live Prism instance.
-- Next, restore distinct legacy crafting components and metadata variants. Full gameplay parity and client verification are still open.
+- Legacy components and the pointer have distinct item IDs, models, names, and recipe inputs and outputs. The old generic IDs still load, and the old unstackable item converts to the pointer. Generic stacks from earlier port builds have no stored subtype. The Miracle Magnet reuses the crane magnet sprite with its legacy enchantment glint because the legacy snapshot lacks the referenced sprite.
+- All nine standalone GameTests pass, including crafting a hang glider and map with the right components, rejecting incorrect substitutions, upgrading an old pointer, and crafting a sketching pencil with either coal or charcoal. The packaged jar contains the item models and excludes the test fixtures. Item rendering still needs client verification.
+- Next, restore elevator colors across placement, drops, appearance, crafting, and destination matching, then restore jump/sneak activation. Full gameplay parity and client verification are still open.
 
 ## Current Snapshot
 - Legacy codebase analyzed: `old-1.12.2`.

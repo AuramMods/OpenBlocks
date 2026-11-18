@@ -10,6 +10,7 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.registries.DeferredRegister;
@@ -67,7 +68,23 @@ public final class OBItems {
 
     // Standalone items
     public static final RegistryObject<Item> HANG_GLIDER = registerItem("hang_glider");
-    public static final RegistryObject<Item> GENERIC = registerItem("generic");
+    public static final RegistryObject<Item> GLIDER_WING = registerItem("glider_wing");
+    public static final RegistryObject<Item> BEAM = registerItem("beam");
+    public static final RegistryObject<Item> CRANE_ENGINE = registerItem("crane_engine");
+    public static final RegistryObject<Item> CRANE_MAGNET = registerItem("crane_magnet");
+    public static final RegistryObject<Item> MIRACLE_MAGNET = registerItem("miracle_magnet", () -> new Item(new Item.Properties()) {
+        @Override
+        public boolean isFoil(final ItemStack stack) {
+            return true;
+        }
+    });
+    public static final RegistryObject<Item> LINE = registerItem("line");
+    public static final RegistryObject<Item> MAP_CONTROLLER = registerItem("map_controller");
+    public static final RegistryObject<Item> MAP_MEMORY = registerItem("map_memory");
+    public static final RegistryObject<Item> ASSISTANT_BASE = registerItem("assistant_base");
+    public static final RegistryObject<Item> UNPREPARED_STENCIL = registerItem("unprepared_stencil");
+    public static final RegistryObject<Item> SKETCHING_PENCIL = registerItem("sketching_pencil");
+    public static final RegistryObject<Item> POINTER = registerItem("pointer", new Item.Properties().stacksTo(1));
     public static final RegistryObject<Item> LUGGAGE = registerItem("luggage");
     public static final RegistryObject<Item> SONIC_GLASSES = registerItem("sonic_glasses");
     public static final RegistryObject<Item> PENCIL_GLASSES = registerItem("pencil_glasses");
@@ -88,7 +105,6 @@ public final class OBItems {
     public static final RegistryObject<Item> TASTY_CLAY = registerItem("tasty_clay", new Item.Properties().food(
             new FoodProperties.Builder().nutrition(1).saturationMod(0.1f).alwaysEat().build()));
     public static final RegistryObject<Item> GOLDEN_EYE = registerItem("golden_eye");
-    public static final RegistryObject<Item> GENERIC_UNSTACKABLE = registerItem("generic_unstackable", new Item.Properties().stacksTo(1));
     public static final RegistryObject<Item> CURSOR = registerItem("cursor");
     public static final RegistryObject<Item> INFO_BOOK = registerItem("info_book");
     public static final RegistryObject<Item> DEV_NULL = registerItem("dev_null", new Item.Properties().stacksTo(1));
@@ -97,6 +113,11 @@ public final class OBItems {
     public static final RegistryObject<Item> EPIC_ERASER = registerItem("epic_eraser");
     public static final RegistryObject<Item> WRENCH = registerItem("wrench");
     public static final RegistryObject<Item> GLYPH = registerItem("glyph");
+
+    // Keep the scaffold IDs loadable in existing worlds.
+    public static final RegistryObject<Item> GENERIC = ITEMS.register("generic", () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> GENERIC_UNSTACKABLE = ITEMS.register("generic_unstackable",
+            () -> new Item(new Item.Properties().stacksTo(1)));
 
     private OBItems() {}
 

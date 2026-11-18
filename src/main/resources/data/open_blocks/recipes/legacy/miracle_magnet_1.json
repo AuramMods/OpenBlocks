@@ -14,10 +14,10 @@
       "item": "minecraft:ender_pearl"
     },
     "m": {
-      "item": "open_blocks:generic"
+      "item": "open_blocks:crane_magnet"
     }
   },
   "result": {
-    "item": "open_blocks:generic"
+    "item": "open_blocks:miracle_magnet"
   }
 }

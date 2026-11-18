@@ -8,10 +8,10 @@
   ],
   "key": {
     "c": {
-      "item": "open_blocks:generic"
+      "item": "open_blocks:map_controller"
     },
     "m": {
-      "item": "open_blocks:generic"
+      "item": "open_blocks:map_memory"
     }
   },
   "result": {

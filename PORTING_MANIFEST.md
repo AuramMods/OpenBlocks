@@ -10,7 +10,7 @@
 - Main code root: `old-1.12.2/src/main/java/openblocks`
 - Main assets root: `old-1.12.2/src/main/resources/assets/openblocks`
 
-## Current 1.20.1 Port Snapshot (2026-02-09)
+## Current 1.20.1 Port Snapshot (updated 2026-11-18)
 Current source roots:
 - Java root: `src/main/java/art/arcane/openblocks`
 - Assets root: `src/main/resources/assets/open_blocks`
@@ -68,7 +68,7 @@ Current registry classes:
 
 Current scaffold counts:
 - Block IDs registered: 41
-- Item IDs registered: 71 (41 block items + 30 standalone)
+- Item IDs registered: 83 (41 block items + 42 standalone, including 2 compatibility IDs)
 - Creative tabs registered: 1 (`open_blocks:main`)
 - Fluid types registered: 1 (`xpjuice`)
 - Fluids registered: 2 (`xpjuice`, `flowing_xpjuice`)
@@ -86,7 +86,7 @@ Current scaffold counts:
 Current asset coverage:
 - Blockstates: `src/main/resources/assets/open_blocks/blockstates` (41 files)
 - Block models: `src/main/resources/assets/open_blocks/models/block` (41 files)
-- Item models: `src/main/resources/assets/open_blocks/models/item` (71 files)
+- Item models: `src/main/resources/assets/open_blocks/models/item` (83 files)
 - Language file: `src/main/resources/assets/open_blocks/lang/en_us.json`
 - Sound definitions: `src/main/resources/assets/open_blocks/sounds.json`
 - Sound assets: `src/main/resources/assets/open_blocks/sounds` (legacy OpenBlocks `.ogg` set copied)
@@ -224,7 +224,7 @@ Source: `old-1.12.2/src/main/resources/assets/openblocks/recipes`
     - `forge:ore_shapeless` -> `minecraft:crafting_shapeless`
   - Conversion baseline details:
     - legacy `openblocks:*` IDs remapped to `open_blocks:*`
-    - legacy metadata (`data`) collapsed to modern single-ID forms for breadth coverage
+    - vanilla metadata resolves to flattened item IDs. Legacy generic components and the pointer now use distinct IDs. Color and state variants of other OpenBlocks items still need migration.
     - ore dictionary entries translated to `open_blocks:legacy_ore_dict/*` tags (now populated with broader `forge`/`minecraft` group tags plus vanilla fallback items)
   - Legacy `openmods:enchanting` replacements:
     - `open_blocks:flim_flam_book` custom crafting recipe implemented in:
@@ -339,6 +339,8 @@ Source:
 - `Items.genericUnstackable` (`ItemOBGenericUnstackable`) variants:
   - `pointer`
 
+The 1.20.1 port registers the listed active variants as distinct `open_blocks` items and routes converted recipe inputs and outputs to those IDs. The old `generic` and `generic_unstackable` IDs remain loadable for existing worlds. Old generic stacks contain no subtype to recover. The old unstackable ID has a conversion recipe for its only variant, the pointer. Pointer behavior and the Miracle Magnet's conditional integration are tracked with their feature ports.
+
 ## Legacy Creative Tab Behavior (Model/Lang Parity Critical)
 Primary sources:
 - `old-1.12.2/src/main/java/openblocks/OpenBlocks.java` (`createTabOpenBlocks`, `setupConfigPre`)
@@ -366,7 +368,7 @@ Important item variant behavior in legacy tab:
 - `ItemHeightMap`: intentionally hidden from creative tab (`getSubItems` is empty).
 
 Port implication:
-- Current 1.20.1 breadth scaffold intentionally shows one stack per registry ID in the creative tab.
+- The 1.20.1 tab lists distinct components and omits the two deprecated generic IDs. Most stateful items still show only their default stack.
 - Metadata/NBT creative-variant parity is a later depth pass item.
 
 ## Fluids

@@ -9,7 +9,7 @@
       "tag": "open_blocks:legacy_ore_dict/stick_wood"
     },
     "w": {
-      "item": "open_blocks:generic"
+      "item": "open_blocks:glider_wing"
     }
   },
   "result": {

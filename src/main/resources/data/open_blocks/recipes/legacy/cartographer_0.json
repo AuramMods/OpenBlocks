@@ -3,7 +3,7 @@
   "group": "open_blocks:cartographer",
   "ingredients": [
     {
-      "item": "open_blocks:generic"
+      "item": "open_blocks:assistant_base"
     },
     {
       "item": "minecraft:ender_eye"
