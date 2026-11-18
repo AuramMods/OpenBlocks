@@ -1,5 +1,6 @@
 {
   "variants": {
-    "": { "model": "open_blocks:block/vacuum_hopper" }
+    "enabled=true": { "model": "open_blocks:block/vacuum_hopper" },
+    "enabled=false": { "model": "open_blocks:block/vacuum_hopper" }
   }
 }

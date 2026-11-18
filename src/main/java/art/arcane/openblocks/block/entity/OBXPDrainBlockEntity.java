@@ -2,7 +2,6 @@ package art.arcane.openblocks.block.entity;
 
 import art.arcane.openblocks.config.OBServerConfig;
 import art.arcane.openblocks.registry.OBBlockEntities;
-import art.arcane.openblocks.registry.OBFluids;
 import art.arcane.openblocks.world.OBLiquidExperience;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -17,10 +16,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerXpEvent;
-import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 
 public final class OBXPDrainBlockEntity extends BlockEntity {
 
@@ -40,7 +37,7 @@ public final class OBXPDrainBlockEntity extends BlockEntity {
         final int ratio = OBServerConfig.XP_FLUID_RATIO.get();
         boolean transferred = false;
         for (final ExperienceOrb orb : level.getEntitiesOfClass(ExperienceOrb.class, entity.orbArea, orb -> !orb.isRemoved())) {
-            transferOrb(receiver, orb, ratio);
+            OBLiquidExperience.collectOrb(receiver, orb, ratio);
         }
         for (final Player player : level.getEntitiesOfClass(Player.class, entity.playerArea, player -> player.isAlive() && !player.isSpectator())) {
             transferred |= transferPlayer(receiver, player, ratio);
@@ -51,43 +48,19 @@ public final class OBXPDrainBlockEntity extends BlockEntity {
         }
     }
 
-    private static void transferOrb(final IFluidHandler receiver, final ExperienceOrb orb, final int ratio) {
-        final long unit = (long) orb.getValue() * ratio;
-        if (unit <= 0 || unit > Integer.MAX_VALUE) return;
-        final int fit = unitsThatFit(receiver, (int) unit, orb.count);
-        if (fit <= 0) return;
-        orb.count -= storeUnits(receiver, (int) unit, fit);
-        if (orb.count == 0) orb.discard();
-    }
-
     private static boolean transferPlayer(final IFluidHandler receiver, final Player player, final int ratio) {
         final int offered = Math.min(PLAYER_XP_PER_TICK, OBLiquidExperience.playerPoints(player));
-        final int fit = unitsThatFit(receiver, ratio, offered);
+        final int fit = OBLiquidExperience.unitsThatFit(receiver, ratio, offered);
         if (fit <= 0) return false;
         final var event = new PlayerXpEvent.XpChange(player, -fit);
         if (MinecraftForge.EVENT_BUS.post(event) || event.getAmount() >= 0) return false;
 
         final int agreed = (int) Math.min(fit, -(long) event.getAmount());
         final int available = Math.min(agreed, OBLiquidExperience.playerPoints(player));
-        final int transferred = storeUnits(receiver, ratio, unitsThatFit(receiver, ratio, available));
+        final int transferred = OBLiquidExperience.storeUnits(receiver, ratio, OBLiquidExperience.unitsThatFit(receiver, ratio, available));
         if (transferred <= 0) return false;
         spendPoints(player, transferred);
         return true;
-    }
-
-    private static int unitsThatFit(final IFluidHandler receiver, final int millibucketsPerUnit, final int offeredUnits) {
-        if (offeredUnits <= 0) return 0;
-        final int amount = Math.min(offeredUnits, Integer.MAX_VALUE / millibucketsPerUnit) * millibucketsPerUnit;
-        return receiver.fill(new FluidStack(OBFluids.XP_JUICE.get(), amount), FluidAction.SIMULATE) / millibucketsPerUnit;
-    }
-
-    private static int storeUnits(final IFluidHandler receiver, final int millibucketsPerUnit, final int units) {
-        if (units <= 0) return 0;
-        final var fluid = new FluidStack(OBFluids.XP_JUICE.get(), units * millibucketsPerUnit);
-        final int stored = receiver.fill(fluid, FluidAction.EXECUTE);
-        final int remainder = stored % millibucketsPerUnit;
-        if (remainder > 0) receiver.drain(new FluidStack(fluid, remainder), FluidAction.EXECUTE);
-        return stored / millibucketsPerUnit;
     }
 
     private static void spendPoints(final Player player, final int cost) {

@@ -5,7 +5,6 @@ import art.arcane.openblocks.block.entity.OBXPBottlerBlockEntity.Port;
 import art.arcane.openblocks.registry.OBMenuTypes;
 import javax.annotation.Nullable;
 import net.minecraft.core.Direction;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -23,11 +22,8 @@ import net.minecraftforge.items.SlotItemHandler;
 public final class OBXPBottlerMenu extends AbstractContainerMenu {
 
     private static final int MACHINE_SLOTS = 2;
-    private static final int PROGRESS = 0;
-    private static final int VOLUME = 1;
-    private static final int CAPACITY = 3;
-    private static final int FLUID = 5;
-    private static final int PORTS = 7;
+    private static final int PROGRESS = OBFluidMenuData.VALUES;
+    private static final int PORTS = PROGRESS + 1;
     private static final Port[] PORT_ORDER = Port.values();
     private static final int DATA_COUNT = PORTS + PORT_ORDER.length;
     private static final int AUTOMATIC = Direction.values().length;
@@ -41,7 +37,8 @@ public final class OBXPBottlerMenu extends AbstractContainerMenu {
     }
 
     public OBXPBottlerMenu(final int id, final Inventory inventory, final OBXPBottlerBlockEntity bottler) {
-        this(id, inventory, bottler, bottler.bottles(), synchronizedData(bottler));
+        this(id, inventory, bottler, bottler.bottles(), OBFluidMenuData.of(bottler::contents, bottler::capacity,
+                1 + PORT_ORDER.length, index -> index == 0 ? bottler.progress() : bottler.settings(PORT_ORDER[index - 1])));
     }
 
     private OBXPBottlerMenu(final int id, final Inventory inventory, @Nullable final OBXPBottlerBlockEntity bottler,
@@ -77,50 +74,16 @@ public final class OBXPBottlerMenu extends AbstractContainerMenu {
         };
     }
 
-    private static ContainerData synchronizedData(final OBXPBottlerBlockEntity bottler) {
-        return new ContainerData() {
-            @Override
-            public int get(final int index) {
-                return switch (index) {
-                    case PROGRESS -> bottler.progress();
-                    case VOLUME, VOLUME + 1 -> word(bottler.contents().getAmount(), index - VOLUME);
-                    case CAPACITY, CAPACITY + 1 -> word(bottler.capacity(), index - CAPACITY);
-                    case FLUID, FLUID + 1 -> word(BuiltInRegistries.FLUID.getId(bottler.contents().getFluid()), index - FLUID);
-                    default -> bottler.settings(PORT_ORDER[index - PORTS]);
-                };
-            }
-
-            @Override
-            public void set(final int index, final int value) {}
-
-            @Override
-            public int getCount() {
-                return DATA_COUNT;
-            }
-        };
-    }
-
-    // Each vanilla menu data packet carries a signed 16-bit value.
-    private static int word(final int value, final int index) {
-        return (short) (value >>> (index * Short.SIZE));
-    }
-
-    private int readInt(final int first) {
-        return (data.get(first) & 0xffff) | (data.get(first + 1) << Short.SIZE);
-    }
-
     public int progress() {
         return data.get(PROGRESS);
     }
 
     public int capacity() {
-        return readInt(CAPACITY);
+        return OBFluidMenuData.capacity(data);
     }
 
     public FluidStack fluid() {
-        final int amount = readInt(VOLUME);
-        final var fluid = BuiltInRegistries.FLUID.byId(readInt(FLUID));
-        return fluid == null || amount <= 0 ? FluidStack.EMPTY : new FluidStack(fluid, amount);
+        return OBFluidMenuData.fluid(data);
     }
 
     public boolean isSideEnabled(final Port port, final Direction side) {

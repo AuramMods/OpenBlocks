@@ -184,7 +184,8 @@ Checklist:
 - [x] Restore tank block and item storage, connected transfer and rendering, XP and bucket exchange, and the Liquid XP block assets.
 - [x] Restore the XP Drain and redstone-powered XP Shower. The drain transfers whole XP into a fluid receiver, and the shower releases falling XP orbs that a drain can collect.
 - [x] Restore the XP Bottler recipe, timed bottle production, directional item and fluid access, and configurable automation.
+- [x] Restore the Vacuum Hopper's item and XP collection, separate output faces, pause control, and persistent storage.
 - [ ] Continue block functionality sweep (depth pass order):
-  - vacuum_hopper: collect items and XP orbs and route items and Liquid XP through the configured faces
   - block_breaker/block_placer/item_dropper + auto_anvil/auto_enchantment_table: tick/work cycles and inventory IO
+  - Cannon item projectiles: verify the Vacuum Hopper's interaction with falling projectiles when porting the Cannon
   - XP Bucket: reconcile the legacy source pickup and creative-tab settings with Forge's fluid bucket

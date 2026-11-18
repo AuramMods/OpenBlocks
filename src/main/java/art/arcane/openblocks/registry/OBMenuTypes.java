@@ -1,6 +1,7 @@
 package art.arcane.openblocks.registry;
 
 import art.arcane.openblocks.OpenBlocks;
+import art.arcane.openblocks.menu.OBVacuumHopperMenu;
 import art.arcane.openblocks.menu.OBXPBottlerMenu;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.inventory.ChestMenu;
@@ -26,7 +27,8 @@ public final class OBMenuTypes {
     public static final RegistryObject<MenuType<ChestMenu>> PAINT_MIXER = register("paint_mixer");
     public static final RegistryObject<MenuType<ChestMenu>> PROJECTOR = register("projector");
     public static final RegistryObject<MenuType<ChestMenu>> SPRINKLER = register("sprinkler");
-    public static final RegistryObject<MenuType<ChestMenu>> VACUUM_HOPPER = register("vacuum_hopper");
+    public static final RegistryObject<MenuType<OBVacuumHopperMenu>> VACUUM_HOPPER = MENU_TYPES.register("vacuum_hopper",
+            () -> new MenuType<>(OBVacuumHopperMenu::new, FeatureFlags.DEFAULT_FLAGS));
     public static final RegistryObject<MenuType<OBXPBottlerMenu>> XP_BOTTLER = MENU_TYPES.register("xp_bottler",
             () -> new MenuType<>(OBXPBottlerMenu::new, FeatureFlags.DEFAULT_FLAGS));
 

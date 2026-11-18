@@ -4,6 +4,7 @@ import art.arcane.openblocks.menu.OBXPBottlerMenu;
 import art.arcane.openblocks.registry.OBBlockEntities;
 import art.arcane.openblocks.registry.OBSounds;
 import art.arcane.openblocks.world.OBLiquidExperience;
+import art.arcane.openblocks.world.OBMachineItems;
 import java.util.EnumMap;
 import java.util.Map;
 import javax.annotation.Nullable;
@@ -13,7 +14,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -32,7 +32,6 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
 
 public final class OBXPBottlerBlockEntity extends BlockEntity implements MenuProvider {
@@ -151,9 +150,9 @@ public final class OBXPBottlerBlockEntity extends BlockEntity implements MenuPro
     }
 
     private void pullBottle(final Level level, final BlockPos pos) {
-        final Direction face = chooseItemFace(Port.INPUT, level.random);
+        final Direction face = OBMachineItems.chooseFace(sides[Port.INPUT.ordinal()], level.random);
         if (face == null) return;
-        final IItemHandler source = adjacentItems(level, pos, face);
+        final IItemHandler source = OBMachineItems.adjacent(level, pos, face);
         if (source == null) return;
         for (int slot = 0; slot < source.getSlots(); slot++) {
             if (!source.extractItem(slot, 1, true).is(Items.GLASS_BOTTLE)) continue;
@@ -166,38 +165,10 @@ public final class OBXPBottlerBlockEntity extends BlockEntity implements MenuPro
     }
 
     private void ejectBottle(final Level level, final BlockPos pos) {
-        final Direction face = chooseItemFace(Port.OUTPUT, level.random);
+        final Direction face = OBMachineItems.chooseFace(sides[Port.OUTPUT.ordinal()], level.random);
         if (face == null) return;
-        final IItemHandler destination = adjacentItems(level, pos, face);
-        if (destination == null) return;
-        final ItemStack offered = bottles.extractItem(OUTPUT, 1, true);
-        if (!ItemHandlerHelper.insertItemStacked(destination, offered, true).isEmpty()) return;
-        final ItemStack removed = bottles.extractItem(OUTPUT, 1, false);
-        final ItemStack remainder = ItemHandlerHelper.insertItemStacked(destination, removed, false);
-        if (!remainder.isEmpty()) {
-            final ItemStack output = bottles.getStackInSlot(OUTPUT);
-            if (output.isEmpty()) bottles.setStackInSlot(OUTPUT, remainder);
-            else if (ItemStack.isSameItemSameTags(output, remainder) && output.getCount() < output.getMaxStackSize()) {
-                bottles.setStackInSlot(OUTPUT, output.copyWithCount(output.getCount() + 1));
-            } else Block.popResource(level, pos, remainder);
-        }
-    }
-
-    @Nullable
-    private Direction chooseItemFace(final Port port, final RandomSource random) {
-        int mask = sides[port.ordinal()];
-        if (mask == 0) return null;
-        // Drop the lowest set bits to select one configured face per tick.
-        for (int skip = random.nextInt(Integer.bitCount(mask)); skip > 0; skip--) mask &= mask - 1;
-        return DIRECTIONS[Integer.numberOfTrailingZeros(mask)];
-    }
-
-    @Nullable
-    private static IItemHandler adjacentItems(final Level level, final BlockPos pos, final Direction face) {
-        final BlockPos adjacent = pos.relative(face);
-        if (!level.hasChunkAt(adjacent)) return null;
-        final var entity = level.getBlockEntity(adjacent);
-        return entity == null ? null : entity.getCapability(ForgeCapabilities.ITEM_HANDLER, face.getOpposite()).orElse(null);
+        final IItemHandler destination = OBMachineItems.adjacent(level, pos, face);
+        if (destination != null) OBMachineItems.push(level, pos, bottles, OUTPUT, destination, 1);
     }
 
     private void work(final Level level, final BlockPos pos) {

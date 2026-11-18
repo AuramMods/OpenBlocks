@@ -5,10 +5,13 @@ import art.arcane.openblocks.registry.OBFluids;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.commons.lang3.math.NumberUtils;
@@ -21,6 +24,31 @@ public final class OBLiquidExperience {
 
     public static FluidStack juice(final int points) {
         return new FluidStack(OBFluids.XP_JUICE.get(), millibuckets(points, OBServerConfig.XP_FLUID_RATIO.get()));
+    }
+
+    public static void collectOrb(final IFluidHandler receiver, final ExperienceOrb orb, final int ratio) {
+        final long unit = (long) orb.getValue() * ratio;
+        if (orb.isRemoved() || unit <= 0 || unit > Integer.MAX_VALUE) return;
+        final int fit = unitsThatFit(receiver, (int) unit, orb.count);
+        final int stored = storeUnits(receiver, (int) unit, fit);
+        if (stored <= 0) return;
+        orb.count -= stored;
+        if (orb.count == 0) orb.discard();
+    }
+
+    public static int unitsThatFit(final IFluidHandler receiver, final int millibucketsPerUnit, final int offeredUnits) {
+        if (offeredUnits <= 0) return 0;
+        final int amount = Math.min(offeredUnits, Integer.MAX_VALUE / millibucketsPerUnit) * millibucketsPerUnit;
+        return receiver.fill(new FluidStack(OBFluids.XP_JUICE.get(), amount), FluidAction.SIMULATE) / millibucketsPerUnit;
+    }
+
+    public static int storeUnits(final IFluidHandler receiver, final int millibucketsPerUnit, final int units) {
+        if (units <= 0) return 0;
+        final var fluid = new FluidStack(OBFluids.XP_JUICE.get(), units * millibucketsPerUnit);
+        final int stored = receiver.fill(fluid, FluidAction.EXECUTE);
+        final int remainder = stored % millibucketsPerUnit;
+        if (remainder > 0) receiver.drain(new FluidStack(fluid, remainder), FluidAction.EXECUTE);
+        return stored / millibucketsPerUnit;
     }
 
     public static int millibuckets(final int points, final int ratio) {

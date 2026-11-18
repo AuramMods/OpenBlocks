@@ -12,6 +12,7 @@ import art.arcane.openblocks.block.OBScaffoldingBlock;
 import art.arcane.openblocks.block.OBShapeBlock;
 import art.arcane.openblocks.block.OBSpongeBlock;
 import art.arcane.openblocks.block.OBTankBlock;
+import art.arcane.openblocks.block.OBVacuumHopperBlock;
 import art.arcane.openblocks.block.OBXPBottlerBlock;
 import art.arcane.openblocks.block.OBXPDrainBlock;
 import art.arcane.openblocks.block.OBXPShowerBlock;
@@ -36,7 +37,6 @@ public final class OBBlocks {
     private static final VoxelShape SHAPE_BIG_BUTTON = Block.box(1.0D, 0.0D, 1.0D, 15.0D, 2.0D, 15.0D);
     private static final VoxelShape SHAPE_FLAG = Block.box(7.0D, 0.0D, 7.0D, 9.0D, 16.0D, 9.0D);
     private static final VoxelShape SHAPE_TROPHY = Block.box(3.2D, 0.0D, 3.2D, 12.8D, 3.2D, 12.8D);
-    private static final VoxelShape SHAPE_VACUUM_HOPPER = Block.box(4.0D, 4.0D, 4.0D, 12.0D, 12.0D, 12.0D);
     private static final VoxelShape SHAPE_GOLDEN_EGG = Block.box(2.0D, 0.0D, 2.0D, 14.0D, 16.0D, 14.0D);
     private static final VoxelShape SHAPE_AUTO_ENCHANT = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 12.0D, 16.0D);
     private static final VoxelShape SHAPE_AUTO_ANVIL = Block.box(2.0D, 0.0D, 0.0D, 14.0D, 16.0D, 16.0D);
@@ -128,6 +128,7 @@ public final class OBBlocks {
         if ("sponge".equals(id)) return new OBSpongeBlock(BlockBehaviour.Properties.copy(Blocks.SPONGE));
         if ("grave".equals(id)) return new OBGraveBlock(properties, shape, collisionShape);
         if ("tank".equals(id)) return new OBTankBlock(properties);
+        if ("vacuum_hopper".equals(id)) return new OBVacuumHopperBlock(properties);
         if ("xp_bottler".equals(id)) return new OBXPBottlerBlock(properties);
         if ("xp_drain".equals(id)) return new OBXPDrainBlock(properties);
         if ("xp_shower".equals(id)) return new OBXPShowerBlock(properties);
@@ -157,7 +158,6 @@ public final class OBBlocks {
             case "trophy" -> SHAPE_TROPHY;
             case "beartrap" -> SHAPE_BEARTRAP;
             case "cannon" -> SHAPE_CANNON;
-            case "vacuum_hopper" -> SHAPE_VACUUM_HOPPER;
             case "fan" -> SHAPE_FAN;
             case "golden_egg" -> SHAPE_GOLDEN_EGG;
             case "auto_anvil" -> SHAPE_AUTO_ANVIL;
