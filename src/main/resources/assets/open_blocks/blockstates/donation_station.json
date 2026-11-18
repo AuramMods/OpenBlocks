@@ -1,5 +1,8 @@
 {
   "variants": {
-    "": { "model": "open_blocks:block/donation_station" }
+    "facing=north": { "model": "open_blocks:block/donation_station" },
+    "facing=east": { "model": "open_blocks:block/donation_station", "y": 90 },
+    "facing=south": { "model": "open_blocks:block/donation_station", "y": 180 },
+    "facing=west": { "model": "open_blocks:block/donation_station", "y": 270 }
   }
 }

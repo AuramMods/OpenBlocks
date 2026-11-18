@@ -187,7 +187,7 @@ Checklist:
 - [x] Restore the Vacuum Hopper's item and XP collection, separate output faces, pause control, and persistent storage.
 - [x] Restore the Block Breaker, Block Placer, and Item Dropper, including redstone behavior, six-directional models, inventory access, and the Dropper's launch controls.
 - [x] Restore the Auto Anvil and Auto Enchantment Table, including sided automation, Liquid XP costs, menus, bookshelf power, and the animated book.
+- [x] Restore the Sprinkler's water and bone-meal cycles, growth, and animated spray, and the Donation Station's sample inventory, author links, and optional peripheral.
 - [ ] Continue block functionality sweep (depth pass order):
-  - sprinkler and donation_station: restore production, transfer, and normal player interactions
   - Cannon item projectiles: verify the Vacuum Hopper's interaction with falling projectiles when porting the Cannon
   - XP Bucket: reconcile the legacy source pickup and creative-tab settings with Forge's fluid bucket

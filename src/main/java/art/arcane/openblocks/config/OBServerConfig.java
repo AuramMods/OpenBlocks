@@ -35,6 +35,12 @@ public final class OBServerConfig {
     public static final ForgeConfigSpec.ConfigValue<List<? extends String>> BLOCK_BREAKER_TOOLS;
     public static final ForgeConfigSpec.IntValue BLOCK_PLACER_ACTION_LIMIT;
     public static final ForgeConfigSpec.DoubleValue ITEM_DROPPER_MAX_SPEED;
+    public static final ForgeConfigSpec.IntValue SPRINKLER_FERTILIZE_CHANCE;
+    public static final ForgeConfigSpec.IntValue SPRINKLER_BONEMEAL_CHANCE;
+    public static final ForgeConfigSpec.IntValue SPRINKLER_RANGE;
+    public static final ForgeConfigSpec.IntValue SPRINKLER_CAPACITY;
+    public static final ForgeConfigSpec.IntValue SPRINKLER_BONEMEAL_RATE;
+    public static final ForgeConfigSpec.IntValue SPRINKLER_WATER_RATE;
 
     static {
         final var builder = new ForgeConfigSpec.Builder();
@@ -102,6 +108,19 @@ public final class OBServerConfig {
         builder.push("itemdropper");
         ITEM_DROPPER_MAX_SPEED = builder.comment("Maximum launch speed selectable in the Item Dropper menu, in blocks per tick.")
                 .defineInRange("maxItemDropSpeed", 4.0, 0.0, Integer.MAX_VALUE / 10.0);
+        builder.pop();
+        builder.push("sprinkler");
+        SPRINKLER_FERTILIZE_CHANCE = builder.comment("One growth attempt in this many active ticks without bone meal.")
+                .defineInRange("fertilizeChance", 500, 1, Integer.MAX_VALUE);
+        SPRINKLER_BONEMEAL_CHANCE = builder.comment("One growth attempt in this many active ticks while boosted by bone meal.")
+                .defineInRange("bonemealFertilizeChance", 200, 1, Integer.MAX_VALUE);
+        SPRINKLER_RANGE = builder.comment("Horizontal growth range on each side of the sprinkler.")
+                .defineInRange("effectiveRange", 4, 0, (Integer.MAX_VALUE - 1) / 2);
+        SPRINKLER_CAPACITY = builder.defineInRange("internalTankCapacity", 50, 1, Integer.MAX_VALUE);
+        SPRINKLER_BONEMEAL_RATE = builder.comment("Active ticks per bone meal consumed.")
+                .defineInRange("bonemealConsumeRate", 600, 1, Integer.MAX_VALUE);
+        SPRINKLER_WATER_RATE = builder.comment("Active ticks per millibucket of water consumed.")
+                .defineInRange("waterConsumeRate", 20, 1, Integer.MAX_VALUE);
         builder.pop();
         SPEC = builder.build();
     }

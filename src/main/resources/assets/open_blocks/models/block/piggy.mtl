@@ -1,0 +1,4 @@
+newmtl 1
+map_Kd open_blocks:block/piggy1
+newmtl 2
+map_Kd open_blocks:block/piggy2

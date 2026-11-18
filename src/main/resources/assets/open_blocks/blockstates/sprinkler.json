@@ -1,5 +1,6 @@
 {
   "variants": {
-    "": { "model": "open_blocks:block/sprinkler" }
+    "axis=z": { "model": "open_blocks:block/sprinkler" },
+    "axis=x": { "model": "open_blocks:block/sprinkler", "y": 270 }
   }
 }

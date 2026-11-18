@@ -1,6 +1,7 @@
 package art.arcane.openblocks.registry;
 
 import art.arcane.openblocks.OpenBlocks;
+import art.arcane.openblocks.block.OBDonationStationBlock;
 import art.arcane.openblocks.block.OBElevatorBlock;
 import art.arcane.openblocks.block.OBElevatorRotatingBlock;
 import art.arcane.openblocks.block.OBGraveBlock;
@@ -13,6 +14,7 @@ import art.arcane.openblocks.block.OBRopeLadderBlock;
 import art.arcane.openblocks.block.OBScaffoldingBlock;
 import art.arcane.openblocks.block.OBShapeBlock;
 import art.arcane.openblocks.block.OBSpongeBlock;
+import art.arcane.openblocks.block.OBSprinklerBlock;
 import art.arcane.openblocks.block.OBTankBlock;
 import art.arcane.openblocks.block.OBVacuumHopperBlock;
 import art.arcane.openblocks.block.OBXPBottlerBlock;
@@ -55,7 +57,6 @@ public final class OBBlocks {
             Block.box(0.0D, 0.0D, 0.0D, 1.0D, 1.0D, 16.0D),
             Block.box(15.0D, 0.0D, 0.0D, 16.0D, 1.0D, 16.0D),
             Block.box(0.0D, 1.0D, 0.0D, 16.0D, 2.0D, 15.0D));
-    private static final VoxelShape SHAPE_SPRINKLER = Block.box(4.8D, 0.0D, 0.0D, 11.2D, 4.8D, 16.0D);
 
     public static final RegistryObject<Block> LADDER = register("ladder");
     public static final RegistryObject<Block> GUIDE = register("guide");
@@ -138,6 +139,8 @@ public final class OBBlocks {
         if ("block_breaker".equals(id)) return new OBRedstoneMachineBlock(properties, Kind.BREAKER);
         if ("block_placer".equals(id)) return new OBRedstoneMachineBlock(properties, Kind.PLACER);
         if ("item_dropper".equals(id)) return new OBRedstoneMachineBlock(properties, Kind.DROPPER);
+        if ("sprinkler".equals(id)) return new OBSprinklerBlock(BlockBehaviour.Properties.of().strength(1.0F).noOcclusion());
+        if ("donation_station".equals(id)) return new OBDonationStationBlock(properties.strength(1.0F));
         if (shape != null) return new OBShapeBlock(properties, shape, collisionShape);
         return new Block(properties);
     }
@@ -157,7 +160,6 @@ public final class OBBlocks {
     private static VoxelShape shapeFor(final String id) {
         return switch (id) {
             case "path" -> SHAPE_PATH;
-            case "sprinkler" -> SHAPE_SPRINKLER;
             case "target" -> SHAPE_TARGET;
             case "flag" -> SHAPE_FLAG;
             case "grave" -> SHAPE_GRAVE;

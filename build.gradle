@@ -77,6 +77,12 @@ minecraft {
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 repositories {
+    exclusiveContent {
+        forRepository {
+            maven { url "https://maven.squiddev.cc" }
+        }
+        filter { includeGroup("cc.tweaked") }
+    }
     maven {
         url "https://www.cursemaven.com"
         content {
@@ -98,6 +104,8 @@ dependencies {
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
     compileOnly(fg.deobf("mezz.jei:jei-${minecraft_version}-common-api:${jei_version}"))
     compileOnly(fg.deobf("mezz.jei:jei-${minecraft_version}-forge-api:${jei_version}"))
+    compileOnly("cc.tweaked:cc-tweaked-1.20.1-core-api:1.120.2")
+    compileOnly("cc.tweaked:cc-tweaked-1.20.1-common-api:1.120.2")
     if (!standalone) {
         runtimeOnly fg.deobf("curse.maven:projecte-226410:4901949")
         runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge:${jei_version}")

@@ -24,13 +24,16 @@ public class OBBlockTagsProvider extends BlockTagsProvider {
         final var ladder = OBBlocks.LADDER.get();
         final var ropeLadder = OBBlocks.ROPE_LADDER.get();
         final var scaffolding = OBBlocks.SCAFFOLDING.get();
+        final var sprinkler = OBBlocks.SPRINKLER.get();
+        final var donationStation = OBBlocks.DONATION_STATION.get();
         OBBlocks.all().forEach(entry -> {
             final var block = entry.get();
             if (block == ladder || block == ropeLadder) {
                 tag(BlockTags.MINEABLE_WITH_AXE).add(block);
             } else if (block != scaffolding) {
                 tag(BlockTags.MINEABLE_WITH_PICKAXE).add(block);
-                if (!(block instanceof OBRedstoneMachineBlock) && !(block instanceof OBXpWorkbenchBlock)) tag(BlockTags.NEEDS_STONE_TOOL).add(block);
+                if (!(block instanceof OBRedstoneMachineBlock) && !(block instanceof OBXpWorkbenchBlock)
+                        && block != sprinkler && block != donationStation) tag(BlockTags.NEEDS_STONE_TOOL).add(block);
             }
         });
 
