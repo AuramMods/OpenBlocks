@@ -190,4 +190,7 @@ Checklist:
 - [x] Restore the Sprinkler's water and bone-meal cycles, growth, and animated spray, and the Donation Station's sample inventory, author links, and optional peripheral.
 - [x] Restore the redstone Cannon, Pointer targeting, animated model and flight preview, item projectiles, and falling-projectile collection by the Vacuum Hopper.
 - [x] Restore the XP Bucket's world-source pickup and creative visibility settings. The Forge bucket still supports fluid capabilities and tank exchange.
-- [ ] Continue the block functionality sweep with the Big Buttons and folding Target.
+- [x] Restore the stone and wooden Big Buttons, including six-face placement, configurable redstone pulses, and wooden arrow activation.
+- [x] Restore the folding Target's redstone deployment, accuracy-based output, and arrow recovery.
+- [ ] Test and port the optional Flan's Mod projectile integration against its 1.20.1 implementation.
+- [ ] Continue the block functionality sweep with the Fan and Bear Trap.

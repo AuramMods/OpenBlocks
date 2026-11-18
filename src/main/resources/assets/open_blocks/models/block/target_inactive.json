@@ -1,4 +1,5 @@
 {
+    "parent": "minecraft:block/block",
     "textures": {
         "particle": "open_blocks:block/target_front",
         "leg": "open_blocks:block/target_leg",

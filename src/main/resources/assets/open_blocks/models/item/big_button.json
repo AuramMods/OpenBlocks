@@ -1,3 +1,7 @@
 {
-  "parent": "open_blocks:block/big_button"
+  "parent": "open_blocks:block/big_button_inventory",
+  "textures": {
+    "all": "minecraft:block/stone",
+    "particle": "minecraft:block/stone"
+  }
 }

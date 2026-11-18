@@ -1,6 +1,7 @@
 package art.arcane.openblocks.registry;
 
 import art.arcane.openblocks.OpenBlocks;
+import art.arcane.openblocks.menu.OBBigButtonMenu;
 import art.arcane.openblocks.menu.OBRedstoneMachineMenu;
 import art.arcane.openblocks.menu.OBUtilityInventoryMenu;
 import art.arcane.openblocks.menu.OBVacuumHopperMenu;
@@ -22,7 +23,8 @@ public final class OBMenuTypes {
             () -> new MenuType<>(OBXpWorkbenchMenu::anvil, FeatureFlags.DEFAULT_FLAGS));
     public static final RegistryObject<MenuType<OBXpWorkbenchMenu>> AUTO_ENCHANTMENT_TABLE = MENU_TYPES.register("auto_enchantment_table",
             () -> new MenuType<>(OBXpWorkbenchMenu::enchantmentTable, FeatureFlags.DEFAULT_FLAGS));
-    public static final RegistryObject<MenuType<ChestMenu>> BIG_BUTTON = register("big_button");
+    public static final RegistryObject<MenuType<OBBigButtonMenu>> BIG_BUTTON = MENU_TYPES.register("big_button",
+            () -> new MenuType<>(OBBigButtonMenu::new, FeatureFlags.DEFAULT_FLAGS));
     public static final RegistryObject<MenuType<OBRedstoneMachineMenu>> BLOCK_PLACER = MENU_TYPES.register("block_placer",
             () -> new MenuType<>(OBRedstoneMachineMenu::blockPlacer, FeatureFlags.DEFAULT_FLAGS));
     public static final RegistryObject<MenuType<ChestMenu>> DEV_NULL = register("dev_null");

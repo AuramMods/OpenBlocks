@@ -1,10 +1,12 @@
 package art.arcane.openblocks.registry;
 
 import art.arcane.openblocks.OpenBlocks;
+import art.arcane.openblocks.block.OBBigButtonBlock;
 import art.arcane.openblocks.block.OBCannonBlock;
 import art.arcane.openblocks.block.OBDonationStationBlock;
 import art.arcane.openblocks.block.OBElevatorBlock;
 import art.arcane.openblocks.block.OBElevatorRotatingBlock;
+import art.arcane.openblocks.block.OBFoldingTargetBlock;
 import art.arcane.openblocks.block.OBGraveBlock;
 import art.arcane.openblocks.block.OBHealBlock;
 import art.arcane.openblocks.block.OBLadderBlock;
@@ -27,6 +29,7 @@ import java.util.Collections;
 import java.util.List;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -40,7 +43,6 @@ public final class OBBlocks {
 
     private static final List<RegistryObject<Block>> CREATIVE_ORDER = new ArrayList<>();
     private static final VoxelShape SHAPE_PATH = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 1.6D, 16.0D);
-    private static final VoxelShape SHAPE_BIG_BUTTON = Block.box(1.0D, 0.0D, 1.0D, 15.0D, 2.0D, 15.0D);
     private static final VoxelShape SHAPE_FLAG = Block.box(7.0D, 0.0D, 7.0D, 9.0D, 16.0D, 9.0D);
     private static final VoxelShape SHAPE_TROPHY = Block.box(3.2D, 0.0D, 3.2D, 12.8D, 3.2D, 12.8D);
     private static final VoxelShape SHAPE_GOLDEN_EGG = Block.box(2.0D, 0.0D, 2.0D, 14.0D, 16.0D, 14.0D);
@@ -53,10 +55,6 @@ public final class OBBlocks {
     private static final VoxelShape SHAPE_GRAVE = Shapes.or(
             Block.box(0.0D, 0.0D, 0.0D, 16.0D, 1.0D, 16.0D),
             Block.box(2.0D, 1.0D, 14.0D, 14.0D, 16.0D, 16.0D));
-    private static final VoxelShape SHAPE_TARGET = Shapes.or(
-            Block.box(0.0D, 0.0D, 0.0D, 1.0D, 1.0D, 16.0D),
-            Block.box(15.0D, 0.0D, 0.0D, 16.0D, 1.0D, 16.0D),
-            Block.box(0.0D, 1.0D, 0.0D, 16.0D, 2.0D, 15.0D));
 
     public static final RegistryObject<Block> LADDER = register("ladder");
     public static final RegistryObject<Block> GUIDE = register("guide");
@@ -142,6 +140,9 @@ public final class OBBlocks {
         if ("sprinkler".equals(id)) return new OBSprinklerBlock(BlockBehaviour.Properties.of().strength(1.0F).noOcclusion());
         if ("donation_station".equals(id)) return new OBDonationStationBlock(properties.strength(1.0F));
         if ("cannon".equals(id)) return new OBCannonBlock(properties);
+        if ("target".equals(id)) return new OBFoldingTargetBlock(properties.lightLevel(state -> 4));
+        if ("big_button".equals(id)) return new OBBigButtonBlock(false, BlockBehaviour.Properties.of().sound(SoundType.STONE).strength(0.5F).noOcclusion());
+        if ("big_button_wood".equals(id)) return new OBBigButtonBlock(true, BlockBehaviour.Properties.of().sound(SoundType.WOOD).strength(0.5F).noOcclusion());
         if (shape != null) return new OBShapeBlock(properties, shape, collisionShape);
         return new Block(properties);
     }
@@ -161,7 +162,6 @@ public final class OBBlocks {
     private static VoxelShape shapeFor(final String id) {
         return switch (id) {
             case "path" -> SHAPE_PATH;
-            case "target" -> SHAPE_TARGET;
             case "flag" -> SHAPE_FLAG;
             case "grave" -> SHAPE_GRAVE;
             case "trophy" -> SHAPE_TROPHY;
@@ -172,7 +172,6 @@ public final class OBBlocks {
             case "paint_can" -> SHAPE_PAINT_CAN;
             case "projector" -> SHAPE_PROJECTOR;
             case "village_highlighter" -> SHAPE_VILLAGE_HIGHLIGHTER;
-            case "big_button", "big_button_wood" -> SHAPE_BIG_BUTTON;
             default -> null;
         };
     }
