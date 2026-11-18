@@ -12,6 +12,8 @@ import art.arcane.openblocks.block.OBScaffoldingBlock;
 import art.arcane.openblocks.block.OBShapeBlock;
 import art.arcane.openblocks.block.OBSpongeBlock;
 import art.arcane.openblocks.block.OBTankBlock;
+import art.arcane.openblocks.block.OBXPDrainBlock;
+import art.arcane.openblocks.block.OBXPShowerBlock;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -30,7 +32,6 @@ public final class OBBlocks {
 
     private static final List<RegistryObject<Block>> CREATIVE_ORDER = new ArrayList<>();
     private static final VoxelShape SHAPE_PATH = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 1.6D, 16.0D);
-    private static final VoxelShape SHAPE_XP_DRAIN = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 1.0D, 16.0D);
     private static final VoxelShape SHAPE_BIG_BUTTON = Block.box(1.0D, 0.0D, 1.0D, 15.0D, 2.0D, 15.0D);
     private static final VoxelShape SHAPE_FLAG = Block.box(7.0D, 0.0D, 7.0D, 9.0D, 16.0D, 9.0D);
     private static final VoxelShape SHAPE_TROPHY = Block.box(3.2D, 0.0D, 3.2D, 12.8D, 3.2D, 12.8D);
@@ -40,7 +41,6 @@ public final class OBBlocks {
     private static final VoxelShape SHAPE_AUTO_ANVIL = Block.box(2.0D, 0.0D, 0.0D, 14.0D, 16.0D, 16.0D);
     private static final VoxelShape SHAPE_PAINT_CAN = Block.box(4.0D, 0.0D, 4.0D, 12.0D, 11.0D, 12.0D);
     private static final VoxelShape SHAPE_PAINT_MIXER = Block.box(2.0D, 0.0D, 2.0D, 14.0D, 16.0D, 14.0D);
-    private static final VoxelShape SHAPE_XP_SHOWER = Block.box(7.0D, 7.0D, 7.0D, 9.0D, 9.0D, 16.0D);
     private static final VoxelShape SHAPE_PROJECTOR = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 8.0D, 16.0D);
     private static final VoxelShape SHAPE_VILLAGE_HIGHLIGHTER = Block.box(2.0D, 0.0D, 1.0D, 14.0D, 16.0D, 15.0D);
     private static final VoxelShape SHAPE_FAN = Block.box(3.0D, 0.0D, 3.0D, 13.0D, 16.0D, 13.0D);
@@ -127,6 +127,8 @@ public final class OBBlocks {
         if ("sponge".equals(id)) return new OBSpongeBlock(BlockBehaviour.Properties.copy(Blocks.SPONGE));
         if ("grave".equals(id)) return new OBGraveBlock(properties, shape, collisionShape);
         if ("tank".equals(id)) return new OBTankBlock(properties);
+        if ("xp_drain".equals(id)) return new OBXPDrainBlock(properties);
+        if ("xp_shower".equals(id)) return new OBXPShowerBlock(properties);
         if (shape != null) return new OBShapeBlock(properties, shape, collisionShape);
         return new Block(properties);
     }
@@ -146,7 +148,6 @@ public final class OBBlocks {
     private static VoxelShape shapeFor(final String id) {
         return switch (id) {
             case "path" -> SHAPE_PATH;
-            case "xp_drain" -> SHAPE_XP_DRAIN;
             case "sprinkler" -> SHAPE_SPRINKLER;
             case "target" -> SHAPE_TARGET;
             case "flag" -> SHAPE_FLAG;
@@ -162,7 +163,6 @@ public final class OBBlocks {
             case "paint_mixer" -> SHAPE_PAINT_MIXER;
             case "paint_can" -> SHAPE_PAINT_CAN;
             case "projector" -> SHAPE_PROJECTOR;
-            case "xp_shower" -> SHAPE_XP_SHOWER;
             case "village_highlighter" -> SHAPE_VILLAGE_HIGHLIGHTER;
             case "big_button", "big_button_wood" -> SHAPE_BIG_BUTTON;
             default -> null;

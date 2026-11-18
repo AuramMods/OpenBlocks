@@ -1,6 +1,7 @@
 package art.arcane.openblocks.registry;
 
 import art.arcane.openblocks.OpenBlocks;
+import art.arcane.openblocks.entity.OBFallingExperienceOrb;
 import art.arcane.openblocks.entity.OBPlaceholderEntity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
@@ -13,7 +14,9 @@ public final class OBEntities {
     public static final DeferredRegister<EntityType<?>> ENTITY_TYPES = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, OpenBlocks.MODID);
 
     public static final RegistryObject<EntityType<OBPlaceholderEntity>> LUGGAGE = register("luggage", 64, 1);
-    public static final RegistryObject<EntityType<OBPlaceholderEntity>> XP_ORB_NO_FLY = register("xp_orb_no_fly", 64, 1);
+    public static final RegistryObject<EntityType<OBFallingExperienceOrb>> XP_ORB_NO_FLY = ENTITY_TYPES.register("xp_orb_no_fly",
+            () -> EntityType.Builder.<OBFallingExperienceOrb>of(OBFallingExperienceOrb::new, MobCategory.MISC)
+                    .sized(0.25F, 0.25F).clientTrackingRange(6).updateInterval(5).build(OpenBlocks.id("xp_orb_no_fly").toString()));
     public static final RegistryObject<EntityType<OBPlaceholderEntity>> HANG_GLIDER = register("hang_glider", 64, 1);
     public static final RegistryObject<EntityType<OBPlaceholderEntity>> MAGNET = register("magnet", 64, 1);
     public static final RegistryObject<EntityType<OBPlaceholderEntity>> MOUNTED_BLOCK = register("mounted_block", 64, 1);

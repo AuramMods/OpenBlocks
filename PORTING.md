@@ -182,6 +182,7 @@ Checklist:
   - revisit remaining metadata-collapsed conversions to restore accurate color and subtype behavior (paintbrush variants, flag color outputs, and similar cases)
 - [x] Restore configurable sponge cleanup, Sponge on a Stick, scattered-stone path rendering, and the healing block's one-tick pulses.
 - [x] Restore tank block and item storage, connected transfer and rendering, XP and bucket exchange, and the Liquid XP block assets.
+- [x] Restore the XP Drain and redstone-powered XP Shower. The drain transfers whole XP into a fluid receiver, and the shower releases falling XP orbs that a drain can collect.
 - [ ] Continue block functionality sweep (depth pass order):
-  - xp_drain/xp_shower/xp_bottler: wire the tank's fluid storage into orb, player and bottle workflows
+  - xp_bottler: restore the inventory, bottling timer, fluid input, and configurable automation screen
   - block_breaker/block_placer/item_dropper + auto_anvil/auto_enchantment_table: tick/work cycles and inventory IO

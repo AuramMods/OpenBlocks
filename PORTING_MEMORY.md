@@ -28,7 +28,11 @@
 - Datagen and jar reobfuscation completed. All 29 GameTests passed, including six tank tests covering simulated and executed column transfers, conservation and balancing, block-entity serialization, break and placement, stacked portable tanks, bucket exchange, XP gain, light, and a canceled XP event.
 - The reobfuscated jar started on a clean Forge 47.4.10 dedicated server with `--nogui`. The server saved a tank with 5,310 mB of Liquid XP and reported the same contents after a full restart.
 - A muted packaged client under Docker/Xvfb reopened a single-player world with the tanks in place. Compatible Liquid XP tanks shared one frame and surface, while water and lava kept separate frames. The filled tank rendered in the hotbar and hand. The Liquid XP blockstate warnings are resolved.
-- Next, finish the XP drain, shower and bottler using these fluid capabilities and converters.
+- XP Drains deposit whole player XP points and orb constituents into the fluid handler below. They keep merged orb constituents that do not fit and honor Forge callbacks that cancel player XP loss.
+- XP Showers mount on horizontal faces and run while powered. They pull liquid through the face behind the nozzle and preserve the buffer through saves and canceled spawns. Shower orbs use vanilla physics and pickup while falling without targeting players. The spray uses the Liquid XP block sprite in vanilla falling terrain particles.
+- Datagen and packaging finished and all 34 standalone GameTests passed. The five XP tests cover level-boundary accounting, partial merged-orb collection, canceled XP loss, a powered shower feeding another drain, and shower buffer save/load and spawn cancellation.
+- A muted packaged client joined a standalone Forge 47.4.10 server over a private Docker network. The client rendered the shower spray and orbs. With a survival player nearby, a sampled orb had zero horizontal velocity. The receiving drain recovered all 16,000 mB, and standing on a second drain converted two player XP points to exactly 40 mB.
+- Next, port the XP Bottler with sided inventory and fluid capabilities, bottling progress, and automation controls.
 
 ## Current Snapshot
 - Legacy codebase analyzed: `old-1.12.2`.

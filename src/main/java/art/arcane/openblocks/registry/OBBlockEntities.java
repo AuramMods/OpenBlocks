@@ -5,6 +5,8 @@ import art.arcane.openblocks.block.entity.OBGraveBlockEntity;
 import art.arcane.openblocks.block.entity.OBHealBlockEntity;
 import art.arcane.openblocks.block.entity.OBPlaceholderBlockEntity;
 import art.arcane.openblocks.block.entity.OBTankBlockEntity;
+import art.arcane.openblocks.block.entity.OBXPDrainBlockEntity;
+import art.arcane.openblocks.block.entity.OBXPShowerBlockEntity;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -42,7 +44,7 @@ public final class OBBlockEntities {
     public static final RegistryObject<BlockEntityType<OBPlaceholderBlockEntity>> VILLAGE_HIGHLIGHTER = register("village_highlighter", OBBlocks.VILLAGE_HIGHLIGHTER);
     public static final RegistryObject<BlockEntityType<OBPlaceholderBlockEntity>> AUTO_ANVIL = register("auto_anvil", OBBlocks.AUTO_ANVIL);
     public static final RegistryObject<BlockEntityType<OBPlaceholderBlockEntity>> AUTO_ENCHANTMENT_TABLE = register("auto_enchantment_table", OBBlocks.AUTO_ENCHANTMENT_TABLE);
-    public static final RegistryObject<BlockEntityType<OBPlaceholderBlockEntity>> XP_DRAIN = register("xp_drain", OBBlocks.XP_DRAIN);
+    public static final RegistryObject<BlockEntityType<OBXPDrainBlockEntity>> XP_DRAIN = register("xp_drain", OBXPDrainBlockEntity::new, OBBlocks.XP_DRAIN);
     public static final RegistryObject<BlockEntityType<OBPlaceholderBlockEntity>> BLOCK_BREAKER = register("block_breaker", OBBlocks.BLOCK_BREAKER);
     public static final RegistryObject<BlockEntityType<OBPlaceholderBlockEntity>> BLOCK_PLACER = register("block_placer", OBBlocks.BLOCK_PLACER);
     public static final RegistryObject<BlockEntityType<OBPlaceholderBlockEntity>> ITEM_DROPPER = register("item_dropper", OBBlocks.ITEM_DROPPER);
@@ -54,7 +56,7 @@ public final class OBBlockEntities {
     public static final RegistryObject<BlockEntityType<OBPlaceholderBlockEntity>> PROJECTOR = register("projector", OBBlocks.PROJECTOR);
     public static final RegistryObject<BlockEntityType<OBPlaceholderBlockEntity>> DRAWING_TABLE = register("drawing_table", OBBlocks.DRAWING_TABLE);
     public static final RegistryObject<BlockEntityType<OBPlaceholderBlockEntity>> SKY = register("sky", OBBlocks.SKY);
-    public static final RegistryObject<BlockEntityType<OBPlaceholderBlockEntity>> XP_SHOWER = register("xp_shower", OBBlocks.XP_SHOWER);
+    public static final RegistryObject<BlockEntityType<OBXPShowerBlockEntity>> XP_SHOWER = register("xp_shower", OBXPShowerBlockEntity::new, OBBlocks.XP_SHOWER);
     public static final RegistryObject<BlockEntityType<OBPlaceholderBlockEntity>> GOLDEN_EGG = register("golden_egg", OBBlocks.GOLDEN_EGG);
 
     private OBBlockEntities() {}

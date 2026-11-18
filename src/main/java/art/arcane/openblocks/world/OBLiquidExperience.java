@@ -2,9 +2,14 @@ package art.arcane.openblocks.world;
 
 import art.arcane.openblocks.config.OBServerConfig;
 import art.arcane.openblocks.registry.OBFluids;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidUtil;
+import net.minecraftforge.fluids.capability.templates.FluidTank;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.commons.lang3.math.NumberUtils;
 
@@ -35,6 +40,23 @@ public final class OBLiquidExperience {
             if (!fluidName.equals(fluidName.contains(":") ? id.toString() : id.getPath())) continue;
             final int configured = NumberUtils.toInt(entry.substring(split + 1).trim());
             if (configured > 0 && configured <= Integer.MAX_VALUE / XP_PER_BOTTLE) return configured;
+        }
+        return 0;
+    }
+
+    public static int pull(final Level level, final BlockPos pos, final Direction side, final FluidTank receiver, final int limit) {
+        if (receiver.getSpace() <= 0 || !level.hasChunkAt(pos)) return 0;
+        final var source = FluidUtil.getFluidHandler(level, pos, side).orElse(null);
+        if (source == null) return 0;
+        final int amount = Math.min(limit, receiver.getSpace());
+        if (!receiver.isEmpty()) {
+            return FluidUtil.tryFluidTransfer(receiver, source, new FluidStack(receiver.getFluid(), amount), true).getAmount();
+        }
+        for (int index = 0; index < source.getTanks(); index++) {
+            final FluidStack candidate = source.getFluidInTank(index);
+            if (candidate.isEmpty() || !receiver.isFluidValid(candidate)) continue;
+            final FluidStack moved = FluidUtil.tryFluidTransfer(receiver, source, new FluidStack(candidate, amount), true);
+            if (!moved.isEmpty()) return moved.getAmount();
         }
         return 0;
     }
