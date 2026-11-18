@@ -25,6 +25,7 @@ Current registry classes:
 - Block entity register: `src/main/java/art/arcane/openblocks/registry/OBBlockEntities.java`
 - Entity register: `src/main/java/art/arcane/openblocks/registry/OBEntities.java`
 - Sound register: `src/main/java/art/arcane/openblocks/registry/OBSounds.java`
+- Custom statistic register for Bricks dropped: `src/main/java/art/arcane/openblocks/registry/OBStats.java`
 - Enchantment register: `src/main/java/art/arcane/openblocks/registry/OBEnchantments.java`
 - Menu register: `src/main/java/art/arcane/openblocks/registry/OBMenuTypes.java`
 - Recipe serializer register: `src/main/java/art/arcane/openblocks/registry/OBRecipeSerializers.java`
@@ -76,6 +77,7 @@ Current scaffold counts:
 - Block entity types registered: 35
 - Entity types registered: 11
 - Sound events registered: 19
+- Custom statistics registered: 1 (`open_blocks:bricks_dropped`)
 - Enchantments registered: 3
 - Menu types registered: 14
 - Recipe serializers registered: 10
@@ -190,11 +192,8 @@ Current validation status:
   - `src/main/java/art/arcane/openblocks/capability/OBCapabilities.java` now registers and attaches legacy player capability IDs (`open_blocks:luck`, `open_blocks:pedometer_state`, `open_blocks:bowels`) and copies them during `PlayerEvent.Clone` (except `bowels` on death clones, to avoid duplicate death-drop state).
   - `OBCapabilities.PedometerState` now includes runtime/report helpers (`reset`, `start`, `tick`, `stop`, `createReport`) and report DTO data used by pedometer messaging.
   - `src/main/java/art/arcane/openblocks/advancement/OBCriterions.java` now registers custom trigger IDs `open_blocks:brick_dropped` and `open_blocks:dev_null_stacked` for advancement compatibility baseline.
-  - `src/main/java/art/arcane/openblocks/advancement/OBAdvancementHooks.java` now wires initial trigger/capability gameplay hooks:
-    - `tasty_clay` consume increments bowels count,
-    - brick toss conditionally fires `brick_dropped` and decrements bowels for survival players,
-    - `LivingDropsEvent` emits up to 16 brick drops from bowels count and clears stored bowels state,
-    - `PlayerTickEvent` now performs baseline pedometer sampling while a pedometer is present in hotbar and tracking is active.
+  - `OBBrickActions` handles Tasty Clay digestion, the Boo packet, and death drops when the server's `tomfoolery.weAreSeriousPeople` option is false. Only a successfully spawned Boo brick advances `brick_dropped` and the Bricks dropped statistic.
+  - `OBAdvancementHooks` performs baseline pedometer sampling while a pedometer is present in hotbar and tracking is active.
   - `OBDevNullMenu` fires `dev_null_stacked` from the stored item's actual nesting depth after inventory edits. `OBDevNullPickup` fills exact matching stacks on pickup before discarding overflow.
   - `src/main/java/art/arcane/openblocks/registry/OBItems.java` now sets parity-critical item properties:
     - `tasty_clay` is edible,
@@ -330,7 +329,7 @@ Source: `old-1.12.2/src/main/java/openblocks/OpenBlocks.java`
 | height_map | ItemHeightMap | `Items.heightMap` | `heightMap` |
 | empty_map | ItemEmptyMap | `Items.emptyMap` | `emptyMap` |
 | cartographer | ItemCartographer | `Items.cartographer` | - |
-| tasty_clay | ItemTastyClay | `Items.tastyClay` | `tastyClay` |
+| tasty_clay | ItemTastyClay | `Items.tastyClay` | `tastyClay`. In 1.20.1, `OBBrickActions` adds a stored brick after the always-edible food is consumed with digestion enabled. |
 | golden_eye | ItemGoldenEye | `Items.goldenEye` | `goldenEye` |
 | generic_unstackable | ItemOBGenericUnstackable | `Items.genericUnstackable` | no default model; `genericUnstackable` |
 | cursor | ItemCursor | `Items.cursor` | - |
@@ -599,7 +598,7 @@ Sources:
 - Trigger registration: `old-1.12.2/src/main/java/openblocks/advancements/Criterions.java`
 - Trigger classes:
   - `TriggerDevNullStack` -> trigger ID `openblocks:dev_null_stacked`
-  - `TriggerBrickDropped` -> trigger ID `openblocks:brick_dropped`
+  - `TriggerBrickDropped` -> trigger ID `openblocks:brick_dropped`. The 1.20.1 `open_blocks:brick_dropped` trigger is fired by `OBBrickActions` after Be Silly spawns a brick.
 - Advancement JSON files:
   - `old-1.12.2/src/main/resources/assets/openblocks/advancements/oops.json`
   - `old-1.12.2/src/main/resources/assets/openblocks/advancements/tma2.json`

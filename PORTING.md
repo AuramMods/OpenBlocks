@@ -174,9 +174,7 @@ Checklist:
   - harden grave placement edge-cases (destructive fallback policy, cross-dimension guarantees, failure-path UX/messages)
 - [ ] Replace capability placeholders with gameplay hooks:
   - `pedometer_state`: expand from current explicit start/reset/report baseline to deeper parity (client-side speed property behavior + legacy unit/readout polish)
-  - `bowels`: expand from current tasty-clay + brick-toss + death-drop hooks to full legacy behavior parity (keybound brick-drop path + sound/stat nuances)
   - `luck`: reconnect full flim-flam cooldown and forced-trigger logic (currently just raw value storage)
-- [ ] Replace the temporary `brick_dropped` advancement hook with the legacy boo/brick action.
 - [ ] Finish legacy recipe migration for skipped recipe files:
   - revisit remaining metadata-collapsed conversions to restore accurate color and subtype behavior, including paintbrush variants
 - [x] Restore configurable sponge cleanup, Sponge on a Stick, scattered-stone path rendering, and the healing block's one-tick pulses.
@@ -195,3 +193,4 @@ Checklist:
 - [x] Restore the Fan's adjustable heading, analog airflow, config, and spinning blades, and the Bear Trap's jaws, mob capture, release and comparator output.
 - [x] Restore Flag mounts, turning, all carpet colors, and color-preserving drops. Restore both Sky Block polarities, the torch conversion, and live sky rendering.
 - [x] Restore the /dev/null inventory, world pickup filtering, overflow, forwarding block placement, and the true nesting advancement.
+- [x] Restore Tasty Clay digestion, the Be Silly key, brick drops, the Bricks dropped statistic, and the Zoinks! advancement.

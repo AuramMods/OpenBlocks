@@ -4,10 +4,10 @@
       "item": "minecraft:brick"
     },
     "title": {
-      "text": "Oops"
+      "translate": "advancements.open_blocks.oops.title"
     },
     "description": {
-      "text": "Drop a brick. Literally."
+      "translate": "advancements.open_blocks.oops.description"
     },
     "frame": "task",
     "show_toast": true,

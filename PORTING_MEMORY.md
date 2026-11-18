@@ -85,7 +85,12 @@
 - Datagen and jar reobfuscation succeeded. All 96 standalone GameTests passed. The six /dev/null tests cover crafting, item NBT, filling multiple matching devices, pickup protection, placement rollback, live updates to the locked menu, and the actual nesting criterion and limit.
 - In packaged Forge 47.4.10 multiplayer, the muted Xvfb client shift-inserted 20 cobblestone. The menu updated to 61 and then 64 after live pickups. The extra nine cobblestone were discarded. Using the device placed one block and left 63. Five separate devices left Stack Overflow locked, while inserting the fifth nested device showed the correct toast and overflow model.
 - After a full dedicated-server restart, opening the same inventory showed the 63 cobblestone, the five-layer item, and the completed advancement. The placed block survived. The final client showed the configured cyan count and opened the menu with regular use in the air when the sneak requirement was disabled.
-- Next, restore the legacy brick action and advancement.
+- Tasty Clay is always edible. The server option `tomfoolery.weAreSeriousPeople=false` enables digestion and the Be Silly action. Clients opt in with the same setting in `open_blocks-client.toml`. The remappable B key appears in Controls even while disabled, and `doItWhileTyping` is off by default.
+- Be Silly plays the original player-category sound even with an empty supply. A charged survival action throws one brick backward and spends one stored brick. Creative throws are free. A successful spawn awards Bricks dropped and Zoinks!, and Forge spawn cancellation returns the reserved charge. On death, up to 16 stored bricks drop with the original trajectory. Network protocol version 3 carries the new action.
+- Datagen and jar reobfuscation succeeded. All 101 standalone GameTests passed. The five new tests cover the recipe and its bucket remainder, eating at full hunger, sound and drop direction, the statistic and criterion, both modes, cancellation, and the death-drop cap.
+- In muted packaged Forge 47.4.10 multiplayer, two Tasty Clay stored two charges at full hunger. A normal Q toss earned nothing. B threw a brick behind the player and displayed Zoinks!. B typed in chat used a charge only with `doItWhileTyping` enabled, and the character still appeared in the chat field. Holding B in creative mode threw one brick and used no charge.
+- A dedicated-server restart preserved the remaining clay charge, the advancement, and the custom stat at three. Server Serious Mode blocked B while preserving that charge. Opting back in used the same saved charge and raised the stat to four.
+- Next, restore the Pedometer's tracking and readout behavior.
 
 ## Current Snapshot
 - Legacy codebase analyzed: `old-1.12.2`.
@@ -292,9 +297,8 @@
   - Added event bridge hooks:
     - `src/main/java/art/arcane/openblocks/advancement/OBAdvancementHooks.java`
   - Current hooks:
-    - `tasty_clay` consumption increments `open_blocks:bowels` count.
-    - Brick item toss triggers `open_blocks:brick_dropped` when allowed (creative or positive bowels count, with decrement for non-creative).
-    - Player death now drops up to 16 bricks based on bowels count and clears bowels state.
+    - `OBBrickActions` handles Tasty Clay, Be Silly, and death drops with the server's Serious Mode setting.
+    - A successful Be Silly drop awards `open_blocks:brick_dropped` and `open_blocks:bricks_dropped`.
     - Server player tick now updates `open_blocks:pedometer_state` movement sampling when the player has a pedometer in the hotbar and tracking is active.
     - The dev-null editor now triggers `open_blocks:dev_null_stacked` from the actual nested contents.
     - New explicit pedometer item flow is wired in `src/main/java/art/arcane/openblocks/item/OBPedometerItem.java`:
@@ -539,9 +543,7 @@
 - Move Phase 3 command/trigger work from placeholders to hooked gameplay paths:
   - deepen `flimflam` from current breadth-stage effects to legacy cost/weight/luck/blacklist behavior
   - deepen `ob_inventory` from current built-in targets + event-bridge payload schema + grave placement/claim/action-filter baseline to concrete subsystem integrations + full grave/backend parity
-  - use the legacy boo/brick action for its advancement trigger
 - Move Phase 3 capability work from placeholders to hooked gameplay paths:
   - expand pedometer from current explicit start/reset/report baseline to deeper parity (legacy unit formatting, client-side speed property behavior, polish on readout cadence)
-  - expand brick/bowels behavior from current tasty-clay + brick toss + death-drop baseline to full legacy parity (keybound boo action path, whoops sound/stat behavior)
   - restore luck cooldown/forced-trigger behavior for `open_blocks:luck`
 - Draft legacy compatibility/remap mapping plan (`openblocks` namespace + legacy alias IDs -> `open_blocks` canonical IDs).

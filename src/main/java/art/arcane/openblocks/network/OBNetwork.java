@@ -3,13 +3,14 @@ package art.arcane.openblocks.network;
 import art.arcane.openblocks.OpenBlocks;
 import art.arcane.openblocks.block.OBElevatorTravel;
 import art.arcane.openblocks.menu.OBRedstoneMachineMenu;
+import art.arcane.openblocks.player.OBBrickActions;
 import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.simple.SimpleChannel;
 
 public final class OBNetwork {
 
-    private static final String VERSION = "2";
+    private static final String VERSION = "3";
     private static final SimpleChannel CHANNEL = NetworkRegistry.ChannelBuilder.named(OpenBlocks.id("main"))
             .networkProtocolVersion(() -> VERSION)
             .clientAcceptedVersions(VERSION::equals)
@@ -36,6 +37,14 @@ public final class OBNetwork {
                             && menu.containerId == message.containerId()) menu.setLaunchSpeed(sender, message.speedTenths());
                 })
                 .add();
+        CHANNEL.messageBuilder(BooAction.class, 2, NetworkDirection.PLAY_TO_SERVER)
+                .encoder((message, buf) -> {})
+                .decoder(buf -> new BooAction())
+                .consumerMainThread((message, context) -> {
+                    final var sender = context.get().getSender();
+                    if (sender != null) OBBrickActions.boo(sender);
+                })
+                .add();
     }
 
     public static void requestElevator(final boolean descend) {
@@ -46,7 +55,13 @@ public final class OBNetwork {
         CHANNEL.sendToServer(new DropperSpeed(containerId, speedTenths));
     }
 
+    public static void requestBoo() {
+        CHANNEL.sendToServer(new BooAction());
+    }
+
     private record ElevatorAction(boolean descend) {}
 
     private record DropperSpeed(int containerId, int speedTenths) {}
+
+    private record BooAction() {}
 }

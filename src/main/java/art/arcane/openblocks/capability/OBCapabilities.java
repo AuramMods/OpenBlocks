@@ -84,9 +84,8 @@ public final class OBCapabilities {
     public static int setBowelBrickCount(final Player player, final int count) {
         return player.getCapability(BOWELS)
                 .map((data) -> {
-                    final int normalized = Math.max(0, count);
-                    data.setBrickCount(normalized);
-                    return normalized;
+                    data.setBrickCount(count);
+                    return data.getBrickCount();
                 })
                 .orElse(0);
     }
@@ -485,7 +484,11 @@ public final class OBCapabilities {
         }
 
         public void setBrickCount(final int brickCount) {
-            this.brickCount = brickCount;
+            this.brickCount = Math.max(0, brickCount);
+        }
+
+        public void addBrick() {
+            if (brickCount < Integer.MAX_VALUE) brickCount++;
         }
 
         @Override
@@ -497,7 +500,7 @@ public final class OBCapabilities {
 
         @Override
         public void deserializeNBT(final CompoundTag tag) {
-            this.brickCount = tag.getInt("brick_count");
+            setBrickCount(tag.getInt("brick_count"));
         }
 
         @Override
