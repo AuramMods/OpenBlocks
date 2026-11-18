@@ -4,6 +4,7 @@ import art.arcane.openblocks.OpenBlocks;
 import art.arcane.openblocks.item.OBElevatorItem;
 import art.arcane.openblocks.item.OBPedometerItem;
 import art.arcane.openblocks.item.OBScaffoldingItem;
+import art.arcane.openblocks.item.OBSpongeOnAStickItem;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -113,7 +114,7 @@ public final class OBItems {
     public static final RegistryObject<Item> CURSOR = registerItem("cursor");
     public static final RegistryObject<Item> INFO_BOOK = registerItem("info_book");
     public static final RegistryObject<Item> DEV_NULL = registerItem("dev_null", new Item.Properties().stacksTo(1));
-    public static final RegistryObject<Item> SPONGE_ON_A_STICK = registerItem("sponge_on_a_stick");
+    public static final RegistryObject<Item> SPONGE_ON_A_STICK = registerItem("sponge_on_a_stick", OBSpongeOnAStickItem::new);
     public static final RegistryObject<Item> PEDOMETER = registerItem("pedometer", OBPedometerItem::new);
     public static final RegistryObject<Item> EPIC_ERASER = registerItem("epic_eraser");
     public static final RegistryObject<Item> WRENCH = registerItem("wrench");

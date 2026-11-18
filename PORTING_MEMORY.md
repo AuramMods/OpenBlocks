@@ -19,7 +19,11 @@
 - OpenBlocks scaffolding is a solid temporary block, with the legacy random despawn rate, item drop, 100-tick fuel value, and hidden inside faces. Use the `scaffolding.despawnRate` world server config to change the rate.
 - Datagen, packaging, and all 17 standalone GameTests passed. The ladder tests exercised actual item placement, climb and redstone behavior, finite and infinite rope drops, Forge placement cancellation, and scaffolding fuel and despawn.
 - The muted packaged Forge client in Docker/Xvfb rendered both Jaded Ladder positions, a hanging wall rope, and adjacent cutout scaffolds in the disposable single-player world.
-- Next, finish the sponge, path and healing-block behavior checks, then port the tank and XP chain.
+- The sponge block and Sponge on a Stick use configurable cleanup radii and neighbor updates. Both remove logged water while keeping the host block. The tool spends one durability per wet use, and lava burns the block or destroys the tool and ignites its user.
+- The path restores the legacy scattered-stone look using a stable position seed. It has no movement collision, requires a sturdy block underneath, and drops if that support is broken. The healing block restores one health and one food per pulse when both are low.
+- Datagen and jar reobfuscation completed. All 23 standalone GameTests passed, including six new checks for sponge settings and lava, tool use and durability, path support and collision, and the timed healing pulse. If a fresh GameTest world stalls in spawn lighting with `MissingPaletteEntryException`, the successful retry used a fresh run directory and `JAVA_TOOL_OPTIONS=-XX:ActiveProcessorCount=4`.
+- The packaged client rendered different stone layouts on adjacent path blocks and showed the path in the hotbar and hand. Verification used Docker/Xvfb with master volume zero and OpenAL's null backend.
+- Next, port the tank and XP chain.
 
 ## Current Snapshot
 - Legacy codebase analyzed: `old-1.12.2`.

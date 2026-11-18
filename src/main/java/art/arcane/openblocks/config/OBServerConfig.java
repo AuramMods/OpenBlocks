@@ -17,6 +17,11 @@ public final class OBServerConfig {
     public static final ForgeConfigSpec.ConfigValue<List<? extends String>> ELEVATOR_OVERRIDES;
     public static final ForgeConfigSpec.BooleanValue ROPE_LADDER_INFINITE;
     public static final ForgeConfigSpec.IntValue SCAFFOLDING_DESPAWN_RATE;
+    public static final ForgeConfigSpec.IntValue SPONGE_RANGE;
+    public static final ForgeConfigSpec.BooleanValue SPONGE_BLOCK_UPDATE;
+    public static final ForgeConfigSpec.IntValue SPONGE_STICK_RANGE;
+    public static final ForgeConfigSpec.IntValue SPONGE_STICK_DURABILITY;
+    public static final ForgeConfigSpec.BooleanValue SPONGE_STICK_BLOCK_UPDATE;
 
     static {
         final var builder = new ForgeConfigSpec.Builder();
@@ -42,6 +47,17 @@ public final class OBServerConfig {
         builder.push("scaffolding");
         SCAFFOLDING_DESPAWN_RATE = builder.comment("A scaffold breaks on one in this many random ticks. 0 breaks on every random tick.")
                 .defineInRange("despawnRate", 4, 0, Integer.MAX_VALUE);
+        builder.pop();
+        builder.push("sponge");
+        SPONGE_RANGE = builder.comment("Liquid removal radius of the sponge block.")
+                .defineInRange("spongeRange", 3, 0, 32);
+        SPONGE_BLOCK_UPDATE = builder.comment("Notify neighbors when the sponge block removes liquids.")
+                .define("blockUpdate", false);
+        SPONGE_STICK_RANGE = builder.comment("Liquid removal radius of the Sponge on a Stick.")
+                .defineInRange("spongeStickRange", 3, 0, 32);
+        SPONGE_STICK_DURABILITY = builder.defineInRange("spongeStickUseCount", 256, 1, Integer.MAX_VALUE);
+        SPONGE_STICK_BLOCK_UPDATE = builder.comment("Notify neighbors when the Sponge on a Stick removes liquids.")
+                .define("stickBlockUpdate", false);
         builder.pop();
         SPEC = builder.build();
     }

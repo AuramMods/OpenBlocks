@@ -2,11 +2,13 @@ package art.arcane.openblocks.block;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class OBPathBlock extends OBShapeBlock {
@@ -22,6 +24,11 @@ public class OBPathBlock extends OBShapeBlock {
     public boolean canSurvive(final BlockState state, final LevelReader level, final BlockPos pos) {
         final BlockPos belowPos = pos.below();
         return level.getBlockState(belowPos).isFaceSturdy(level, belowPos, Direction.UP);
+    }
+
+    @Override
+    public VoxelShape getBlockSupportShape(final BlockState state, final BlockGetter level, final BlockPos pos) {
+        return getShape(state, level, pos, CollisionContext.empty());
     }
 
     @Override

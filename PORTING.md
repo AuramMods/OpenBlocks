@@ -180,7 +180,7 @@ Checklist:
   - replace temporary hooks with legacy-accurate trigger sources (`brick_dropped` from boo/brick action path, `dev_null_stacked` from nested dev-null inventory depth)
 - [ ] Finish legacy recipe migration for skipped recipe files:
   - revisit remaining metadata-collapsed conversions to restore accurate color and subtype behavior (paintbrush variants, flag color outputs, and similar cases)
+- [x] Restore configurable sponge cleanup, Sponge on a Stick, scattered-stone path rendering, and the healing block's one-tick pulses.
 - [ ] Continue block functionality sweep (depth pass order):
-  - sponge/path/heal: finish configuration and behavior checks for the existing blocks
   - xp_drain/xp_shower/xp_bottler + tank: fluid/xp transfer behavior and interaction flow
   - block_breaker/block_placer/item_dropper + auto_anvil/auto_enchantment_table: tick/work cycles and inventory IO

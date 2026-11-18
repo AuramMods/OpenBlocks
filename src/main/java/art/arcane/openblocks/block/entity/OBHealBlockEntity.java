@@ -29,8 +29,8 @@ public class OBHealBlockEntity extends BlockEntity {
 
         final AABB effectBounds = new AABB(pos).inflate(HORIZONTAL_RANGE, VERTICAL_RANGE, HORIZONTAL_RANGE);
         for (final Player player : level.getEntitiesOfClass(Player.class, effectBounds, player -> !player.isCreative())) {
-            player.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 2, 10, false, false, false));
-            player.addEffect(new MobEffectInstance(MobEffects.SATURATION, 2, 0, false, false, false));
+            player.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 1, 10, false, false, false));
+            player.addEffect(new MobEffectInstance(MobEffects.SATURATION, 1, 0, false, false, false));
         }
     }
 }

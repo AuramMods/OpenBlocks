@@ -141,15 +141,16 @@ Current validation status:
   - `src/main/java/art/arcane/openblocks/api/OBGraveDropsEvent.java` now mirrors legacy grave drop-action event semantics (`STORE`/`DROP`/`DELETE`) for grave filtering hooks.
   - `src/main/java/art/arcane/openblocks/world/OBGameRules.java` now registers legacy grave gamerule key `openblocks:spawn_graves` (default `true`).
   - `src/main/java/art/arcane/openblocks/block/OBGraveBlock.java` + `src/main/java/art/arcane/openblocks/block/entity/OBGraveBlockEntity.java` now provide placeable grave state with persisted dump metadata, death message display on normal interaction, and shovel-gated loot claim behavior.
-  - `src/main/java/art/arcane/openblocks/block/OBHealBlock.java` + `src/main/java/art/arcane/openblocks/block/entity/OBHealBlockEntity.java` now provide periodic server-side healing/saturation aura behavior for nearby non-creative players.
+  - `OBHealBlockEntity` applies one tick each of Regeneration and Saturation every 20 server ticks to nearby non-creative players.
   - `OBElevatorBlock` and `OBElevatorRotatingBlock` share a dye color blockstate. Rotating elevators store their facing in blockstate and set yaw on arrival.
   - `OBElevatorTravel` handles jump/sneak requests from `OBElevatorControls` and `OBNetwork`. It validates the player's position and destination on the server. The world server config controls range, block rules, overrides, centering, clearance and XP costs.
   - The item uses vanilla `BlockStateTag.color` and the generated loot tables preserve color. Untagged items and old block states default to white. One color-preserving rotating upgrade replaces the 16 metadata-specific upgrades.
   - `OBLadderBlock` is the Jaded Ladder trapdoor. It climbs when open and uses vanilla trapdoor placement, redstone, sounds, and waterlogging.
   - `OBRopeLadderBlock` stores facing and drop eligibility in blockstate. Ropes extend downward and detach below a broken rung. Finite ropes consume one item per rung. Infinite ropes charge only the anchor and never yield drops from their rungs.
   - `OBScaffoldingBlock` and `OBScaffoldingItem` restore solid temporary scaffolds that drop when they decay and burn for 100 ticks.
-  - `src/main/java/art/arcane/openblocks/block/OBPathBlock.java` now enforces support-below survival and drops itself when support is removed.
-  - `src/main/java/art/arcane/openblocks/block/OBSpongeBlock.java` now performs periodic liquid cleanup, lava burn fallback, and border-fluid wake-up scheduling on removal.
+  - `OBPathBlock` is a decorative, non-colliding path with a sturdy underside. It drops when its support is removed. `OBPathGeometry` bakes the legacy scattered stones from a stable position seed and uses a fixed seed for the item model.
+  - `OBSpongeBlock` clears liquids periodically, burns on lava contact, and schedules adjacent fluids to refill the cleared area on removal when neighbor notifications are disabled.
+  - `OBSpongeOnAStickItem` clears liquids on block or air use and spends one durability when it absorbs fluid. Lava destroys the tool and sets the player on fire. Both sponge forms use `OBSpongeDrain` to preserve waterlogged blocks and have separate radius and block-update settings in the world server config.
   - `src/main/java/art/arcane/openblocks/grave/OBGraveHooks.java` now writes grave backup dumps, posts/consumes `OBGraveDropsEvent` action filtering, searches for valid placement nearby, places grave blocks on successful death handling, and clears only stored grave drops when grave placement succeeds.
   - `src/main/java/art/arcane/openblocks/command/OBFlimFlamEffects.java` now provides executable breadth-stage actions for all legacy `/flimflam` effect IDs.
   - Current command parity:
