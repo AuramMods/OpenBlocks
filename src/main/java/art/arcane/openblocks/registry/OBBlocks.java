@@ -12,6 +12,7 @@ import art.arcane.openblocks.block.OBScaffoldingBlock;
 import art.arcane.openblocks.block.OBShapeBlock;
 import art.arcane.openblocks.block.OBSpongeBlock;
 import art.arcane.openblocks.block.OBTankBlock;
+import art.arcane.openblocks.block.OBXPBottlerBlock;
 import art.arcane.openblocks.block.OBXPDrainBlock;
 import art.arcane.openblocks.block.OBXPShowerBlock;
 import java.util.ArrayList;
@@ -127,6 +128,7 @@ public final class OBBlocks {
         if ("sponge".equals(id)) return new OBSpongeBlock(BlockBehaviour.Properties.copy(Blocks.SPONGE));
         if ("grave".equals(id)) return new OBGraveBlock(properties, shape, collisionShape);
         if ("tank".equals(id)) return new OBTankBlock(properties);
+        if ("xp_bottler".equals(id)) return new OBXPBottlerBlock(properties);
         if ("xp_drain".equals(id)) return new OBXPDrainBlock(properties);
         if ("xp_shower".equals(id)) return new OBXPShowerBlock(properties);
         if (shape != null) return new OBShapeBlock(properties, shape, collisionShape);

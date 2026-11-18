@@ -44,6 +44,15 @@ public final class OBLiquidExperience {
         return 0;
     }
 
+    public static int bottleCapacity() {
+        if (!OBServerConfig.SPEC.isLoaded()) return XP_PER_BOTTLE * OBServerConfig.XP_FLUID_RATIO.getDefault();
+        int maxRatio = OBServerConfig.XP_FLUID_RATIO.get();
+        for (final var fluid : ForgeRegistries.FLUIDS) {
+            maxRatio = Math.max(maxRatio, ratio(new FluidStack(fluid, 1)));
+        }
+        return maxRatio * XP_PER_BOTTLE;
+    }
+
     public static int pull(final Level level, final BlockPos pos, final Direction side, final FluidTank receiver, final int limit) {
         if (receiver.getSpace() <= 0 || !level.hasChunkAt(pos)) return 0;
         final var source = FluidUtil.getFluidHandler(level, pos, side).orElse(null);

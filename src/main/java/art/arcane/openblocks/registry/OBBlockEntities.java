@@ -5,6 +5,7 @@ import art.arcane.openblocks.block.entity.OBGraveBlockEntity;
 import art.arcane.openblocks.block.entity.OBHealBlockEntity;
 import art.arcane.openblocks.block.entity.OBPlaceholderBlockEntity;
 import art.arcane.openblocks.block.entity.OBTankBlockEntity;
+import art.arcane.openblocks.block.entity.OBXPBottlerBlockEntity;
 import art.arcane.openblocks.block.entity.OBXPDrainBlockEntity;
 import art.arcane.openblocks.block.entity.OBXPShowerBlockEntity;
 import java.util.ArrayList;
@@ -40,7 +41,7 @@ public final class OBBlockEntities {
     public static final RegistryObject<BlockEntityType<OBPlaceholderBlockEntity>> BIG_BUTTON_WOOD = register("big_button_wood", OBBlocks.BIG_BUTTON_WOOD);
     public static final RegistryObject<BlockEntityType<OBPlaceholderBlockEntity>> IMAGINARY = register("imaginary", OBBlocks.IMAGINARY);
     public static final RegistryObject<BlockEntityType<OBPlaceholderBlockEntity>> FAN = register("fan", OBBlocks.FAN);
-    public static final RegistryObject<BlockEntityType<OBPlaceholderBlockEntity>> XP_BOTTLER = register("xp_bottler", OBBlocks.XP_BOTTLER);
+    public static final RegistryObject<BlockEntityType<OBXPBottlerBlockEntity>> XP_BOTTLER = register("xp_bottler", OBXPBottlerBlockEntity::new, OBBlocks.XP_BOTTLER);
     public static final RegistryObject<BlockEntityType<OBPlaceholderBlockEntity>> VILLAGE_HIGHLIGHTER = register("village_highlighter", OBBlocks.VILLAGE_HIGHLIGHTER);
     public static final RegistryObject<BlockEntityType<OBPlaceholderBlockEntity>> AUTO_ANVIL = register("auto_anvil", OBBlocks.AUTO_ANVIL);
     public static final RegistryObject<BlockEntityType<OBPlaceholderBlockEntity>> AUTO_ENCHANTMENT_TABLE = register("auto_enchantment_table", OBBlocks.AUTO_ENCHANTMENT_TABLE);
