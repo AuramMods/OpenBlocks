@@ -47,6 +47,7 @@ public final class OBServerConfig {
     public static final ForgeConfigSpec.DoubleValue FAN_RANGE;
     public static final ForgeConfigSpec.BooleanValue FAN_REDSTONE;
     public static final ForgeConfigSpec.BooleanValue DEV_NULL_SNEAK_GUI;
+    public static final ForgeConfigSpec.BooleanValue HANG_GLIDER_THERMALS;
     public static final ForgeConfigSpec.BooleanValue SERIOUS_MODE;
 
     static {
@@ -145,6 +146,10 @@ public final class OBServerConfig {
         builder.push("devnull");
         DEV_NULL_SNEAK_GUI = builder.comment("Require sneaking when opening the /dev/null by clicking the air.")
                 .define("sneakClickToGui", true);
+        builder.pop();
+        builder.push("hangglider");
+        HANG_GLIDER_THERMALS = builder.comment("Enable daytime thermal lift and weather effects for the Hang Glider.")
+                .define("enableThermal", true);
         builder.pop();
         builder.push("tomfoolery");
         SERIOUS_MODE = builder.comment("Disable Tasty Clay digestion and the Be Silly action.")

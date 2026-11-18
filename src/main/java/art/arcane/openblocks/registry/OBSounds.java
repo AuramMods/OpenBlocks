@@ -17,6 +17,8 @@ public final class OBSounds {
     public static final RegistryObject<SoundEvent> LUGGAGE_WALK = register("luggage.walk");
     public static final RegistryObject<SoundEvent> LUGGAGE_EAT_FOOD = register("luggage.eat.food");
     public static final RegistryObject<SoundEvent> LUGGAGE_EAT_ITEM = register("luggage.eat.item");
+    public static final RegistryObject<SoundEvent> VARIOMETER_LOW = register("hang_glider.variometer_low");
+    public static final RegistryObject<SoundEvent> VARIOMETER_HIGH = register("hang_glider.variometer_high");
     public static final RegistryObject<SoundEvent> PEDOMETER_USE = register("pedometer.use");
     public static final RegistryObject<SoundEvent> SLIMALYZER_SIGNAL = register("slimalyzer.signal");
     public static final RegistryObject<SoundEvent> SQUEEGEE_USE = register("squeegee.use");

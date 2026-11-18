@@ -1,4 +1,10 @@
 {
+    "hang_glider.variometer_low": {
+        "sounds": ["open_blocks:hang_glider/variometer_low"]
+    },
+    "hang_glider.variometer_high": {
+        "sounds": ["open_blocks:hang_glider/variometer_high"]
+    },
     "elevator.activate": {
         "sounds": [
             "open_blocks:teleport"

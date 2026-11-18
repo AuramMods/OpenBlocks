@@ -128,7 +128,7 @@ Exit criteria:
 Goal: move from "exists" to "works correctly".
 
 Suggested order:
-- [-] Transportation/domain: elevators, rope ladder, hang glider, crane/magnet
+- [-] Transportation/domain: crane and magnet
 - [-] Storage/domain: tanks, xp systems, vacuum hopper, donation station
 - [-] Utility/domain: block breaker/placer/dropper, auto anvil/enchantment table
 - [ ] Visual/domain: canvas/paint/stencil/glyph/projector/sky block
@@ -195,3 +195,4 @@ Checklist:
 - [x] Restore Tasty Clay digestion, the Be Silly key, brick drops, the Bricks dropped statistic, and the Zoinks! advancement.
 - [x] Restore Pedometer sampling, offhand use, route checks, original readout units, and its movement-driven item animation.
 - [x] Restore Luggage deployment, owner following, item collection, packing, both inventory sizes, lightning upgrades, and the original animated models.
+- [x] Restore Hang Glider deployment, steering, dive, fall protection, thermal lift, camera-specific rendering, and variometer controls.

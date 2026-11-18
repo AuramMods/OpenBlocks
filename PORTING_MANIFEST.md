@@ -28,6 +28,11 @@ Current registry classes:
   - `src/main/java/art/arcane/openblocks/item/OBLuggageItem.java`
   - `src/main/java/art/arcane/openblocks/entity/OBLuggage.java`
   - `src/main/java/art/arcane/openblocks/client/OBLuggageRendering.java`
+- Hang Glider flight and client presentation:
+  - `src/main/java/art/arcane/openblocks/item/OBHangGliderItem.java`
+  - `src/main/java/art/arcane/openblocks/entity/OBHangGlider.java`
+  - `src/main/java/art/arcane/openblocks/client/OBHangGliderRendering.java`
+  - `src/main/java/art/arcane/openblocks/client/OBVariometer.java`
 - Sound register: `src/main/java/art/arcane/openblocks/registry/OBSounds.java`
 - Custom statistic register for Bricks dropped: `src/main/java/art/arcane/openblocks/registry/OBStats.java`
 - Enchantment register: `src/main/java/art/arcane/openblocks/registry/OBEnchantments.java`
@@ -81,7 +86,7 @@ Current scaffold counts:
 - Fluid blocks registered: 1 (`xpjuice`)
 - Block entity types registered: 35
 - Entity types registered: 11
-- Sound events registered: 19
+- Sound events registered: 21, including the two variometer tone sources
 - Custom statistics registered: 1 (`open_blocks:bricks_dropped`)
 - Enchantments registered: 3
 - Menu types registered: 14
@@ -93,7 +98,7 @@ Current scaffold counts:
 Current asset coverage:
 - Blockstates: `src/main/resources/assets/open_blocks/blockstates` (41 files)
 - Block models: `src/main/resources/assets/open_blocks/models/block` (41 files)
-- Item models: `src/main/resources/assets/open_blocks/models/item` (86 files)
+- Item models: `src/main/resources/assets/open_blocks/models/item` (87 files)
 - Language file: `src/main/resources/assets/open_blocks/lang/en_us.json`
 - Sound definitions: `src/main/resources/assets/open_blocks/sounds.json`
 - Sound assets: `src/main/resources/assets/open_blocks/sounds` (legacy OpenBlocks `.ogg` set copied)
@@ -315,7 +320,7 @@ Source: `old-1.12.2/src/main/java/openblocks/OpenBlocks.java`
 
 | ID | Item Class | Field | Legacy IDs / Notes |
 |---|---|---|---|
-| hang_glider | ItemHangGlider | `Items.hangGlider` | `hangglider` |
+| hang_glider | ItemHangGlider | `Items.hangGlider` | `hangglider`. The held item equips or stows the transient glider. The armed model hides the deploying hand's sprite and keeps the inventory icon. |
 | generic | ItemOBGeneric | `Items.generic` | no default model; meta item holder |
 | luggage | ItemLuggage | `Items.luggage` | `OBLuggageItem` deploys from the main hand and restores the stored slots, custom name, and lightning upgrade. Packed drops resist damage and despawn. |
 | sonic_glasses | ItemSonicGlasses | `Items.sonicGlasses` | `sonicglasses` |
@@ -455,13 +460,15 @@ Additional keys present in `sounds.json` but not registered in code:
 - `radio.activate`
 - `unused.mortar`
 
+The 1.20.1 variometer plays `open_blocks:hang_glider.variometer_low` and `open_blocks:hang_glider.variometer_high` through Minecraft's sound engine.
+
 ## Entities
 Source: `old-1.12.2/src/main/java/openblocks/OpenBlocks.java`
 
 Registered mod entities:
 - `openblocks:luggage` -> `EntityLuggage` (legacy numeric ID constant `702`). `open_blocks:luggage` uses `OBLuggage` with owner following, grounded item collection, 27 or 54 slots, and synchronized lightning charge.
 - `openblocks:xp_orb_no_fly` -> `EntityXPOrbNoFly` (`709`)
-- `openblocks:hang_glider` -> `EntityHangGlider` (`701`)
+- `openblocks:hang_glider` -> `EntityHangGlider` (`701`). `open_blocks:hang_glider` uses `OBHangGlider`, with synchronized holder, hand, airborne state, and thermal seed. Equipped gliders are transient.
 - `openblocks:magnet` -> `EntityMagnet` (`703`)
 - `openblocks:mounted_block` -> `EntityMountedBlock` (`704`)
 - `openblocks:player_magnet` -> `EntityMagnet.PlayerBound` (`708`)

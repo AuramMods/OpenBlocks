@@ -1,0 +1,14 @@
+{
+  "loader": "forge:separate_transforms",
+  "textures": { "particle": "open_blocks:item/hang_glider" },
+  "base": {
+    "parent": "minecraft:item/generated",
+    "textures": { "layer0": "open_blocks:item/hang_glider" }
+  },
+  "perspectives": {
+    "firstperson_lefthand": {},
+    "firstperson_righthand": {},
+    "thirdperson_lefthand": {},
+    "thirdperson_righthand": {}
+  }
+}

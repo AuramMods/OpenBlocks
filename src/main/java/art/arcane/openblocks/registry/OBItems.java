@@ -6,6 +6,7 @@ import art.arcane.openblocks.item.OBCannonItem;
 import art.arcane.openblocks.item.OBDevNullItem;
 import art.arcane.openblocks.item.OBElevatorItem;
 import art.arcane.openblocks.item.OBFlagItem;
+import art.arcane.openblocks.item.OBHangGliderItem;
 import art.arcane.openblocks.item.OBLuggageItem;
 import art.arcane.openblocks.item.OBPedometerItem;
 import art.arcane.openblocks.item.OBPointerItem;
@@ -81,7 +82,7 @@ public final class OBItems {
             () -> new OBScaffoldingItem(OBBlocks.SCAFFOLDING.get(), new Item.Properties()));
 
     // Standalone items
-    public static final RegistryObject<Item> HANG_GLIDER = registerItem("hang_glider");
+    public static final RegistryObject<Item> HANG_GLIDER = registerItem("hang_glider", OBHangGliderItem::new);
     public static final RegistryObject<Item> GLIDER_WING = registerItem("glider_wing");
     public static final RegistryObject<Item> BEAM = registerItem("beam");
     public static final RegistryObject<Item> CRANE_ENGINE = registerItem("crane_engine");

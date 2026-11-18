@@ -2,5 +2,11 @@
   "parent": "minecraft:item/generated",
   "textures": {
     "layer0": "open_blocks:item/hang_glider"
-  }
+  },
+  "overrides": [
+    {
+      "predicate": { "open_blocks:armed": 1 },
+      "model": "open_blocks:item/hang_glider_armed"
+    }
+  ]
 }
