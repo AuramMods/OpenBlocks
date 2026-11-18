@@ -1,5 +1,23 @@
 {
   "type": "minecraft:block",
+  "functions": [
+    {
+      "block": "open_blocks:sky",
+      "conditions": [
+        {
+          "block": "open_blocks:sky",
+          "condition": "minecraft:block_state_property",
+          "properties": {
+            "inverted": "true"
+          }
+        }
+      ],
+      "function": "minecraft:copy_state",
+      "properties": [
+        "inverted"
+      ]
+    }
+  ],
   "pools": [
     {
       "bonus_rolls": 0.0,

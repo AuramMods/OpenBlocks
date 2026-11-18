@@ -4,9 +4,11 @@ import art.arcane.openblocks.OpenBlocks;
 import art.arcane.openblocks.item.OBAnimatedFloorItem;
 import art.arcane.openblocks.item.OBCannonItem;
 import art.arcane.openblocks.item.OBElevatorItem;
+import art.arcane.openblocks.item.OBFlagItem;
 import art.arcane.openblocks.item.OBPedometerItem;
 import art.arcane.openblocks.item.OBPointerItem;
 import art.arcane.openblocks.item.OBScaffoldingItem;
+import art.arcane.openblocks.item.OBSkyItem;
 import art.arcane.openblocks.item.OBSpongeOnAStickItem;
 import art.arcane.openblocks.item.OBTankItem;
 import java.util.ArrayList;
@@ -41,7 +43,7 @@ public final class OBItems {
     public static final RegistryObject<Item> HEAL = registerBlockItem("heal", OBBlocks.HEAL);
     public static final RegistryObject<Item> TARGET = registerBlockItem("target", OBBlocks.TARGET);
     public static final RegistryObject<Item> GRAVE = registerBlockItem("grave", OBBlocks.GRAVE);
-    public static final RegistryObject<Item> FLAG = registerBlockItem("flag", OBBlocks.FLAG);
+    public static final RegistryObject<Item> FLAG = registerItem("flag", () -> new OBFlagItem(OBBlocks.FLAG.get(), new Item.Properties()));
     public static final RegistryObject<Item> TANK = registerItem("tank", () -> new OBTankItem(OBBlocks.TANK.get(), new Item.Properties()));
     public static final RegistryObject<Item> TROPHY = registerBlockItem("trophy", OBBlocks.TROPHY);
     public static final RegistryObject<Item> BEARTRAP = registerItem("beartrap", () -> new OBAnimatedFloorItem(OBBlocks.BEARTRAP.get(), new Item.Properties()));
@@ -70,7 +72,7 @@ public final class OBItems {
     public static final RegistryObject<Item> CANVAS_GLASS = registerBlockItem("canvas_glass", OBBlocks.CANVAS_GLASS);
     public static final RegistryObject<Item> PROJECTOR = registerBlockItem("projector", OBBlocks.PROJECTOR);
     public static final RegistryObject<Item> DRAWING_TABLE = registerBlockItem("drawing_table", OBBlocks.DRAWING_TABLE);
-    public static final RegistryObject<Item> SKY = registerBlockItem("sky", OBBlocks.SKY);
+    public static final RegistryObject<Item> SKY = registerItem("sky", () -> new OBSkyItem(OBBlocks.SKY.get(), new Item.Properties()));
     public static final RegistryObject<Item> XP_SHOWER = registerBlockItem("xp_shower", OBBlocks.XP_SHOWER);
     public static final RegistryObject<Item> GOLDEN_EGG = registerBlockItem("golden_egg", OBBlocks.GOLDEN_EGG);
     public static final RegistryObject<Item> SCAFFOLDING = registerItem("scaffolding",

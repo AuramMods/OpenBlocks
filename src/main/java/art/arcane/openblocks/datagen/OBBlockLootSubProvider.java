@@ -1,7 +1,9 @@
 package art.arcane.openblocks.datagen;
 
 import art.arcane.openblocks.block.OBElevatorBlock;
+import art.arcane.openblocks.block.OBFlagBlock;
 import art.arcane.openblocks.block.OBRopeLadderBlock;
+import art.arcane.openblocks.block.OBSkyBlock;
 import art.arcane.openblocks.block.OBTankBlock;
 import art.arcane.openblocks.block.entity.OBTankBlockEntity;
 import art.arcane.openblocks.registry.OBBlocks;
@@ -36,6 +38,16 @@ public class OBBlockLootSubProvider extends BlockLootSubProvider {
                         .setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(OBElevatorBlock.COLOR, DyeColor.WHITE));
                 add(block, createSingleItemTable(block).apply(CopyBlockState.copyState(block).copy(OBElevatorBlock.COLOR)
                         .when(isWhite.invert())));
+            } else if (block instanceof OBFlagBlock) {
+                final var isLime = LootItemBlockStatePropertyCondition.hasBlockStateProperties(block)
+                        .setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(OBFlagBlock.COLOR, OBFlagBlock.DEFAULT_COLOR));
+                add(block, createSingleItemTable(block).apply(CopyBlockState.copyState(block).copy(OBFlagBlock.COLOR)
+                        .when(isLime.invert())));
+            } else if (block instanceof OBSkyBlock) {
+                final var isInverted = LootItemBlockStatePropertyCondition.hasBlockStateProperties(block)
+                        .setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(OBSkyBlock.INVERTED, true));
+                add(block, createSingleItemTable(block).apply(CopyBlockState.copyState(block).copy(OBSkyBlock.INVERTED)
+                        .when(isInverted)));
             } else if (block instanceof OBRopeLadderBlock) {
                 final var recoverable = LootItemBlockStatePropertyCondition.hasBlockStateProperties(block)
                         .setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(OBRopeLadderBlock.RECOVERABLE, true));

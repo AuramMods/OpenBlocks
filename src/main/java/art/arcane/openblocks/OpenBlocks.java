@@ -2,6 +2,7 @@ package art.arcane.openblocks;
 
 import art.arcane.openblocks.advancement.OBCriterions;
 import art.arcane.openblocks.capability.OBCapabilities;
+import art.arcane.openblocks.config.OBClientConfig;
 import art.arcane.openblocks.config.OBServerConfig;
 import art.arcane.openblocks.integration.OBComputerCraftCannon;
 import art.arcane.openblocks.integration.OBComputerCraftDonations;
@@ -56,6 +57,7 @@ public class OpenBlocks {
         if (ModList.get().isLoaded("computercraft")) modEventBus.addListener(this::setupComputerCraft);
 
         context.registerConfig(ModConfig.Type.SERVER, OBServerConfig.SPEC);
+        context.registerConfig(ModConfig.Type.CLIENT, OBClientConfig.SPEC);
         OBNetwork.register();
         OBCriterions.bootstrap();
         OBGameRules.bootstrap();

@@ -78,7 +78,7 @@ Current scaffold counts:
 - Sound events registered: 19
 - Enchantments registered: 3
 - Menu types registered: 14
-- Recipe serializers registered: 9
+- Recipe serializers registered: 10
 - Command roots wired: 3 (`flimflam`, `luck`, `ob_inventory`)
 - Custom capabilities wired: 3 (`open_blocks:luck`, `open_blocks:pedometer_state`, `open_blocks:bowels`)
 - Custom advancement triggers wired: 2 (`open_blocks:brick_dropped`, `open_blocks:dev_null_stacked`)
@@ -171,6 +171,7 @@ Current validation status:
   - `OBBigButtonBlockEntity` holds eight stacks that set the duration of a full-strength pulse. `OBBigButtonBlock` attaches to all six faces, notifies its support and neighbors, and lets arrows hold the wooden plate. `OBBigButtonMenu` and `OBBigButtonScreen` restore the timing inventory and its live readout.
   - `OBFoldingTargetBlock` raises its face on incoming redstone and scores the exact arrow collision. `OBFoldingTargetBlockEntity` provides the ten-tick signal and returns the target's embedded, collectible arrows on folding. The optional Flan's Mod projectile integration remains open.
   - `OBFanBlockEntity` saves a continuous heading and applies distance-scaled horizontal airflow in a cone. Incoming signal controls force and blade speed. `OBBearTrapBlockEntity` captures eligible mobs, holds them at its base, releases on use or redstone, and exposes a comparator signal. `OBFloorDeviceRendering` animates both blocks from their synchronized state and renders their models as items.
+  - `OBFlagBlock` restores floor, wall, fence, and stacked mounting, and `OBFlagRendering` uses each block's saved color and bearing. `OBSkyRendering` composites the live sky from the Forge render stages with ordinary depth testing. `OBDecorationChunkUpgrade` restores missing block entities for those two blocks in existing 1.20.1 chunks.
   - `src/main/java/art/arcane/openblocks/grave/OBGraveHooks.java` now writes grave backup dumps, posts/consumes `OBGraveDropsEvent` action filtering, searches for valid placement nearby, places grave blocks on successful death handling, and clears only stored grave drops when grave placement succeeds.
   - `src/main/java/art/arcane/openblocks/command/OBFlimFlamEffects.java` now provides executable breadth-stage actions for all legacy `/flimflam` effect IDs.
   - Current command parity:
@@ -271,7 +272,7 @@ Source: `old-1.12.2/src/main/java/openblocks/OpenBlocks.java`
 | heal | BlockHeal | `Blocks.heal` | TileEntityHealBlock | default | - |
 | target | BlockTarget | `Blocks.target` | TileEntityTarget | default | - |
 | grave | BlockGrave | `Blocks.grave` | TileEntityGrave | default | - |
-| flag | BlockFlag | `Blocks.flag` | TileEntityFlag | ItemFlagBlock | - |
+| flag | BlockFlag | `Blocks.flag` | TileEntityFlag | ItemFlagBlock | 1.20.1 uses `OBFlagBlock`, `OBFlagBlockEntity`, and `OBFlagItem`. Wall facing and cloth color are block properties. Upright yaw is synced block-entity data. |
 | tank | BlockTank | `Blocks.tank` | TileEntityTank | ItemTankBlock | - |
 | trophy | BlockTrophy | `Blocks.trophy` | TileEntityTrophy | ItemTrophyBlock | - |
 | beartrap | BlockBearTrap | `Blocks.bearTrap` | TileEntityBearTrap | default | - |
@@ -300,7 +301,7 @@ Source: `old-1.12.2/src/main/java/openblocks/OpenBlocks.java`
 | canvas_glass | BlockCanvasGlass | `Blocks.canvasGlass` | TileEntityCanvasGlass | default | `canvasglass` |
 | projector | BlockProjector | `Blocks.projector` | TileEntityProjector | default | - |
 | drawing_table | BlockDrawingTable | `Blocks.drawingTable` | TileEntityDrawingTable | default | `drawingtable` |
-| sky | BlockSky | `Blocks.sky` | TileEntitySky | ItemSkyBlock | unlocalized `sky.normal` |
+| sky | BlockSky | `Blocks.sky` | TileEntitySky | ItemSkyBlock | 1.20.1 uses `OBSkyBlock`, `OBSkyBlockEntity`, and `OBSkyItem`. The original ID carries both polarities. `OBSkyRendering` uses Forge render stages to display the current dimension's sky. |
 | xp_shower | BlockXPShower | `Blocks.xpShower` | TileEntityXPShower | default | `xpshower` |
 | golden_egg | BlockGoldenEgg | `Blocks.goldenEgg` | TileEntityGoldenEgg | default | `goldenegg` |
 | scaffolding | BlockScaffolding | `Blocks.scaffolding` | - | BlockScaffolding.Item | - |
@@ -377,7 +378,8 @@ Core behavior:
 Important item variant behavior in legacy tab:
 - `ItemElevator`: exposes 16 color metadata variants.
 - `ItemPaintCan`: exposes one full can per color.
-- `ItemSkyBlock`: exposes normal + inverted variants.
+- `ItemSkyBlock`: exposes normal + inverted variants. The port represents inversion with `BlockStateTag.inverted` and restores torch-based conversion in both directions.
+- `ItemFlagBlock`: the tab shows a lime flag and uses it as the icon. All sixteen cloth colors are available by carpet crafting or cycling the held stack. The port preserves the color using `BlockStateTag.color`.
 - `ItemTrophyBlock`: exposes one stack per trophy/entity type.
 - `ItemImaginary`: exposes pencil + all crayon colors.
 - `ItemPaintBrush`: exposes blank + colored variants.

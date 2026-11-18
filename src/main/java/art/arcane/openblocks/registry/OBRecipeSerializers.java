@@ -4,6 +4,7 @@ import art.arcane.openblocks.OpenBlocks;
 import art.arcane.openblocks.recipe.OBElevatorUpgradeRecipe;
 import art.arcane.openblocks.recipe.OBFlimFlamBookRecipe;
 import art.arcane.openblocks.recipe.OBNoopSpecialRecipe;
+import art.arcane.openblocks.recipe.OBSkyInversionRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.SimpleCraftingRecipeSerializer;
 import net.minecraftforge.registries.DeferredRegister;
@@ -26,6 +27,8 @@ public final class OBRecipeSerializers {
             () -> new SimpleCraftingRecipeSerializer<>(OBFlimFlamBookRecipe::new));
     public static final RegistryObject<RecipeSerializer<?>> ELEVATOR_UPGRADE = RECIPE_SERIALIZERS.register("elevator_upgrade",
             () -> new SimpleCraftingRecipeSerializer<>(OBElevatorUpgradeRecipe::new));
+    public static final RegistryObject<RecipeSerializer<?>> SKY_INVERSION = RECIPE_SERIALIZERS.register("sky_inversion",
+            () -> new SimpleCraftingRecipeSerializer<>(OBSkyInversionRecipe::new));
 
     private OBRecipeSerializers() {}
 

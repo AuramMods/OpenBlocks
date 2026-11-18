@@ -7,11 +7,13 @@ import art.arcane.openblocks.block.entity.OBBigButtonBlockEntity;
 import art.arcane.openblocks.block.entity.OBCannonBlockEntity;
 import art.arcane.openblocks.block.entity.OBDonationStationBlockEntity;
 import art.arcane.openblocks.block.entity.OBFanBlockEntity;
+import art.arcane.openblocks.block.entity.OBFlagBlockEntity;
 import art.arcane.openblocks.block.entity.OBFoldingTargetBlockEntity;
 import art.arcane.openblocks.block.entity.OBGraveBlockEntity;
 import art.arcane.openblocks.block.entity.OBHealBlockEntity;
 import art.arcane.openblocks.block.entity.OBPlaceholderBlockEntity;
 import art.arcane.openblocks.block.entity.OBRedstoneMachineBlockEntity;
+import art.arcane.openblocks.block.entity.OBSkyBlockEntity;
 import art.arcane.openblocks.block.entity.OBSprinklerBlockEntity;
 import art.arcane.openblocks.block.entity.OBTankBlockEntity;
 import art.arcane.openblocks.block.entity.OBVacuumHopperBlockEntity;
@@ -41,7 +43,7 @@ public final class OBBlockEntities {
     public static final RegistryObject<BlockEntityType<OBHealBlockEntity>> HEAL = register("heal", OBHealBlockEntity::new, OBBlocks.HEAL);
     public static final RegistryObject<BlockEntityType<OBFoldingTargetBlockEntity>> TARGET = register("target", OBFoldingTargetBlockEntity::new, OBBlocks.TARGET);
     public static final RegistryObject<BlockEntityType<OBGraveBlockEntity>> GRAVE = register("grave", OBGraveBlockEntity::new, OBBlocks.GRAVE);
-    public static final RegistryObject<BlockEntityType<OBPlaceholderBlockEntity>> FLAG = register("flag", OBBlocks.FLAG);
+    public static final RegistryObject<BlockEntityType<OBFlagBlockEntity>> FLAG = register("flag", OBFlagBlockEntity::new, OBBlocks.FLAG);
     public static final RegistryObject<BlockEntityType<OBTankBlockEntity>> TANK = register("tank", OBTankBlockEntity::new, OBBlocks.TANK);
     public static final RegistryObject<BlockEntityType<OBPlaceholderBlockEntity>> TROPHY = register("trophy", OBBlocks.TROPHY);
     public static final RegistryObject<BlockEntityType<OBBearTrapBlockEntity>> BEARTRAP = register("beartrap", OBBearTrapBlockEntity::new, OBBlocks.BEARTRAP);
@@ -74,7 +76,7 @@ public final class OBBlockEntities {
     public static final RegistryObject<BlockEntityType<OBPlaceholderBlockEntity>> CANVAS_GLASS = register("canvas_glass", OBBlocks.CANVAS_GLASS);
     public static final RegistryObject<BlockEntityType<OBPlaceholderBlockEntity>> PROJECTOR = register("projector", OBBlocks.PROJECTOR);
     public static final RegistryObject<BlockEntityType<OBPlaceholderBlockEntity>> DRAWING_TABLE = register("drawing_table", OBBlocks.DRAWING_TABLE);
-    public static final RegistryObject<BlockEntityType<OBPlaceholderBlockEntity>> SKY = register("sky", OBBlocks.SKY);
+    public static final RegistryObject<BlockEntityType<OBSkyBlockEntity>> SKY = register("sky", OBSkyBlockEntity::new, OBBlocks.SKY);
     public static final RegistryObject<BlockEntityType<OBXPShowerBlockEntity>> XP_SHOWER = register("xp_shower", OBXPShowerBlockEntity::new, OBBlocks.XP_SHOWER);
     public static final RegistryObject<BlockEntityType<OBPlaceholderBlockEntity>> GOLDEN_EGG = register("golden_egg", OBBlocks.GOLDEN_EGG);
 

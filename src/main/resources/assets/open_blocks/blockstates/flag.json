@@ -1,5 +1,9 @@
 {
   "variants": {
-    "": { "model": "open_blocks:block/flag" }
+    "facing=up": { "model": "open_blocks:block/flag" },
+    "facing=north": { "model": "open_blocks:block/flag_wall" },
+    "facing=east": { "model": "open_blocks:block/flag_wall", "y": 90 },
+    "facing=south": { "model": "open_blocks:block/flag_wall", "y": 180 },
+    "facing=west": { "model": "open_blocks:block/flag_wall", "y": 270 }
   }
 }

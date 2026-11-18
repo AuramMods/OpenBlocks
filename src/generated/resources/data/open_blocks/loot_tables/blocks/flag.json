@@ -1,5 +1,26 @@
 {
   "type": "minecraft:block",
+  "functions": [
+    {
+      "block": "open_blocks:flag",
+      "conditions": [
+        {
+          "condition": "minecraft:inverted",
+          "term": {
+            "block": "open_blocks:flag",
+            "condition": "minecraft:block_state_property",
+            "properties": {
+              "color": "lime"
+            }
+          }
+        }
+      ],
+      "function": "minecraft:copy_state",
+      "properties": [
+        "color"
+      ]
+    }
+  ],
   "pools": [
     {
       "bonus_rolls": 0.0,

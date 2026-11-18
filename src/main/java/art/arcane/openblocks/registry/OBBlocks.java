@@ -8,6 +8,7 @@ import art.arcane.openblocks.block.OBDonationStationBlock;
 import art.arcane.openblocks.block.OBElevatorBlock;
 import art.arcane.openblocks.block.OBElevatorRotatingBlock;
 import art.arcane.openblocks.block.OBFanBlock;
+import art.arcane.openblocks.block.OBFlagBlock;
 import art.arcane.openblocks.block.OBFoldingTargetBlock;
 import art.arcane.openblocks.block.OBGraveBlock;
 import art.arcane.openblocks.block.OBHealBlock;
@@ -18,6 +19,7 @@ import art.arcane.openblocks.block.OBRedstoneMachineBlock.Kind;
 import art.arcane.openblocks.block.OBRopeLadderBlock;
 import art.arcane.openblocks.block.OBScaffoldingBlock;
 import art.arcane.openblocks.block.OBShapeBlock;
+import art.arcane.openblocks.block.OBSkyBlock;
 import art.arcane.openblocks.block.OBSpongeBlock;
 import art.arcane.openblocks.block.OBSprinklerBlock;
 import art.arcane.openblocks.block.OBTankBlock;
@@ -45,7 +47,6 @@ public final class OBBlocks {
 
     private static final List<RegistryObject<Block>> CREATIVE_ORDER = new ArrayList<>();
     private static final VoxelShape SHAPE_PATH = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 1.6D, 16.0D);
-    private static final VoxelShape SHAPE_FLAG = Block.box(7.0D, 0.0D, 7.0D, 9.0D, 16.0D, 9.0D);
     private static final VoxelShape SHAPE_TROPHY = Block.box(3.2D, 0.0D, 3.2D, 12.8D, 3.2D, 12.8D);
     private static final VoxelShape SHAPE_GOLDEN_EGG = Block.box(2.0D, 0.0D, 2.0D, 14.0D, 16.0D, 14.0D);
     private static final VoxelShape SHAPE_PAINT_CAN = Block.box(4.0D, 0.0D, 4.0D, 12.0D, 11.0D, 12.0D);
@@ -145,13 +146,15 @@ public final class OBBlocks {
         if ("big_button_wood".equals(id)) return new OBBigButtonBlock(true, BlockBehaviour.Properties.of().sound(SoundType.WOOD).strength(0.5F).noOcclusion());
         if ("beartrap".equals(id)) return new OBBearTrapBlock(properties);
         if ("fan".equals(id)) return new OBFanBlock(properties);
+        if ("flag".equals(id)) return new OBFlagBlock(BlockBehaviour.Properties.of().noCollission().instabreak().sound(SoundType.WOOD));
+        if ("sky".equals(id)) return new OBSkyBlock(properties.sound(SoundType.METAL));
         if (shape != null) return new OBShapeBlock(properties, shape, collisionShape);
         return new Block(properties);
     }
 
     private static boolean isNonOccludingModel(final String id) {
         return switch (id) {
-            case "guide", "builder_guide", "target", "grave", "flag",
+            case "guide", "builder_guide", "target", "grave",
                     "tank", "trophy", "beartrap", "sprinkler", "cannon", "vacuum_hopper",
                     "big_button", "big_button_wood", "imaginary", "fan", "village_highlighter",
                     "path", "auto_anvil", "auto_enchantment_table", "xp_drain",
@@ -164,7 +167,6 @@ public final class OBBlocks {
     private static VoxelShape shapeFor(final String id) {
         return switch (id) {
             case "path" -> SHAPE_PATH;
-            case "flag" -> SHAPE_FLAG;
             case "grave" -> SHAPE_GRAVE;
             case "trophy" -> SHAPE_TROPHY;
             case "golden_egg" -> SHAPE_GOLDEN_EGG;
@@ -178,7 +180,7 @@ public final class OBBlocks {
 
     private static VoxelShape collisionShapeFor(final String id, final VoxelShape shape) {
         return switch (id) {
-            case "path", "flag" -> Shapes.empty();
+            case "path" -> Shapes.empty();
             default -> shape == null ? Shapes.block() : shape;
         };
     }

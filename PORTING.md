@@ -159,7 +159,7 @@ Checklist:
 - [x] Restore distinct legacy crafting components across recipes, creative entries, and models.
 - [x] Restore elevator colors and movement activation. Headless tests cover server behavior and item color through crafting, placement, and drops. A packaged client verified Space, Shift, color matching, and rotation in single-player using a silent virtual display.
 - [x] Restore Jaded Ladder trapdoor behavior, directional rope ladders, and temporary scaffolding. The standalone suite verifies climbing, redstone, placement rollback, rope drop accounting, decay and fuel.
-- [ ] Restore flag, painting, and other state variants across recipes, creative entries, and models.
+- [ ] Restore painting and other remaining state variants across recipes, creative entries, and models.
 - [ ] Run a muted client in an isolated or background graphical session to verify models, transparency, and face culling.
 - [ ] Extend recipe coverage beyond custom special recipe placeholders (core craft paths for major blocks/items).
 - [ ] Deepen `/flimflam` parity beyond current breadth-stage action wiring:
@@ -179,7 +179,7 @@ Checklist:
 - [ ] Wire custom advancement triggers into gameplay events:
   - replace temporary hooks with legacy-accurate trigger sources (`brick_dropped` from boo/brick action path, `dev_null_stacked` from nested dev-null inventory depth)
 - [ ] Finish legacy recipe migration for skipped recipe files:
-  - revisit remaining metadata-collapsed conversions to restore accurate color and subtype behavior (paintbrush variants, flag color outputs, and similar cases)
+  - revisit remaining metadata-collapsed conversions to restore accurate color and subtype behavior, including paintbrush variants
 - [x] Restore configurable sponge cleanup, Sponge on a Stick, scattered-stone path rendering, and the healing block's one-tick pulses.
 - [x] Restore tank block and item storage, connected transfer and rendering, XP and bucket exchange, and the Liquid XP block assets.
 - [x] Restore the XP Drain and redstone-powered XP Shower. The drain transfers whole XP into a fluid receiver, and the shower releases falling XP orbs that a drain can collect.
@@ -194,4 +194,5 @@ Checklist:
 - [x] Restore the folding Target's redstone deployment, accuracy-based output, and arrow recovery.
 - [ ] Test and port the optional Flan's Mod projectile integration against its 1.20.1 implementation.
 - [x] Restore the Fan's adjustable heading, analog airflow, config, and spinning blades, and the Bear Trap's jaws, mob capture, release and comparator output.
-- [ ] Continue the block functionality sweep with the Flag and Sky Block.
+- [x] Restore Flag mounts, turning, all carpet colors, and color-preserving drops. Restore both Sky Block polarities, the torch conversion, and live sky rendering.
+- [ ] Port the Dev Null inventory and advance its trigger from the actual nesting depth.
