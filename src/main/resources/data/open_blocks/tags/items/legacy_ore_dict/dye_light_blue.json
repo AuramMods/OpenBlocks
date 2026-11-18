@@ -2,7 +2,6 @@
   "replace": false,
   "values": [
     "#forge:dyes/light_blue",
-    "#forge:dyes",
     "minecraft:light_blue_dye"
   ]
 }

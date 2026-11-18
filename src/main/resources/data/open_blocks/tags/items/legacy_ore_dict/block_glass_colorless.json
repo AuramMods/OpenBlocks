@@ -2,7 +2,6 @@
   "replace": false,
   "values": [
     "#forge:glass/colorless",
-    "#forge:glass",
     "minecraft:glass"
   ]
 }

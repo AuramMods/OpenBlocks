@@ -2,7 +2,6 @@
   "replace": false,
   "values": [
     "#forge:rods/wooden",
-    "#forge:rods",
     "minecraft:stick"
   ]
 }

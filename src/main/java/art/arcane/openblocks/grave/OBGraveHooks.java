@@ -50,7 +50,7 @@ public final class OBGraveHooks {
         if (dropsEvent.getDrops().isEmpty()) return;
         if (MinecraftForge.EVENT_BUS.post(dropsEvent)) return;
 
-        final List<ItemStack> storedDrops = new ArrayList<>();
+        final List<ItemEntity> graveDrops = new ArrayList<>();
         final List<ItemEntity> worldDrops = new ArrayList<>();
         for (final OBGraveDropsEvent.ItemAction action : dropsEvent.getDrops()) {
             final ItemEntity itemEntity = action.getItem();
@@ -58,7 +58,7 @@ public final class OBGraveHooks {
             if (stack.isEmpty()) continue;
 
             switch (action.getAction()) {
-                case STORE -> storedDrops.add(stack.copy());
+                case STORE -> graveDrops.add(itemEntity);
                 case DROP -> worldDrops.add(itemEntity);
                 case DELETE -> {
                     // intentionally omitted from both grave storage and world drops.
@@ -66,42 +66,42 @@ public final class OBGraveHooks {
             }
         }
 
-        if (storedDrops.isEmpty()) {
-            event.getDrops().clear();
-            event.getDrops().addAll(worldDrops);
-            return;
-        }
+        final boolean stored = !graveDrops.isEmpty() && tryStoreInGrave(level, player, graveDrops);
+        event.getDrops().clear();
+        event.getDrops().addAll(worldDrops);
+        if (!stored) event.getDrops().addAll(graveDrops);
+    }
 
+    private static boolean tryStoreInGrave(
+            final ServerLevel level, final ServerPlayer player, final List<ItemEntity> graveDrops) {
+        final List<ItemStack> stacks = graveDrops.stream().map(drop -> drop.getItem().copy()).toList();
         final String id;
         try {
-            id = OBInventoryStore.storeDroppedItems(player, "grave", storedDrops);
+            id = OBInventoryStore.storeDroppedItems(player, "grave", stacks);
         } catch (final IOException e) {
             player.sendSystemMessage(Component.literal(
                     "OpenBlocks failed to store grave backup: " + e.getMessage()));
-            return;
+            return false;
         }
 
         final BlockPos gravePos = findPlacement(level, player.blockPosition());
         if (gravePos == null) {
             player.sendSystemMessage(Component.literal(
                     "OpenBlocks stored your grave backup as '" + id + "' (no valid placement found)."));
-            return;
+            return false;
         }
 
         if (!placeGrave(level, gravePos, player, id)) {
             player.sendSystemMessage(Component.literal(
                     "OpenBlocks stored your grave backup as '" + id + "' (grave placement failed)."));
-            event.getDrops().clear();
-            event.getDrops().addAll(worldDrops);
-            return;
+            return false;
         }
 
-        event.getDrops().clear();
-        event.getDrops().addAll(worldDrops);
         player.sendSystemMessage(Component.literal(
                 "OpenBlocks placed your grave at "
                         + gravePos.getX() + ", " + gravePos.getY() + ", " + gravePos.getZ()
                         + " with backup '" + id + "'."));
+        return true;
     }
 
     private static boolean placeGrave(

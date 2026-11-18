@@ -2,7 +2,6 @@
   "replace": false,
   "values": [
     "#forge:dusts/redstone",
-    "#forge:dusts",
     "minecraft:redstone"
   ]
 }

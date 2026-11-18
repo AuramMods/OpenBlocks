@@ -72,8 +72,8 @@ public class OBElevatorBlock extends Block {
             final BlockState state = level.getBlockState(searchPos);
             if (state.isAir()) continue;
 
-            if (state.getBlock() instanceof OBElevatorBlock && canTeleportTo(level, searchPos)) {
-                return new SearchResult(searchPos, state);
+            if (state.getBlock() instanceof OBElevatorBlock elevator && canTeleportTo(level, searchPos)) {
+                return new SearchResult(searchPos, elevator.getTargetYaw(state));
             }
 
             if (++blockers > MAX_BLOCKERS) break;
@@ -102,7 +102,7 @@ public class OBElevatorBlock extends Block {
         final double targetX = destination.pos.getX() + 0.5D;
         final double targetY = destination.pos.getY() + 1.1D;
         final double targetZ = destination.pos.getZ() + 0.5D;
-        final Float targetYaw = getTargetYaw(destination.state);
+        final Float targetYaw = destination.yaw;
         final float currentPitch = player.getXRot();
 
         if (player instanceof ServerPlayer serverPlayer) {
@@ -121,5 +121,5 @@ public class OBElevatorBlock extends Block {
         return null;
     }
 
-    private record SearchResult(BlockPos pos, BlockState state) {}
+    private record SearchResult(BlockPos pos, @Nullable Float yaw) {}
 }

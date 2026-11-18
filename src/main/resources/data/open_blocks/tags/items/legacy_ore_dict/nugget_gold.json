@@ -2,7 +2,6 @@
   "replace": false,
   "values": [
     "#forge:nuggets/gold",
-    "#forge:nuggets",
     "minecraft:gold_nugget"
   ]
 }

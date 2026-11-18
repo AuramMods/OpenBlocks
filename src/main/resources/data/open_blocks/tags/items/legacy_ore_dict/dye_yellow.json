@@ -2,7 +2,6 @@
   "replace": false,
   "values": [
     "#forge:dyes/yellow",
-    "#forge:dyes",
     "minecraft:yellow_dye"
   ]
 }

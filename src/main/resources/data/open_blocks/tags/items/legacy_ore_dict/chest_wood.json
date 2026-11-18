@@ -2,7 +2,6 @@
   "replace": false,
   "values": [
     "#forge:chests/wooden",
-    "#forge:chests",
     "minecraft:chest",
     "minecraft:trapped_chest"
   ]

@@ -2,7 +2,6 @@
   "replace": false,
   "values": [
     "#forge:gems/lapis",
-    "#forge:gems",
     "minecraft:lapis_lazuli"
   ]
 }

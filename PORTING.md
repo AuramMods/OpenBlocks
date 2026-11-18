@@ -6,9 +6,8 @@
 3. `PORTING_MANIFEST.md`
 
 ## Porting Strategy
-- Breadth-first first, depth second.
-- Keep IDs stable first, then implement behavior.
-- Avoid deep rewrites early; get full registry coverage across all systems before polishing internals.
+- Preserve the registry scaffold and finish behavior by feature. Verify normal acquisition, interaction, persistence, synchronization, and presentation where applicable.
+- Use quiet, headless server runs by default. Client verification needs a muted graphical session that leaves the user's foreground app in focus.
 
 ## Status Legend
 - `[ ]` not started
@@ -79,6 +78,7 @@ Exit criteria:
 - [ ] Data generation/resources run without missing-model or missing-lang spam for core objects.
 
 Validation log:
+- [x] Repaired the canvas recipe to use oak fence and narrowed legacy tags to the intended materials and dye colors. The standalone game server loaded the canvas recipe and verified ingredient matching on 2026-11-18.
 - [x] `./gradlew compileJava` succeeds after registry + asset changes.
 - [x] `./gradlew compileJava runData` succeeds (as of 2026-02-08) after isolating datagen runs from optional `extra-mods-1.20.1` jars.
 - [x] Added initial non-full-block render/collision parity pass for legacy-style models (cutout/translucent setup + custom voxel/collision shapes) and revalidated with `./gradlew compileJava runData` on 2026-02-08.
@@ -155,7 +155,9 @@ Checklist:
 - [ ] Cleanup dead stubs and document final architecture.
 
 ## Immediate Next Task
-- [ ] Have user run a quick in-game visual sweep (no `runClient` on agent side) to confirm the latest transparency/collision changes removed purple-black model regressions and face-culling issues.
+- [x] Reproduce and repair the baseline defects in mixed elevator rotation, sponge handling of logged water, and grave placement fallback. Verified with the standalone GameTest server on 2026-11-18.
+- [ ] Restore distinct legacy crafting components and variants across recipes, creative entries, and models.
+- [ ] Run a muted client in an isolated or background graphical session to verify models, transparency, and face culling.
 - [ ] Extend recipe coverage beyond custom special recipe placeholders (core craft paths for major blocks/items).
 - [ ] Deepen `/flimflam` parity beyond current breadth-stage action wiring:
   - reconnect legacy luck/cost/weight and safe/blacklist gating behavior

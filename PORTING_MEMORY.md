@@ -4,6 +4,13 @@
 > STEP 1: Open `PORTING.md` for current phase/checklist.
 > STEP 2: Open `PORTING_MANIFEST.md` for exact IDs and source locations.
 
+## Full port continuation (2026-11-18)
+
+- The standalone Forge GameTest server reproduced five baseline regressions before the fixes. All five tests now pass, covering the canvas recipe, material and dye tags, mixed elevator rotation, waterlogged blocks near sponges, and drop handling when a grave cannot be placed.
+- Run `./gradlew -PopenBlocksStandalone runGameTestServer` for silent server checks. Pass `-PopenBlocksRunDir=/absolute/path` for a disposable run, with `eula=true` in its `gametest/eula.txt`. Optional Auram runtime mods are excluded in standalone mode. The test sources and fixture are excluded from the distribution jar.
+- Use `jar` for packaging during development. The `build` finalizer copies the jar into the configured live Prism instance.
+- Next, restore distinct legacy crafting components and metadata variants. Full gameplay parity and client verification are still open.
+
 ## Current Snapshot
 - Legacy codebase analyzed: `old-1.12.2`.
 - Analysis goal completed: breadth-first registry and system inventory.

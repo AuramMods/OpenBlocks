@@ -2,7 +2,6 @@
   "replace": false,
   "values": [
     "#forge:dyes/gray",
-    "#forge:dyes",
     "minecraft:gray_dye"
   ]
 }

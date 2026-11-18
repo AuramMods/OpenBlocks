@@ -8,8 +8,10 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseFireBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.FluidState;
 
 public class OBSpongeBlock extends Block {
@@ -81,11 +83,17 @@ public class OBSpongeBlock extends Block {
                     final BlockPos workPos = origin.offset(dx, dy, dz);
                     if (!level.hasChunkAt(workPos)) continue;
 
-                    final FluidState fluidState = level.getBlockState(workPos).getFluidState();
+                    final BlockState state = level.getBlockState(workPos);
+                    final FluidState fluidState = state.getFluidState();
                     if (fluidState.isEmpty()) continue;
 
-                    touchedLava |= fluidState.is(FluidTags.LAVA);
-                    level.setBlock(workPos, Blocks.AIR.defaultBlockState(), Block.UPDATE_CLIENTS);
+                    if (state.getBlock() instanceof LiquidBlock) {
+                        touchedLava |= fluidState.is(FluidTags.LAVA);
+                        level.setBlock(workPos, Blocks.AIR.defaultBlockState(), Block.UPDATE_CLIENTS);
+                    } else if (state.hasProperty(BlockStateProperties.WATERLOGGED)
+                            && state.getValue(BlockStateProperties.WATERLOGGED)) {
+                        level.setBlock(workPos, state.setValue(BlockStateProperties.WATERLOGGED, false), Block.UPDATE_CLIENTS);
+                    }
                 }
             }
         }

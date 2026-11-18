@@ -20,6 +20,15 @@ base {
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
+sourceSets {
+    gameTest {
+        compileClasspath += main.output + main.compileClasspath
+    }
+}
+
+def standalone = providers.gradleProperty('openBlocksStandalone').isPresent()
+def runDirectory = providers.gradleProperty('openBlocksRunDir').orElse('run')
+
 println "Java: ${System.getProperty 'java.version'}, JVM: ${System.getProperty 'java.vm.version'} (${System.getProperty 'java.vendor'}), Arch: ${System.getProperty 'os.arch'}"
 minecraft {
     mappings channel: mapping_channel, version: mapping_version
@@ -27,7 +36,7 @@ minecraft {
 
     runs {
         configureEach {
-            workingDirectory project.file('run')
+            workingDirectory project.file(runDirectory.get())
             property 'forge.logging.markers', 'REGISTRIES'
             property 'forge.logging.console.level', 'debug'
 
@@ -48,7 +57,13 @@ minecraft {
         }
 
         gameTestServer {
+            workingDirectory project.file("${runDirectory.get()}/gametest")
             property 'forge.enabledGameTestNamespaces', mod_id
+            mods {
+                "${mod_id}" {
+                    source sourceSets.gameTest
+                }
+            }
         }
 
         data {
@@ -80,11 +95,12 @@ repositories {
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
-    implementation fg.deobf("curse.maven:projecte-226410:4901949")
-    
     compileOnly(fg.deobf("mezz.jei:jei-${minecraft_version}-common-api:${jei_version}"))
     compileOnly(fg.deobf("mezz.jei:jei-${minecraft_version}-forge-api:${jei_version}"))
-    runtimeOnly(fg.deobf("mezz.jei:jei-${minecraft_version}-forge:${jei_version}"))
+    if (!standalone) {
+        runtimeOnly fg.deobf("curse.maven:projecte-226410:4901949")
+        runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge:${jei_version}")
+    }
 }
 
 tasks.named('processResources', ProcessResources).configure {
@@ -165,7 +181,7 @@ repositories {
 def requestedTasks = gradle.startParameter.taskNames.collect { it.toLowerCase() }
 def runningDataGen = requestedTasks.any { it.contains("rundata") || it.contains("datagen") }
 
-if (!runningDataGen) {
+if (!standalone && !runningDataGen) {
     dependencies {
         for (extraModJar in fileTree(dir: extraModsDir, include: '*.jar')) {
             def basename = extraModJar.name.substring(0, extraModJar.name.length() - ".jar".length())
@@ -177,5 +193,5 @@ if (!runningDataGen) {
         }
     }
 } else {
-    logger.lifecycle("Skipping optional jars from ${extraModsDir} for data generation runs")
+    logger.lifecycle("Skipping optional jars from ${extraModsDir} for standalone or data generation runs")
 }
