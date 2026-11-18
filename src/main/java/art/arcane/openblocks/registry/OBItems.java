@@ -1,6 +1,7 @@
 package art.arcane.openblocks.registry;
 
 import art.arcane.openblocks.OpenBlocks;
+import art.arcane.openblocks.item.OBElevatorItem;
 import art.arcane.openblocks.item.OBPedometerItem;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -27,8 +28,10 @@ public final class OBItems {
     public static final RegistryObject<Item> LADDER = registerBlockItem("ladder", OBBlocks.LADDER);
     public static final RegistryObject<Item> GUIDE = registerBlockItem("guide", OBBlocks.GUIDE);
     public static final RegistryObject<Item> BUILDER_GUIDE = registerBlockItem("builder_guide", OBBlocks.BUILDER_GUIDE);
-    public static final RegistryObject<Item> ELEVATOR = registerBlockItem("elevator", OBBlocks.ELEVATOR);
-    public static final RegistryObject<Item> ELEVATOR_ROTATING = registerBlockItem("elevator_rotating", OBBlocks.ELEVATOR_ROTATING);
+    public static final RegistryObject<Item> ELEVATOR = registerItem("elevator",
+            () -> new OBElevatorItem(OBBlocks.ELEVATOR.get(), new Item.Properties()));
+    public static final RegistryObject<Item> ELEVATOR_ROTATING = registerItem("elevator_rotating",
+            () -> new OBElevatorItem(OBBlocks.ELEVATOR_ROTATING.get(), new Item.Properties()));
     public static final RegistryObject<Item> HEAL = registerBlockItem("heal", OBBlocks.HEAL);
     public static final RegistryObject<Item> TARGET = registerBlockItem("target", OBBlocks.TARGET);
     public static final RegistryObject<Item> GRAVE = registerBlockItem("grave", OBBlocks.GRAVE);

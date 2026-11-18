@@ -1,18 +1,3 @@
 {
-  "type": "minecraft:crafting_shapeless",
-  "group": "open_blocks:elevator_rotating",
-  "ingredients": [
-    {
-      "item": "open_blocks:elevator"
-    },
-    {
-      "tag": "open_blocks:legacy_ore_dict/ingot_iron"
-    },
-    {
-      "tag": "open_blocks:legacy_ore_dict/ingot_iron"
-    }
-  ],
-  "result": {
-    "item": "open_blocks:elevator_rotating"
-  }
+  "type": "open_blocks:elevator_upgrade"
 }

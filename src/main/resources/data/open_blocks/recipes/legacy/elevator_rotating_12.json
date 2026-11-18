@@ -18,6 +18,11 @@
     }
   },
   "result": {
-    "item": "open_blocks:elevator_rotating"
+    "item": "open_blocks:elevator_rotating",
+    "nbt": {
+      "BlockStateTag": {
+        "color": "pink"
+      }
+    }
   }
 }

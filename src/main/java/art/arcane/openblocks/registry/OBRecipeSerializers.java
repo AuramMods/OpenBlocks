@@ -1,6 +1,7 @@
 package art.arcane.openblocks.registry;
 
 import art.arcane.openblocks.OpenBlocks;
+import art.arcane.openblocks.recipe.OBElevatorUpgradeRecipe;
 import art.arcane.openblocks.recipe.OBFlimFlamBookRecipe;
 import art.arcane.openblocks.recipe.OBNoopSpecialRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
@@ -23,6 +24,8 @@ public final class OBRecipeSerializers {
     public static final RegistryObject<RecipeSerializer<?>> EPIC_ERASER_ACTION = register("epic_eraser_action");
     public static final RegistryObject<RecipeSerializer<?>> FLIM_FLAM_BOOK = RECIPE_SERIALIZERS.register("flim_flam_book",
             () -> new SimpleCraftingRecipeSerializer<>(OBFlimFlamBookRecipe::new));
+    public static final RegistryObject<RecipeSerializer<?>> ELEVATOR_UPGRADE = RECIPE_SERIALIZERS.register("elevator_upgrade",
+            () -> new SimpleCraftingRecipeSerializer<>(OBElevatorUpgradeRecipe::new));
 
     private OBRecipeSerializers() {}
 

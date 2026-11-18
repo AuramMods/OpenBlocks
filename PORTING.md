@@ -113,7 +113,7 @@ Goal: recreate cross-cutting systems in thin form before deep feature parity.
 Checklist:
 - [ ] Replace old GUI/container flow with modern menu/screen flow.
 - [-] Rebuild capability equivalents (player/entity state).
-- [ ] Rebuild networking layer for events/RPC replacements.
+- [-] Rebuild networking layer for events/RPC replacements. The elevator request is the first registered serverbound packet.
 - [-] Rebuild advancement trigger plumbing.
 - [-] Rebuild command registration.
 - [ ] Rebuild loot injection strategy.
@@ -157,7 +157,8 @@ Checklist:
 ## Immediate Next Task
 - [x] Reproduce and repair the baseline defects in mixed elevator rotation, sponge handling of logged water, and grave placement fallback. Verified with the standalone GameTest server on 2026-11-18.
 - [x] Restore distinct legacy crafting components across recipes, creative entries, and models.
-- [ ] Restore elevator, flag, painting, and other state variants across recipes, creative entries, and models.
+- [x] Restore elevator colors and movement activation. Headless tests cover server behavior and item color through crafting, placement, and drops. A packaged client verified Space, Shift, color matching, and rotation in single-player using a silent virtual display.
+- [ ] Restore flag, painting, and other state variants across recipes, creative entries, and models.
 - [ ] Run a muted client in an isolated or background graphical session to verify models, transparency, and face culling.
 - [ ] Extend recipe coverage beyond custom special recipe placeholders (core craft paths for major blocks/items).
 - [ ] Deepen `/flimflam` parity beyond current breadth-stage action wiring:
@@ -177,9 +178,8 @@ Checklist:
 - [ ] Wire custom advancement triggers into gameplay events:
   - replace temporary hooks with legacy-accurate trigger sources (`brick_dropped` from boo/brick action path, `dev_null_stacked` from nested dev-null inventory depth)
 - [ ] Finish legacy recipe migration for skipped recipe files:
-  - revisit remaining metadata-collapsed conversions to restore accurate color and subtype behavior (paintbrush variants, elevator and flag color outputs, and similar cases)
+  - revisit remaining metadata-collapsed conversions to restore accurate color and subtype behavior (paintbrush variants, flag color outputs, and similar cases)
 - [ ] Continue block functionality sweep (depth pass order):
-  - elevator/elevator_rotating: deepen from current right-click baseline to legacy movement-trigger + color-match parity (jump/sneak trigger path, dye/recolor integration, configurable pass-through/xp-cost rules)
   - rope_ladder/scaffolding/ladder: complete orientation/collision parity and scaffolding-specific behavior now that baseline survival/extension is wired
   - xp_drain/xp_shower/xp_bottler + tank: fluid/xp transfer behavior and interaction flow
   - block_breaker/block_placer/item_dropper + auto_anvil/auto_enchantment_table: tick/work cycles and inventory IO

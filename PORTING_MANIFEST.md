@@ -78,7 +78,7 @@ Current scaffold counts:
 - Sound events registered: 19
 - Enchantments registered: 3
 - Menu types registered: 14
-- Recipe serializers registered: 8
+- Recipe serializers registered: 9
 - Command roots wired: 3 (`flimflam`, `luck`, `ob_inventory`)
 - Custom capabilities wired: 3 (`open_blocks:luck`, `open_blocks:pedometer_state`, `open_blocks:bowels`)
 - Custom advancement triggers wired: 2 (`open_blocks:brick_dropped`, `open_blocks:dev_null_stacked`)
@@ -142,8 +142,9 @@ Current validation status:
   - `src/main/java/art/arcane/openblocks/world/OBGameRules.java` now registers legacy grave gamerule key `openblocks:spawn_graves` (default `true`).
   - `src/main/java/art/arcane/openblocks/block/OBGraveBlock.java` + `src/main/java/art/arcane/openblocks/block/entity/OBGraveBlockEntity.java` now provide placeable grave state with persisted dump metadata, death message display on normal interaction, and shovel-gated loot claim behavior.
   - `src/main/java/art/arcane/openblocks/block/OBHealBlock.java` + `src/main/java/art/arcane/openblocks/block/entity/OBHealBlockEntity.java` now provide periodic server-side healing/saturation aura behavior for nearby non-creative players.
-  - `src/main/java/art/arcane/openblocks/block/OBElevatorBlock.java` now provides baseline elevator teleport flow (right-click up / sneak-right-click down) with travel/blocker limits and safe destination checks.
-  - `src/main/java/art/arcane/openblocks/block/OBElevatorRotatingBlock.java` now extends baseline elevator teleport flow with facing-based player yaw alignment on arrival.
+  - `OBElevatorBlock` and `OBElevatorRotatingBlock` share a dye color blockstate. Rotating elevators store their facing in blockstate and set yaw on arrival.
+  - `OBElevatorTravel` handles jump/sneak requests from `OBElevatorControls` and `OBNetwork`. It validates the player's position and destination on the server. The world server config controls range, block rules, overrides, centering, clearance and XP costs.
+  - The item uses vanilla `BlockStateTag.color` and the generated loot tables preserve color. Untagged items and old block states default to white. One color-preserving rotating upgrade replaces the 16 metadata-specific upgrades.
   - `src/main/java/art/arcane/openblocks/block/OBLadderBlock.java` now enforces north-face support survival for `open_blocks:ladder`.
   - `src/main/java/art/arcane/openblocks/block/OBPathBlock.java` now enforces support-below survival and drops itself when support is removed.
   - `src/main/java/art/arcane/openblocks/block/OBRopeLadderBlock.java` now supports chain survival, survival-mode downward auto-extension on placement, and cascading chain removal.
@@ -217,7 +218,7 @@ Source: `old-1.12.2/src/main/resources/assets/openblocks/recipes`
 - Existing 1.20 scaffold recipes currently present:
   - `src/main/resources/data/open_blocks/recipes` (7 custom serializer placeholders from `CustomRecipesSetup` + 1 custom flim-flam replacement recipe)
 - Mechanical conversion output now present:
-  - `src/main/resources/data/open_blocks/recipes/legacy` (185 converted crafting recipes)
+  - `src/main/resources/data/open_blocks/recipes/legacy` (170 recipes, including the single upgrade that covers all elevator colors)
   - `src/main/resources/data/open_blocks/tags/items/legacy_ore_dict` (35 compatibility item-tag files for former ore-dict names)
   - Converted types:
     - `forge:ore_shaped` -> `minecraft:crafting_shaped`

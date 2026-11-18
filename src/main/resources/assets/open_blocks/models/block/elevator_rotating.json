@@ -1,7 +1,7 @@
 {
-  "parent": "minecraft:block/cube_all",
+  "parent": "open_blocks:block/elevator_cube",
   "textures": {
-    "all": "open_blocks:block/elevator_rot",
-    "particle": "open_blocks:block/elevator_rot"
+    "side": "open_blocks:block/elevator",
+    "top": "open_blocks:block/elevator_rot"
   }
 }

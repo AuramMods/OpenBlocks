@@ -66,14 +66,14 @@ public final class ComponentRecipeGameTests {
         helper.succeed();
     }
 
-    private static CraftingContainer input(GameTestHelper helper, ItemLike... slots) {
+    static CraftingContainer input(GameTestHelper helper, ItemLike... slots) {
         final var menu = new CraftingMenu(0, helper.makeMockSurvivalPlayer().getInventory());
         final var input = new TransientCraftingContainer(menu, 3, 3);
         for (int i = 0; i < slots.length; i++) input.setItem(i, new ItemStack(slots[i]));
         return input;
     }
 
-    private static ItemStack craft(GameTestHelper helper, CraftingContainer input) {
+    static ItemStack craft(GameTestHelper helper, CraftingContainer input) {
         final var level = helper.getLevel();
         return level.getRecipeManager().getRecipeFor(RecipeType.CRAFTING, input, level)
                 .map(recipe -> recipe.assemble(input, level.registryAccess()))

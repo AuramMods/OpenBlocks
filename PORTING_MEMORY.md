@@ -11,7 +11,10 @@
 - Use `jar` for packaging during development. The `build` finalizer copies the jar into the configured live Prism instance.
 - Legacy components and the pointer have distinct item IDs, models, names, and recipe inputs and outputs. The old generic IDs still load, and the old unstackable item converts to the pointer. Generic stacks from earlier port builds have no stored subtype. The Miracle Magnet reuses the crane magnet sprite with its legacy enchantment glint because the legacy snapshot lacks the referenced sprite.
 - All nine standalone GameTests pass, including crafting a hang glider and map with the right components, rejecting incorrect substitutions, upgrading an old pointer, and crafting a sketching pencil with either coal or charcoal. The packaged jar contains the item models and excludes the test fixtures. Item rendering still needs client verification.
-- Next, restore elevator colors across placement, drops, appearance, crafting, and destination matching, then restore jump/sneak activation. Full gameplay parity and client verification are still open.
+- Elevators now use jump and sneak requests with server-side travel, rotation, color matching, collision checks, and XP costs. The server config also supports block pass-through rules and lets other blocks act as elevators. Colors survive crafting, placement, recoloring, and drops. Older items and blocks with no color default to white.
+- The elevator cycle passed datagen, packaging and all 12 standalone GameTests. The tests exercise the server travel logic, including mixed elevators, safe landings, configuration and XP, and the craft/place/recolor/drop flow. The grave fallback fixture now uses a void death to guarantee no valid placement.
+- The packaged jar also passed a single-player smoke test on Forge 47.4.10 under Docker/Xvfb. With master volume at zero and OpenAL's null backend, Space skipped a blue elevator and reached a matching red rotating platform at yaw 90. Shift returned to the red source. The client reported missing `xpjuice` blockstate variants, which belong in the tank and XP cycle.
+- Next, restore wall-facing ladder and rope ladder placement and complete legacy scaffolding behavior.
 
 ## Current Snapshot
 - Legacy codebase analyzed: `old-1.12.2`.

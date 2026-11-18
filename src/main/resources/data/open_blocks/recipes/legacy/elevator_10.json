@@ -15,6 +15,11 @@
     }
   },
   "result": {
-    "item": "open_blocks:elevator"
+    "item": "open_blocks:elevator",
+    "nbt": {
+      "BlockStateTag": {
+        "color": "purple"
+      }
+    }
   }
 }

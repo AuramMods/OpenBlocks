@@ -2,6 +2,8 @@ package art.arcane.openblocks;
 
 import art.arcane.openblocks.advancement.OBCriterions;
 import art.arcane.openblocks.capability.OBCapabilities;
+import art.arcane.openblocks.config.OBServerConfig;
+import art.arcane.openblocks.network.OBNetwork;
 import art.arcane.openblocks.registry.OBBlocks;
 import art.arcane.openblocks.registry.OBBlockEntities;
 import art.arcane.openblocks.registry.OBCreativeTabs;
@@ -14,14 +16,20 @@ import art.arcane.openblocks.registry.OBMenuTypes;
 import art.arcane.openblocks.registry.OBRecipeSerializers;
 import art.arcane.openblocks.registry.OBSounds;
 import art.arcane.openblocks.world.OBGameRules;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 @Mod(OpenBlocks.MODID)
 public class OpenBlocks {
 
     public static final String MODID = "open_blocks";
+
+    public static ResourceLocation id(final String path) {
+        return ResourceLocation.fromNamespaceAndPath(MODID, path);
+    }
 
     public OpenBlocks(final FMLJavaModLoadingContext context) {
         final IEventBus modEventBus = context.getModEventBus();
@@ -42,6 +50,8 @@ public class OpenBlocks {
         OBRecipeSerializers.RECIPE_SERIALIZERS.register(modEventBus);
         modEventBus.addListener(OBCapabilities::onRegisterCapabilities);
 
+        context.registerConfig(ModConfig.Type.SERVER, OBServerConfig.SPEC);
+        OBNetwork.register();
         OBCriterions.bootstrap();
         OBGameRules.bootstrap();
     }

@@ -3,6 +3,7 @@ package art.arcane.openblocks.gametest;
 import art.arcane.openblocks.OpenBlocks;
 import art.arcane.openblocks.api.OBGraveDropsEvent;
 import art.arcane.openblocks.block.OBElevatorRotatingBlock;
+import art.arcane.openblocks.block.OBElevatorTravel;
 import art.arcane.openblocks.registry.OBBlocks;
 import com.mojang.authlib.GameProfile;
 import java.util.ArrayList;
@@ -70,12 +71,13 @@ public final class BaselineGameTests {
         final Vec3 start = Vec3.atBottomCenterOf(helper.absolutePos(lower.above()));
         player.moveTo(start.x, start.y, start.z, 33.0F, 0.0F);
 
-        helper.useBlock(lower, player);
+        player.setOnGround(true);
+        helper.assertTrue(OBElevatorTravel.use(player, false), "Up request did not find any destination");
         helper.assertTrue(player.blockPosition().equals(helper.absolutePos(upper.above())), "Did not reach upper elevator");
         helper.assertTrue(player.getYRot() == 90.0F, "Rotating destination did not set yaw");
 
-        player.setShiftKeyDown(true);
-        helper.useBlock(upper, player);
+        player.setOnGround(true);
+        helper.assertTrue(OBElevatorTravel.use(player, true), "Down request did not find any destination");
         helper.assertTrue(player.blockPosition().equals(helper.absolutePos(lower.above())), "Did not return to ordinary elevator");
         helper.assertTrue(player.getYRot() == 90.0F, "Ordinary destination changed yaw");
         helper.succeed();
@@ -103,7 +105,8 @@ public final class BaselineGameTests {
             @Override
             public void sendSystemMessage(Component message) {}
         };
-        final Vec3 pos = Vec3.atCenterOf(helper.absolutePos(new BlockPos(3, 30, 3)));
+        final BlockPos testPos = helper.absolutePos(new BlockPos(3, 1, 3));
+        final Vec3 pos = Vec3.atCenterOf(testPos.atY(level.getMinBuildHeight() - 5));
         player.setPos(pos.x, pos.y, pos.z);
         final ItemEntity store = new ItemEntity(level, pos.x, pos.y, pos.z, new ItemStack(Items.DIAMOND));
         final ItemEntity drop = new ItemEntity(level, pos.x, pos.y, pos.z, new ItemStack(Items.GOLD_INGOT));
