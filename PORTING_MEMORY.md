@@ -23,7 +23,12 @@
 - The path restores the legacy scattered-stone look using a stable position seed. It has no movement collision, requires a sturdy block underneath, and drops if that support is broken. The healing block restores one health and one food per pulse when both are low.
 - Datagen and jar reobfuscation completed. All 23 standalone GameTests passed, including six new checks for sponge settings and lava, tool use and durability, path support and collision, and the timed healing pulse. If a fresh GameTest world stalls in spawn lighting with `MissingPaletteEntryException`, the successful retry used a fresh run directory and `JAVA_TOOL_OPTIONS=-XX:ActiveProcessorCount=4`.
 - The packaged client rendered different stone layouts on adjacent path blocks and showed the path in the hotbar and hand. Verification used Docker/Xvfb with master volume zero and OpenAL's null backend.
-- Next, port the tank and XP chain.
+- Tanks store fluid per block, fill connected columns from the connection upwards, and drain column tops first. The world config defaults to 16 buckets per tank and enables gravity, horizontal balancing, bucket exchange, and fluid lighting. Filled tank items preserve fluid data on break and placement and expose a Forge fluid handler.
+- Liquid XP uses the original 20 mB per point, and empty-hand tank interaction withdraws enough for the next level. The tank refunds fluid if a Forge XP event cancels the gain. `experience.additionalXpFluids` also accepts registered fluids and custom ratios.
+- Datagen and jar reobfuscation completed. All 29 GameTests passed, including six tank tests covering simulated and executed column transfers, conservation and balancing, block-entity serialization, break and placement, stacked portable tanks, bucket exchange, XP gain, light, and a canceled XP event.
+- The reobfuscated jar started on a clean Forge 47.4.10 dedicated server with `--nogui`. The server saved a tank with 5,310 mB of Liquid XP and reported the same contents after a full restart.
+- A muted packaged client under Docker/Xvfb reopened a single-player world with the tanks in place. Compatible Liquid XP tanks shared one frame and surface, while water and lava kept separate frames. The filled tank rendered in the hotbar and hand. The Liquid XP blockstate warnings are resolved.
+- Next, finish the XP drain, shower and bottler using these fluid capabilities and converters.
 
 ## Current Snapshot
 - Legacy codebase analyzed: `old-1.12.2`.

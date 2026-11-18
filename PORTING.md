@@ -181,6 +181,7 @@ Checklist:
 - [ ] Finish legacy recipe migration for skipped recipe files:
   - revisit remaining metadata-collapsed conversions to restore accurate color and subtype behavior (paintbrush variants, flag color outputs, and similar cases)
 - [x] Restore configurable sponge cleanup, Sponge on a Stick, scattered-stone path rendering, and the healing block's one-tick pulses.
+- [x] Restore tank block and item storage, connected transfer and rendering, XP and bucket exchange, and the Liquid XP block assets.
 - [ ] Continue block functionality sweep (depth pass order):
-  - xp_drain/xp_shower/xp_bottler + tank: fluid/xp transfer behavior and interaction flow
+  - xp_drain/xp_shower/xp_bottler: wire the tank's fluid storage into orb, player and bottle workflows
   - block_breaker/block_placer/item_dropper + auto_anvil/auto_enchantment_table: tick/work cycles and inventory IO

@@ -22,6 +22,15 @@ public final class OBServerConfig {
     public static final ForgeConfigSpec.IntValue SPONGE_STICK_RANGE;
     public static final ForgeConfigSpec.IntValue SPONGE_STICK_DURABILITY;
     public static final ForgeConfigSpec.BooleanValue SPONGE_STICK_BLOCK_UPDATE;
+    public static final ForgeConfigSpec.IntValue TANK_BUCKETS;
+    public static final ForgeConfigSpec.BooleanValue TANK_BALANCE;
+    public static final ForgeConfigSpec.IntValue TANK_BALANCE_THRESHOLD;
+    public static final ForgeConfigSpec.BooleanValue TANK_BUCKET_DRAIN;
+    public static final ForgeConfigSpec.ConfigValue<List<? extends String>> TANK_ADDITIONAL_BUCKETS;
+    public static final ForgeConfigSpec.BooleanValue TANK_LIGHT;
+    public static final ForgeConfigSpec.BooleanValue TANK_CREATIVE_FLUIDS;
+    public static final ForgeConfigSpec.IntValue XP_FLUID_RATIO;
+    public static final ForgeConfigSpec.ConfigValue<List<? extends String>> XP_ADDITIONAL_FLUIDS;
 
     static {
         final var builder = new ForgeConfigSpec.Builder();
@@ -58,6 +67,22 @@ public final class OBServerConfig {
         SPONGE_STICK_DURABILITY = builder.defineInRange("spongeStickUseCount", 256, 1, Integer.MAX_VALUE);
         SPONGE_STICK_BLOCK_UPDATE = builder.comment("Notify neighbors when the Sponge on a Stick removes liquids.")
                 .define("stickBlockUpdate", false);
+        builder.pop();
+        builder.push("tanks");
+        TANK_BUCKETS = builder.defineInRange("bucketsPerTank", 16, 1, 32767);
+        TANK_BALANCE = builder.define("tankTicks", true);
+        TANK_BALANCE_THRESHOLD = builder.defineInRange("fluidDifferenceUpdateThreshold", 0, 0, Integer.MAX_VALUE);
+        TANK_BUCKET_DRAIN = builder.define("allowBucketDrain", true);
+        TANK_ADDITIONAL_BUCKETS = builder.comment("Additional fluid container item IDs that can be filled from a placed tank.")
+                .defineListAllowEmpty("bucketItems", List.of(), value -> value instanceof String);
+        TANK_LIGHT = builder.define("emitLight", true);
+        TANK_CREATIVE_FLUIDS = builder.define("displayAllFluids", true);
+        builder.pop();
+        builder.push("experience");
+        XP_FLUID_RATIO = builder.comment("Millibuckets of XP Juice per experience point.")
+                .defineInRange("xpToLiquidRatio", 20, 1, Integer.MAX_VALUE / 8);
+        XP_ADDITIONAL_FLUIDS = builder.comment("Extra XP liquids in registry-id=millibuckets-per-point form. Unqualified legacy names match any namespace.")
+                .defineListAllowEmpty("additionalXpFluids", List.of("experience=20"), value -> value instanceof String);
         builder.pop();
         SPEC = builder.build();
     }

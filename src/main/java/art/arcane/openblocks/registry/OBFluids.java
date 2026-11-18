@@ -20,7 +20,7 @@ public final class OBFluids {
     public static final RegistryObject<FlowingFluid> XP_JUICE = FLUIDS.register("xpjuice", () -> new ForgeFlowingFluid.Source(FluidProps.XP_JUICE));
     public static final RegistryObject<FlowingFluid> FLOWING_XP_JUICE = FLUIDS.register("flowing_xpjuice", () -> new ForgeFlowingFluid.Flowing(FluidProps.XP_JUICE));
     public static final RegistryObject<LiquidBlock> XP_JUICE_BLOCK = FLUID_BLOCKS.register("xpjuice",
-            () -> new LiquidBlock(XP_JUICE, BlockBehaviour.Properties.copy(Blocks.WATER)));
+            () -> new LiquidBlock(XP_JUICE, BlockBehaviour.Properties.copy(Blocks.WATER).lightLevel(state -> 10)));
 
     private OBFluids() {}
 

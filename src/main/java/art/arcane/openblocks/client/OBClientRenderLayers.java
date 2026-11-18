@@ -2,6 +2,7 @@ package art.arcane.openblocks.client;
 
 import art.arcane.openblocks.OpenBlocks;
 import art.arcane.openblocks.registry.OBBlocks;
+import art.arcane.openblocks.registry.OBFluids;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.world.level.block.Block;
@@ -28,6 +29,8 @@ public final class OBClientRenderLayers {
             setCutout(OBBlocks.CANVAS);
 
             ItemBlockRenderTypes.setRenderLayer(OBBlocks.CANVAS_GLASS.get(), renderType -> renderType == RenderType.translucent());
+            ItemBlockRenderTypes.setRenderLayer(OBFluids.XP_JUICE.get(), RenderType.translucent());
+            ItemBlockRenderTypes.setRenderLayer(OBFluids.FLOWING_XP_JUICE.get(), RenderType.translucent());
         });
     }
 

@@ -5,6 +5,7 @@ import art.arcane.openblocks.item.OBElevatorItem;
 import art.arcane.openblocks.item.OBPedometerItem;
 import art.arcane.openblocks.item.OBScaffoldingItem;
 import art.arcane.openblocks.item.OBSpongeOnAStickItem;
+import art.arcane.openblocks.item.OBTankItem;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -38,7 +39,7 @@ public final class OBItems {
     public static final RegistryObject<Item> TARGET = registerBlockItem("target", OBBlocks.TARGET);
     public static final RegistryObject<Item> GRAVE = registerBlockItem("grave", OBBlocks.GRAVE);
     public static final RegistryObject<Item> FLAG = registerBlockItem("flag", OBBlocks.FLAG);
-    public static final RegistryObject<Item> TANK = registerBlockItem("tank", OBBlocks.TANK);
+    public static final RegistryObject<Item> TANK = registerItem("tank", () -> new OBTankItem(OBBlocks.TANK.get(), new Item.Properties()));
     public static final RegistryObject<Item> TROPHY = registerBlockItem("trophy", OBBlocks.TROPHY);
     public static final RegistryObject<Item> BEARTRAP = registerBlockItem("beartrap", OBBlocks.BEARTRAP);
     public static final RegistryObject<Item> SPRINKLER = registerBlockItem("sprinkler", OBBlocks.SPRINKLER);

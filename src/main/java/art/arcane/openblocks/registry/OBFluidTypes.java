@@ -3,7 +3,9 @@ package art.arcane.openblocks.registry;
 import art.arcane.openblocks.OpenBlocks;
 import java.util.function.Consumer;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.minecraftforge.common.SoundActions;
 import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -21,7 +23,9 @@ public final class OBFluidTypes {
 
     public static final RegistryObject<FluidType> XP_JUICE_TYPE = FLUID_TYPES.register("xpjuice",
             () -> new OBFluidType(
-                    FluidType.Properties.create(),
+                    FluidType.Properties.create().lightLevel(10).density(800).viscosity(1500)
+                            .sound(SoundActions.BUCKET_FILL, SoundEvents.EXPERIENCE_ORB_PICKUP)
+                            .sound(SoundActions.BUCKET_EMPTY, SoundEvents.PLAYER_LEVELUP),
                     XP_JUICE_STILL_TEXTURE,
                     XP_JUICE_FLOWING_TEXTURE,
                     XP_JUICE_TINT));

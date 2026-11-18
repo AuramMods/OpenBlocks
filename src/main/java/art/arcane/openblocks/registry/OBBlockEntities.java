@@ -4,10 +4,12 @@ import art.arcane.openblocks.OpenBlocks;
 import art.arcane.openblocks.block.entity.OBGraveBlockEntity;
 import art.arcane.openblocks.block.entity.OBHealBlockEntity;
 import art.arcane.openblocks.block.entity.OBPlaceholderBlockEntity;
+import art.arcane.openblocks.block.entity.OBTankBlockEntity;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -22,11 +24,11 @@ public final class OBBlockEntities {
     public static final RegistryObject<BlockEntityType<OBPlaceholderBlockEntity>> GUIDE = register("guide", OBBlocks.GUIDE);
     public static final RegistryObject<BlockEntityType<OBPlaceholderBlockEntity>> BUILDER_GUIDE = register("builder_guide", OBBlocks.BUILDER_GUIDE);
     public static final RegistryObject<BlockEntityType<OBPlaceholderBlockEntity>> ELEVATOR_ROTATING = register("elevator_rotating", OBBlocks.ELEVATOR_ROTATING);
-    public static final RegistryObject<BlockEntityType<OBHealBlockEntity>> HEAL = registerHeal("heal", OBBlocks.HEAL);
+    public static final RegistryObject<BlockEntityType<OBHealBlockEntity>> HEAL = register("heal", OBHealBlockEntity::new, OBBlocks.HEAL);
     public static final RegistryObject<BlockEntityType<OBPlaceholderBlockEntity>> TARGET = register("target", OBBlocks.TARGET);
-    public static final RegistryObject<BlockEntityType<OBGraveBlockEntity>> GRAVE = registerGrave("grave", OBBlocks.GRAVE);
+    public static final RegistryObject<BlockEntityType<OBGraveBlockEntity>> GRAVE = register("grave", OBGraveBlockEntity::new, OBBlocks.GRAVE);
     public static final RegistryObject<BlockEntityType<OBPlaceholderBlockEntity>> FLAG = register("flag", OBBlocks.FLAG);
-    public static final RegistryObject<BlockEntityType<OBPlaceholderBlockEntity>> TANK = register("tank", OBBlocks.TANK);
+    public static final RegistryObject<BlockEntityType<OBTankBlockEntity>> TANK = register("tank", OBTankBlockEntity::new, OBBlocks.TANK);
     public static final RegistryObject<BlockEntityType<OBPlaceholderBlockEntity>> TROPHY = register("trophy", OBBlocks.TROPHY);
     public static final RegistryObject<BlockEntityType<OBPlaceholderBlockEntity>> BEARTRAP = register("beartrap", OBBlocks.BEARTRAP);
     public static final RegistryObject<BlockEntityType<OBPlaceholderBlockEntity>> SPRINKLER = register("sprinkler", OBBlocks.SPRINKLER);
@@ -74,20 +76,10 @@ public final class OBBlockEntities {
 
     @SafeVarargs
     @SuppressWarnings({"unchecked", "rawtypes"})
-    private static RegistryObject<BlockEntityType<OBHealBlockEntity>> registerHeal(final String id, final RegistryObject<Block>... blocks) {
-        final RegistryObject<BlockEntityType<OBHealBlockEntity>> holder = BLOCK_ENTITY_TYPES.register(
-                id,
-                () -> BlockEntityType.Builder.of(OBHealBlockEntity::new, resolveBlocks(blocks)).build(null));
-        ALL.add((RegistryObject) holder);
-        return holder;
-    }
-
-    @SafeVarargs
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    private static RegistryObject<BlockEntityType<OBGraveBlockEntity>> registerGrave(final String id, final RegistryObject<Block>... blocks) {
-        final RegistryObject<BlockEntityType<OBGraveBlockEntity>> holder = BLOCK_ENTITY_TYPES.register(
-                id,
-                () -> BlockEntityType.Builder.of(OBGraveBlockEntity::new, resolveBlocks(blocks)).build(null));
+    private static <T extends BlockEntity> RegistryObject<BlockEntityType<T>> register(final String id,
+            final BlockEntityType.BlockEntitySupplier<T> factory, final RegistryObject<Block>... blocks) {
+        final RegistryObject<BlockEntityType<T>> holder = BLOCK_ENTITY_TYPES.register(id,
+                () -> BlockEntityType.Builder.of(factory, resolveBlocks(blocks)).build(null));
         ALL.add((RegistryObject) holder);
         return holder;
     }

@@ -1,5 +1,20 @@
 {
   "variants": {
-    "": { "model": "open_blocks:block/tank" }
+    "level=0": { "model": "open_blocks:block/tank" },
+    "level=1": { "model": "open_blocks:block/tank" },
+    "level=2": { "model": "open_blocks:block/tank" },
+    "level=3": { "model": "open_blocks:block/tank" },
+    "level=4": { "model": "open_blocks:block/tank" },
+    "level=5": { "model": "open_blocks:block/tank" },
+    "level=6": { "model": "open_blocks:block/tank" },
+    "level=7": { "model": "open_blocks:block/tank" },
+    "level=8": { "model": "open_blocks:block/tank" },
+    "level=9": { "model": "open_blocks:block/tank" },
+    "level=10": { "model": "open_blocks:block/tank" },
+    "level=11": { "model": "open_blocks:block/tank" },
+    "level=12": { "model": "open_blocks:block/tank" },
+    "level=13": { "model": "open_blocks:block/tank" },
+    "level=14": { "model": "open_blocks:block/tank" },
+    "level=15": { "model": "open_blocks:block/tank" }
   }
 }

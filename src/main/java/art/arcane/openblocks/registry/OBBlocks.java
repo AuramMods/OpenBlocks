@@ -11,6 +11,7 @@ import art.arcane.openblocks.block.OBRopeLadderBlock;
 import art.arcane.openblocks.block.OBScaffoldingBlock;
 import art.arcane.openblocks.block.OBShapeBlock;
 import art.arcane.openblocks.block.OBSpongeBlock;
+import art.arcane.openblocks.block.OBTankBlock;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -45,11 +46,6 @@ public final class OBBlocks {
     private static final VoxelShape SHAPE_FAN = Block.box(3.0D, 0.0D, 3.0D, 13.0D, 16.0D, 13.0D);
     private static final VoxelShape SHAPE_BEARTRAP = Block.box(1.6D, 0.0D, 1.6D, 14.4D, 6.4D, 14.4D);
     private static final VoxelShape SHAPE_CANNON = Block.box(4.8D, 0.0D, 4.8D, 9.6D, 11.2D, 11.2D);
-    private static final VoxelShape SHAPE_TANK_FRAME = Shapes.or(
-            Block.box(0.0D, 0.0D, 0.0D, 16.0D, 16.0D, 1.0D),
-            Block.box(0.0D, 0.0D, 15.0D, 16.0D, 16.0D, 16.0D),
-            Block.box(0.0D, 0.0D, 1.0D, 1.0D, 16.0D, 15.0D),
-            Block.box(15.0D, 0.0D, 1.0D, 16.0D, 16.0D, 15.0D));
     private static final VoxelShape SHAPE_GRAVE = Shapes.or(
             Block.box(0.0D, 0.0D, 0.0D, 16.0D, 1.0D, 16.0D),
             Block.box(2.0D, 1.0D, 14.0D, 14.0D, 16.0D, 16.0D));
@@ -130,6 +126,7 @@ public final class OBBlocks {
         if ("path".equals(id)) return new OBPathBlock(properties, shape, collisionShape);
         if ("sponge".equals(id)) return new OBSpongeBlock(BlockBehaviour.Properties.copy(Blocks.SPONGE));
         if ("grave".equals(id)) return new OBGraveBlock(properties, shape, collisionShape);
+        if ("tank".equals(id)) return new OBTankBlock(properties);
         if (shape != null) return new OBShapeBlock(properties, shape, collisionShape);
         return new Block(properties);
     }
@@ -154,7 +151,6 @@ public final class OBBlocks {
             case "target" -> SHAPE_TARGET;
             case "flag" -> SHAPE_FLAG;
             case "grave" -> SHAPE_GRAVE;
-            case "tank" -> SHAPE_TANK_FRAME;
             case "trophy" -> SHAPE_TROPHY;
             case "beartrap" -> SHAPE_BEARTRAP;
             case "cannon" -> SHAPE_CANNON;
