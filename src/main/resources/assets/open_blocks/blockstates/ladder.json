@@ -1,5 +1,25 @@
 {
   "variants": {
-    "": { "model": "open_blocks:block/ladder" }
+    "half=bottom,open=false": {
+      "model": "open_blocks:block/ladder_bottom"
+    },
+    "half=top,open=false": {
+      "model": "open_blocks:block/ladder_top"
+    },
+    "facing=north,open=true": {
+      "model": "open_blocks:block/ladder"
+    },
+    "facing=east,open=true": {
+      "model": "open_blocks:block/ladder",
+      "y": 90
+    },
+    "facing=south,open=true": {
+      "model": "open_blocks:block/ladder",
+      "y": 180
+    },
+    "facing=west,open=true": {
+      "model": "open_blocks:block/ladder",
+      "y": 270
+    }
   }
 }

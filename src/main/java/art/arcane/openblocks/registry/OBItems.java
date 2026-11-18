@@ -3,6 +3,7 @@ package art.arcane.openblocks.registry;
 import art.arcane.openblocks.OpenBlocks;
 import art.arcane.openblocks.item.OBElevatorItem;
 import art.arcane.openblocks.item.OBPedometerItem;
+import art.arcane.openblocks.item.OBScaffoldingItem;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -67,7 +68,8 @@ public final class OBItems {
     public static final RegistryObject<Item> SKY = registerBlockItem("sky", OBBlocks.SKY);
     public static final RegistryObject<Item> XP_SHOWER = registerBlockItem("xp_shower", OBBlocks.XP_SHOWER);
     public static final RegistryObject<Item> GOLDEN_EGG = registerBlockItem("golden_egg", OBBlocks.GOLDEN_EGG);
-    public static final RegistryObject<Item> SCAFFOLDING = registerBlockItem("scaffolding", OBBlocks.SCAFFOLDING);
+    public static final RegistryObject<Item> SCAFFOLDING = registerItem("scaffolding",
+            () -> new OBScaffoldingItem(OBBlocks.SCAFFOLDING.get(), new Item.Properties()));
 
     // Standalone items
     public static final RegistryObject<Item> HANG_GLIDER = registerItem("hang_glider");

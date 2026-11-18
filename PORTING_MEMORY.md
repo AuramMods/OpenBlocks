@@ -14,7 +14,12 @@
 - Elevators now use jump and sneak requests with server-side travel, rotation, color matching, collision checks, and XP costs. The server config also supports block pass-through rules and lets other blocks act as elevators. Colors survive crafting, placement, recoloring, and drops. Older items and blocks with no color default to white.
 - The elevator cycle passed datagen, packaging and all 12 standalone GameTests. The tests exercise the server travel logic, including mixed elevators, safe landings, configuration and XP, and the craft/place/recolor/drop flow. The grave fallback fixture now uses a void death to guarantee no valid placement.
 - The packaged jar also passed a single-player smoke test on Forge 47.4.10 under Docker/Xvfb. With master volume at zero and OpenAL's null backend, Space skipped a blue elevator and reached a matching red rotating platform at yaw 90. Shift returned to the red source. The client reported missing `xpjuice` blockstate variants, which belong in the tank and XP cycle.
-- Next, restore wall-facing ladder and rope ladder placement and complete legacy scaffolding behavior.
+- The Jaded Ladder is a climbable trapdoor when open. It uses vanilla placement, redstone and waterlogging. Earlier property-less saves retain an open ladder facing away from the north wall.
+- Rope ladders now follow the clicked wall and unroll down to the first obstruction, charging one item per survival rung. `ladder.infiniteMode` adds the old single-item extension. Each rung records whether it can drop, so turning infinite mode off cannot duplicate free rungs and turning it on cannot erase previously paid rungs.
+- OpenBlocks scaffolding is a solid temporary block, with the legacy random despawn rate, item drop, 100-tick fuel value, and hidden inside faces. Use the `scaffolding.despawnRate` world server config to change the rate.
+- Datagen, packaging, and all 17 standalone GameTests passed. The ladder tests exercised actual item placement, climb and redstone behavior, finite and infinite rope drops, Forge placement cancellation, and scaffolding fuel and despawn.
+- The muted packaged Forge client in Docker/Xvfb rendered both Jaded Ladder positions, a hanging wall rope, and adjacent cutout scaffolds in the disposable single-player world.
+- Next, finish the sponge, path and healing-block behavior checks, then port the tank and XP chain.
 
 ## Current Snapshot
 - Legacy codebase analyzed: `old-1.12.2`.

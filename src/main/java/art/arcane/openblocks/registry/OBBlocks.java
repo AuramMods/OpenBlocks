@@ -8,6 +8,7 @@ import art.arcane.openblocks.block.OBHealBlock;
 import art.arcane.openblocks.block.OBLadderBlock;
 import art.arcane.openblocks.block.OBPathBlock;
 import art.arcane.openblocks.block.OBRopeLadderBlock;
+import art.arcane.openblocks.block.OBScaffoldingBlock;
 import art.arcane.openblocks.block.OBShapeBlock;
 import art.arcane.openblocks.block.OBSpongeBlock;
 import java.util.ArrayList;
@@ -29,8 +30,6 @@ public final class OBBlocks {
     private static final List<RegistryObject<Block>> CREATIVE_ORDER = new ArrayList<>();
     private static final VoxelShape SHAPE_PATH = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 1.6D, 16.0D);
     private static final VoxelShape SHAPE_XP_DRAIN = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 1.0D, 16.0D);
-    private static final VoxelShape SHAPE_LADDER = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 16.0D, 2.0D);
-    private static final VoxelShape SHAPE_ROPE_LADDER = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 16.0D, 1.0D);
     private static final VoxelShape SHAPE_BIG_BUTTON = Block.box(1.0D, 0.0D, 1.0D, 15.0D, 2.0D, 15.0D);
     private static final VoxelShape SHAPE_FLAG = Block.box(7.0D, 0.0D, 7.0D, 9.0D, 16.0D, 9.0D);
     private static final VoxelShape SHAPE_TROPHY = Block.box(3.2D, 0.0D, 3.2D, 12.8D, 3.2D, 12.8D);
@@ -59,13 +58,6 @@ public final class OBBlocks {
             Block.box(15.0D, 0.0D, 0.0D, 16.0D, 1.0D, 16.0D),
             Block.box(0.0D, 1.0D, 0.0D, 16.0D, 2.0D, 15.0D));
     private static final VoxelShape SHAPE_SPRINKLER = Block.box(4.8D, 0.0D, 0.0D, 11.2D, 4.8D, 16.0D);
-    private static final VoxelShape SHAPE_SCAFFOLDING = Shapes.or(
-            Block.box(0.0D, 0.0D, 0.0D, 16.0D, 2.0D, 16.0D),
-            Block.box(0.0D, 14.0D, 0.0D, 16.0D, 16.0D, 16.0D),
-            Block.box(0.0D, 2.0D, 0.0D, 2.0D, 14.0D, 2.0D),
-            Block.box(14.0D, 2.0D, 0.0D, 16.0D, 14.0D, 2.0D),
-            Block.box(0.0D, 2.0D, 14.0D, 2.0D, 14.0D, 16.0D),
-            Block.box(14.0D, 2.0D, 14.0D, 16.0D, 14.0D, 16.0D));
 
     public static final RegistryObject<Block> LADDER = register("ladder");
     public static final RegistryObject<Block> GUIDE = register("guide");
@@ -130,8 +122,10 @@ public final class OBBlocks {
 
         if ("elevator".equals(id)) return new OBElevatorBlock(properties);
         if ("elevator_rotating".equals(id)) return new OBElevatorRotatingBlock(properties);
-        if ("ladder".equals(id)) return new OBLadderBlock(properties, shape, collisionShape);
-        if ("rope_ladder".equals(id)) return new OBRopeLadderBlock(properties, shape, collisionShape);
+        if ("ladder".equals(id)) return new OBLadderBlock(BlockBehaviour.Properties.copy(Blocks.OAK_TRAPDOOR).strength(3.0F));
+        if ("rope_ladder".equals(id)) return new OBRopeLadderBlock(BlockBehaviour.Properties.copy(Blocks.LADDER).strength(0.4F).dynamicShape());
+        if ("scaffolding".equals(id)) return new OBScaffoldingBlock(BlockBehaviour.Properties.copy(Blocks.WHITE_WOOL)
+                .strength(0.1F).noOcclusion().randomTicks());
         if ("heal".equals(id)) return new OBHealBlock(properties);
         if ("path".equals(id)) return new OBPathBlock(properties, shape, collisionShape);
         if ("sponge".equals(id)) return new OBSpongeBlock(BlockBehaviour.Properties.copy(Blocks.SPONGE));
@@ -142,20 +136,18 @@ public final class OBBlocks {
 
     private static boolean isNonOccludingModel(final String id) {
         return switch (id) {
-            case "ladder", "guide", "builder_guide", "target", "grave", "flag",
+            case "guide", "builder_guide", "target", "grave", "flag",
                     "tank", "trophy", "beartrap", "sprinkler", "cannon", "vacuum_hopper",
                     "big_button", "big_button_wood", "imaginary", "fan", "village_highlighter",
-                    "path", "auto_anvil", "auto_enchantment_table", "xp_drain", "rope_ladder",
+                    "path", "auto_anvil", "auto_enchantment_table", "xp_drain",
                     "donation_station", "paint_mixer", "canvas", "paint_can", "canvas_glass",
-                    "projector", "xp_shower", "golden_egg", "scaffolding" -> true;
+                    "projector", "xp_shower", "golden_egg" -> true;
             default -> false;
         };
     }
 
     private static VoxelShape shapeFor(final String id) {
         return switch (id) {
-            case "ladder" -> SHAPE_LADDER;
-            case "rope_ladder" -> SHAPE_ROPE_LADDER;
             case "path" -> SHAPE_PATH;
             case "xp_drain" -> SHAPE_XP_DRAIN;
             case "sprinkler" -> SHAPE_SPRINKLER;
@@ -177,7 +169,6 @@ public final class OBBlocks {
             case "xp_shower" -> SHAPE_XP_SHOWER;
             case "village_highlighter" -> SHAPE_VILLAGE_HIGHLIGHTER;
             case "big_button", "big_button_wood" -> SHAPE_BIG_BUTTON;
-            case "scaffolding" -> SHAPE_SCAFFOLDING;
             default -> null;
         };
     }

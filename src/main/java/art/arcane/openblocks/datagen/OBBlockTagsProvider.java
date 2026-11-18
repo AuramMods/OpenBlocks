@@ -19,12 +19,19 @@ public class OBBlockTagsProvider extends BlockTagsProvider {
 
     @Override
     protected void addTags(final HolderLookup.Provider provider) {
-        OBBlocks.all().forEach(block -> tag(BlockTags.MINEABLE_WITH_PICKAXE).add(block.get()));
-        OBBlocks.all().forEach(block -> tag(BlockTags.NEEDS_STONE_TOOL).add(block.get()));
+        final var ladder = OBBlocks.LADDER.get();
+        final var ropeLadder = OBBlocks.ROPE_LADDER.get();
+        final var scaffolding = OBBlocks.SCAFFOLDING.get();
+        OBBlocks.all().forEach(entry -> {
+            final var block = entry.get();
+            if (block == ladder || block == ropeLadder) {
+                tag(BlockTags.MINEABLE_WITH_AXE).add(block);
+            } else if (block != scaffolding) {
+                tag(BlockTags.MINEABLE_WITH_PICKAXE).add(block);
+                tag(BlockTags.NEEDS_STONE_TOOL).add(block);
+            }
+        });
 
-        tag(BlockTags.CLIMBABLE).add(
-                OBBlocks.LADDER.get(),
-                OBBlocks.ROPE_LADDER.get(),
-                OBBlocks.SCAFFOLDING.get());
+        tag(BlockTags.CLIMBABLE).add(ropeLadder);
     }
 }

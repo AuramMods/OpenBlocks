@@ -145,9 +145,10 @@ Current validation status:
   - `OBElevatorBlock` and `OBElevatorRotatingBlock` share a dye color blockstate. Rotating elevators store their facing in blockstate and set yaw on arrival.
   - `OBElevatorTravel` handles jump/sneak requests from `OBElevatorControls` and `OBNetwork`. It validates the player's position and destination on the server. The world server config controls range, block rules, overrides, centering, clearance and XP costs.
   - The item uses vanilla `BlockStateTag.color` and the generated loot tables preserve color. Untagged items and old block states default to white. One color-preserving rotating upgrade replaces the 16 metadata-specific upgrades.
-  - `src/main/java/art/arcane/openblocks/block/OBLadderBlock.java` now enforces north-face support survival for `open_blocks:ladder`.
+  - `OBLadderBlock` is the Jaded Ladder trapdoor. It climbs when open and uses vanilla trapdoor placement, redstone, sounds, and waterlogging.
+  - `OBRopeLadderBlock` stores facing and drop eligibility in blockstate. Ropes extend downward and detach below a broken rung. Finite ropes consume one item per rung. Infinite ropes charge only the anchor and never yield drops from their rungs.
+  - `OBScaffoldingBlock` and `OBScaffoldingItem` restore solid temporary scaffolds that drop when they decay and burn for 100 ticks.
   - `src/main/java/art/arcane/openblocks/block/OBPathBlock.java` now enforces support-below survival and drops itself when support is removed.
-  - `src/main/java/art/arcane/openblocks/block/OBRopeLadderBlock.java` now supports chain survival, survival-mode downward auto-extension on placement, and cascading chain removal.
   - `src/main/java/art/arcane/openblocks/block/OBSpongeBlock.java` now performs periodic liquid cleanup, lava burn fallback, and border-fluid wake-up scheduling on removal.
   - `src/main/java/art/arcane/openblocks/grave/OBGraveHooks.java` now writes grave backup dumps, posts/consumes `OBGraveDropsEvent` action filtering, searches for valid placement nearby, places grave blocks on successful death handling, and clears only stored grave drops when grave placement succeeds.
   - `src/main/java/art/arcane/openblocks/command/OBFlimFlamEffects.java` now provides executable breadth-stage actions for all legacy `/flimflam` effect IDs.

@@ -1,4 +1,5 @@
 {
+    "render_type": "minecraft:cutout",
     "textures": {
         "front": "open_blocks:block/rope_ladder",
         "particle": "open_blocks:block/rope_ladder"

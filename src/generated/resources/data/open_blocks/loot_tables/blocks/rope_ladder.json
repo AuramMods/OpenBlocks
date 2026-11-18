@@ -11,6 +11,15 @@
       "entries": [
         {
           "type": "minecraft:item",
+          "conditions": [
+            {
+              "block": "open_blocks:rope_ladder",
+              "condition": "minecraft:block_state_property",
+              "properties": {
+                "recoverable": "true"
+              }
+            }
+          ],
           "name": "open_blocks:rope_ladder"
         }
       ],

@@ -1,5 +1,19 @@
 {
   "variants": {
-    "": { "model": "open_blocks:block/rope_ladder" }
+    "facing=south": {
+      "model": "open_blocks:block/rope_ladder"
+    },
+    "facing=west": {
+      "model": "open_blocks:block/rope_ladder",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "open_blocks:block/rope_ladder",
+      "y": 180
+    },
+    "facing=east": {
+      "model": "open_blocks:block/rope_ladder",
+      "y": 270
+    }
   }
 }

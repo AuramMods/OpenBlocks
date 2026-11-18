@@ -158,6 +158,7 @@ Checklist:
 - [x] Reproduce and repair the baseline defects in mixed elevator rotation, sponge handling of logged water, and grave placement fallback. Verified with the standalone GameTest server on 2026-11-18.
 - [x] Restore distinct legacy crafting components across recipes, creative entries, and models.
 - [x] Restore elevator colors and movement activation. Headless tests cover server behavior and item color through crafting, placement, and drops. A packaged client verified Space, Shift, color matching, and rotation in single-player using a silent virtual display.
+- [x] Restore Jaded Ladder trapdoor behavior, directional rope ladders, and temporary scaffolding. The standalone suite verifies climbing, redstone, placement rollback, rope drop accounting, decay and fuel.
 - [ ] Restore flag, painting, and other state variants across recipes, creative entries, and models.
 - [ ] Run a muted client in an isolated or background graphical session to verify models, transparency, and face culling.
 - [ ] Extend recipe coverage beyond custom special recipe placeholders (core craft paths for major blocks/items).
@@ -180,6 +181,6 @@ Checklist:
 - [ ] Finish legacy recipe migration for skipped recipe files:
   - revisit remaining metadata-collapsed conversions to restore accurate color and subtype behavior (paintbrush variants, flag color outputs, and similar cases)
 - [ ] Continue block functionality sweep (depth pass order):
-  - rope_ladder/scaffolding/ladder: complete orientation/collision parity and scaffolding-specific behavior now that baseline survival/extension is wired
+  - sponge/path/heal: finish configuration and behavior checks for the existing blocks
   - xp_drain/xp_shower/xp_bottler + tank: fluid/xp transfer behavior and interaction flow
   - block_breaker/block_placer/item_dropper + auto_anvil/auto_enchantment_table: tick/work cycles and inventory IO

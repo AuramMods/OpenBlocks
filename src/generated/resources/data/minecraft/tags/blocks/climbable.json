@@ -1,7 +1,5 @@
 {
   "values": [
-    "open_blocks:ladder",
-    "open_blocks:rope_ladder",
-    "open_blocks:scaffolding"
+    "open_blocks:rope_ladder"
   ]
 }

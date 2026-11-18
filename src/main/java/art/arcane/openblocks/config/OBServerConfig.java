@@ -15,6 +15,8 @@ public final class OBServerConfig {
     public static final ForgeConfigSpec.DoubleValue ELEVATOR_XP_PER_BLOCK;
     public static final ForgeConfigSpec.ConfigValue<List<? extends String>> ELEVATOR_RULES;
     public static final ForgeConfigSpec.ConfigValue<List<? extends String>> ELEVATOR_OVERRIDES;
+    public static final ForgeConfigSpec.BooleanValue ROPE_LADDER_INFINITE;
+    public static final ForgeConfigSpec.IntValue SCAFFOLDING_DESPAWN_RATE;
 
     static {
         final var builder = new ForgeConfigSpec.Builder();
@@ -32,6 +34,14 @@ public final class OBServerConfig {
                 .defineListAllowEmpty("specialBlockRules", List.of(), value -> value instanceof String);
         ELEVATOR_OVERRIDES = builder.comment("Use another block as an elevator. Example: minecraft:blue_wool;blue or minecraft:oak_slab[type=top];white.")
                 .defineListAllowEmpty("overrides", List.of(), value -> value instanceof String);
+        builder.pop();
+        builder.push("ladder");
+        ROPE_LADDER_INFINITE = builder.comment("A single rope ladder extends to the next obstruction. Rungs placed in this mode do not drop.")
+                .define("infiniteMode", false);
+        builder.pop();
+        builder.push("scaffolding");
+        SCAFFOLDING_DESPAWN_RATE = builder.comment("A scaffold breaks on one in this many random ticks. 0 breaks on every random tick.")
+                .defineInRange("despawnRate", 4, 0, Integer.MAX_VALUE);
         builder.pop();
         SPEC = builder.build();
     }

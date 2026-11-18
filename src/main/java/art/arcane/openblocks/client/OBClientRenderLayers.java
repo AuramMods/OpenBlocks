@@ -19,13 +19,10 @@ public final class OBClientRenderLayers {
     @SubscribeEvent
     public static void onClientSetup(final FMLClientSetupEvent event) {
         event.enqueueWork(() -> {
-            setCutout(OBBlocks.LADDER);
-            setCutout(OBBlocks.ROPE_LADDER);
             setCutout(OBBlocks.PATH);
             setCutout(OBBlocks.XP_DRAIN);
             setCutout(OBBlocks.SPRINKLER);
             setCutout(OBBlocks.FLAG);
-            setCutout(OBBlocks.SCAFFOLDING);
             setCutout(OBBlocks.PAINT_CAN);
             setCutout(OBBlocks.GUIDE);
             setCutout(OBBlocks.BUILDER_GUIDE);
