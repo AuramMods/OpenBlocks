@@ -189,5 +189,5 @@ Checklist:
 - [x] Restore the Auto Anvil and Auto Enchantment Table, including sided automation, Liquid XP costs, menus, bookshelf power, and the animated book.
 - [x] Restore the Sprinkler's water and bone-meal cycles, growth, and animated spray, and the Donation Station's sample inventory, author links, and optional peripheral.
 - [x] Restore the redstone Cannon, Pointer targeting, animated model and flight preview, item projectiles, and falling-projectile collection by the Vacuum Hopper.
-- [ ] Continue block functionality sweep (depth pass order):
-  - XP Bucket: reconcile the legacy source pickup and creative-tab settings with Forge's fluid bucket
+- [x] Restore the XP Bucket's world-source pickup and creative visibility settings. The Forge bucket still supports fluid capabilities and tank exchange.
+- [ ] Continue the block functionality sweep with the Big Buttons and folding Target.

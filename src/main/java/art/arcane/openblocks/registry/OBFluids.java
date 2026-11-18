@@ -1,6 +1,7 @@
 package art.arcane.openblocks.registry;
 
 import art.arcane.openblocks.OpenBlocks;
+import art.arcane.openblocks.block.OBLiquidExperienceBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LiquidBlock;
@@ -20,7 +21,7 @@ public final class OBFluids {
     public static final RegistryObject<FlowingFluid> XP_JUICE = FLUIDS.register("xpjuice", () -> new ForgeFlowingFluid.Source(FluidProps.XP_JUICE));
     public static final RegistryObject<FlowingFluid> FLOWING_XP_JUICE = FLUIDS.register("flowing_xpjuice", () -> new ForgeFlowingFluid.Flowing(FluidProps.XP_JUICE));
     public static final RegistryObject<LiquidBlock> XP_JUICE_BLOCK = FLUID_BLOCKS.register("xpjuice",
-            () -> new LiquidBlock(XP_JUICE, BlockBehaviour.Properties.copy(Blocks.WATER).lightLevel(state -> 10)));
+            () -> new OBLiquidExperienceBlock(XP_JUICE, BlockBehaviour.Properties.copy(Blocks.WATER).lightLevel(state -> 10)));
 
     private OBFluids() {}
 

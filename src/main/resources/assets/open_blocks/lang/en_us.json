@@ -118,7 +118,7 @@
   "item.open_blocks.crane_control": "Crane Control",
   "item.open_blocks.crane_backpack": "Crane Backpack",
   "item.open_blocks.slimalyzer": "Slimalyzer",
-  "item.open_blocks.xp_bucket": "Xp Bucket",
+  "item.open_blocks.xp_bucket": "XP Bucket",
   "fluid_type.open_blocks.xpjuice": "Liquid XP",
   "block.open_blocks.xpjuice": "Liquid XP",
   "tooltip.open_blocks.tank.contents": "%s: %s mB (%s%%)",

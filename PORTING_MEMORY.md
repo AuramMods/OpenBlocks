@@ -61,7 +61,10 @@
 - Datagen, jar reobfuscation, and all 70 standalone GameTests passed. The five new tests cover the Cannon and Pointer recipes, normal block placement and support loss, the aimed item's physical trajectory and serialization, redstone cadence, rollback and retry following a rejected spawn, and the Vacuum Hopper's capture of descending projectiles.
 - A muted Xvfb client joined the packaged Forge 47.4.10 server. Sneak-use selected the Cannon and aimed it at a Vacuum Hopper ten blocks away. The client rendered the Cannon, its hotbar model, the preview arc, muzzle smoke, and the emerald stack in flight. The source chest emptied and the hopper received all 15 emeralds.
 - After a headless restart the Cannon retained its target angles and the hopper still contained the 15 emeralds. A CC: Tweaked 1.120.2 computer applied yaw −95°, pitch 23.5°, and speed 1.65 through the Cannon peripheral, and also read an author from the Donation Station in the same world.
-- Next, reconcile the XP Bucket with the legacy source-pickup and creative settings, then continue the rest of the block and item sweep.
+- The XP Bucket uses the same registered Forge item for source pickup, placement, and fluid capability transfers. `xpBucket.directFill` controls world source pickup independently of `tanks.allowBucketDrain`. `xpBucket.showInCreativeGui` controls creative display and search after restarting the world. Both settings default to true in `open_blocks-server.toml`.
+- Datagen, jar reobfuscation, and all 73 standalone GameTests passed. The three XP Bucket tests cover survival pickup and placement, rejection of flowing blocks and disabled source pickup, independent tank exchange, the one-bucket Forge capability, and creative tab and search visibility.
+- A muted packaged Forge 47.4.10 client picked up a Liquid XP source in survival, placed it again, and found the bucket in creative search. After restarting the same dedicated world with both options disabled, search returned no XP Bucket. Attempting source pickup left an empty bucket in hand and the source in place. The same bucket then transferred all 1,000 mB from a tank.
+- Next, restore the stone and wooden Big Buttons and the folding Target.
 
 ## Current Snapshot
 - Legacy codebase analyzed: `old-1.12.2`.

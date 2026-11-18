@@ -27,6 +27,7 @@ public final class OBCreativeTabs {
                     .icon(() -> new ItemStack(OBItems.LADDER.get()))
                     .displayItems((params, output) -> OBItems.all().forEach(entry -> {
                         final var item = entry.get();
+                        if (entry == OBItems.XP_BUCKET && OBServerConfig.SPEC.isLoaded() && !OBServerConfig.XP_BUCKET_IN_CREATIVE.get()) return;
                         if (item instanceof OBElevatorItem) {
                             for (final DyeColor color : DyeColor.values()) {
                                 output.accept(OBElevatorItem.create(item, color));

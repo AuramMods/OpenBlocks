@@ -29,6 +29,8 @@ public final class OBServerConfig {
     public static final ForgeConfigSpec.ConfigValue<List<? extends String>> TANK_ADDITIONAL_BUCKETS;
     public static final ForgeConfigSpec.BooleanValue TANK_LIGHT;
     public static final ForgeConfigSpec.BooleanValue TANK_CREATIVE_FLUIDS;
+    public static final ForgeConfigSpec.BooleanValue XP_BUCKET_DIRECT_FILL;
+    public static final ForgeConfigSpec.BooleanValue XP_BUCKET_IN_CREATIVE;
     public static final ForgeConfigSpec.IntValue XP_FLUID_RATIO;
     public static final ForgeConfigSpec.ConfigValue<List<? extends String>> XP_ADDITIONAL_FLUIDS;
     public static final ForgeConfigSpec.IntValue BLOCK_BREAKER_ACTION_LIMIT;
@@ -87,6 +89,12 @@ public final class OBServerConfig {
                 .defineListAllowEmpty("bucketItems", List.of(), value -> value instanceof String);
         TANK_LIGHT = builder.define("emitLight", true);
         TANK_CREATIVE_FLUIDS = builder.define("displayAllFluids", true);
+        builder.pop();
+        builder.push("xpBucket");
+        XP_BUCKET_DIRECT_FILL = builder.comment("Allow buckets to pick up Liquid XP source blocks. Tanks have their own bucket setting.")
+                .define("directFill", true);
+        XP_BUCKET_IN_CREATIVE = builder.comment("Include the XP Bucket in the Open Blocks creative tab and creative search.")
+                .worldRestart().define("showInCreativeGui", true);
         builder.pop();
         builder.push("experience");
         XP_FLUID_RATIO = builder.comment("Millibuckets of XP Juice per experience point.")
