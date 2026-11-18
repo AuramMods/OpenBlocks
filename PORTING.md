@@ -186,7 +186,8 @@ Checklist:
 - [x] Restore the XP Bottler recipe, timed bottle production, directional item and fluid access, and configurable automation.
 - [x] Restore the Vacuum Hopper's item and XP collection, separate output faces, pause control, and persistent storage.
 - [x] Restore the Block Breaker, Block Placer, and Item Dropper, including redstone behavior, six-directional models, inventory access, and the Dropper's launch controls.
+- [x] Restore the Auto Anvil and Auto Enchantment Table, including sided automation, Liquid XP costs, menus, bookshelf power, and the animated book.
 - [ ] Continue block functionality sweep (depth pass order):
-  - auto_anvil/auto_enchantment_table: timed work cycles, item and XP I/O, menus, and enchanting options
+  - sprinkler and donation_station: restore production, transfer, and normal player interactions
   - Cannon item projectiles: verify the Vacuum Hopper's interaction with falling projectiles when porting the Cannon
   - XP Bucket: reconcile the legacy source pickup and creative-tab settings with Forge's fluid bucket

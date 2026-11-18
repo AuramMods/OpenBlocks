@@ -51,4 +51,20 @@ public final class OBMachineItems {
         }
         return count > remainder.getCount();
     }
+
+    public static void pullOne(final Level level, final BlockPos pos, final IItemHandler source, final ItemStackHandler target,
+            final int targetSlot) {
+        for (int slot = 0; slot < source.getSlots(); slot++) {
+            final ItemStack offered = source.extractItem(slot, 1, true);
+            if (offered.isEmpty() || !target.insertItem(targetSlot, offered, true).isEmpty()) continue;
+            final ItemStack retrieved = source.extractItem(slot, 1, false);
+            if (retrieved.isEmpty()) continue;
+            final ItemStack leftover = target.insertItem(targetSlot, retrieved, false);
+            if (!leftover.isEmpty()) {
+                final ItemStack returned = source.insertItem(slot, leftover, false);
+                Block.popResource(level, pos, returned);
+            }
+            return;
+        }
+    }
 }

@@ -1,5 +1,6 @@
 {
   "variants": {
-    "": { "model": "open_blocks:block/auto_anvil" }
+    "axis=z": { "model": "open_blocks:block/auto_anvil" },
+    "axis=x": { "model": "open_blocks:block/auto_anvil", "y": 270 }
   }
 }

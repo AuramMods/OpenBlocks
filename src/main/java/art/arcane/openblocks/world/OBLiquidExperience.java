@@ -73,12 +73,16 @@ public final class OBLiquidExperience {
     }
 
     public static int bottleCapacity() {
-        if (!OBServerConfig.SPEC.isLoaded()) return XP_PER_BOTTLE * OBServerConfig.XP_FLUID_RATIO.getDefault();
+        return capacityForPoints(XP_PER_BOTTLE);
+    }
+
+    public static int capacityForPoints(final int points) {
+        if (!OBServerConfig.SPEC.isLoaded()) return millibuckets(points, OBServerConfig.XP_FLUID_RATIO.getDefault());
         int maxRatio = OBServerConfig.XP_FLUID_RATIO.get();
         for (final var fluid : ForgeRegistries.FLUIDS) {
             maxRatio = Math.max(maxRatio, ratio(new FluidStack(fluid, 1)));
         }
-        return maxRatio * XP_PER_BOTTLE;
+        return millibuckets(points, maxRatio);
     }
 
     public static int pull(final Level level, final BlockPos pos, final Direction side, final FluidTank receiver, final int limit) {
@@ -99,8 +103,13 @@ public final class OBLiquidExperience {
     }
 
     public static int playerPoints(final Player player) {
-        final long level = player.experienceLevel;
+        return (int) Math.min(Integer.MAX_VALUE, (long) pointsAtLevel(player.experienceLevel)
+                + Math.round(player.experienceProgress * player.getXpNeededForNextLevel()));
+    }
+
+    public static int pointsAtLevel(final long level) {
         if (level >= 32768) return Integer.MAX_VALUE;
+        if (level <= 0) return 0;
         final long atLevel;
         if (level >= 32) {
             atLevel = (9 * level * level - 325 * level + 4440) / 2;
@@ -109,6 +118,6 @@ public final class OBLiquidExperience {
         } else {
             atLevel = level * level + 6 * level;
         }
-        return (int) Math.min(Integer.MAX_VALUE, atLevel + Math.round(player.experienceProgress * player.getXpNeededForNextLevel()));
+        return (int) Math.min(Integer.MAX_VALUE, atLevel);
     }
 }

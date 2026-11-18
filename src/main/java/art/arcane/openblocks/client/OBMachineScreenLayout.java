@@ -35,8 +35,12 @@ final class OBMachineScreenLayout {
     }
 
     static void drawPanels(final GuiGraphics graphics, final int left, final int top, final AbstractContainerMenu menu) {
-        drawInventoryPanel(graphics, left, top, 176, HEIGHT, menu);
-        panel(graphics, left + CONTROL_PANEL, top, WIDTH - CONTROL_PANEL, HEIGHT);
+        drawPanels(graphics, left, top, menu, HEIGHT);
+    }
+
+    static void drawPanels(final GuiGraphics graphics, final int left, final int top, final AbstractContainerMenu menu, final int height) {
+        drawInventoryPanel(graphics, left, top, 176, height, menu);
+        panel(graphics, left + CONTROL_PANEL, top, WIDTH - CONTROL_PANEL, height);
     }
 
     static void drawInventoryPanel(final GuiGraphics graphics, final int left, final int top, final int width, final int height,

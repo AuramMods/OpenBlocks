@@ -153,15 +153,7 @@ public final class OBXPBottlerBlockEntity extends BlockEntity implements MenuPro
         final Direction face = OBMachineItems.chooseFace(sides[Port.INPUT.ordinal()], level.random);
         if (face == null) return;
         final IItemHandler source = OBMachineItems.adjacent(level, pos, face);
-        if (source == null) return;
-        for (int slot = 0; slot < source.getSlots(); slot++) {
-            if (!source.extractItem(slot, 1, true).is(Items.GLASS_BOTTLE)) continue;
-            final ItemStack retrieved = source.extractItem(slot, 1, false);
-            if (retrieved.isEmpty()) continue;
-            final ItemStack leftover = bottles.insertItem(INPUT, retrieved, false);
-            if (!leftover.isEmpty()) Block.popResource(level, pos, source.insertItem(slot, leftover, false));
-            return;
-        }
+        if (source != null) OBMachineItems.pullOne(level, pos, source, bottles, INPUT);
     }
 
     private void ejectBottle(final Level level, final BlockPos pos) {

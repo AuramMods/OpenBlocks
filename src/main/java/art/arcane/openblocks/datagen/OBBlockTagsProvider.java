@@ -2,6 +2,7 @@ package art.arcane.openblocks.datagen;
 
 import art.arcane.openblocks.OpenBlocks;
 import art.arcane.openblocks.block.OBRedstoneMachineBlock;
+import art.arcane.openblocks.block.OBXpWorkbenchBlock;
 import art.arcane.openblocks.registry.OBBlocks;
 import java.util.concurrent.CompletableFuture;
 import net.minecraft.core.HolderLookup;
@@ -29,7 +30,7 @@ public class OBBlockTagsProvider extends BlockTagsProvider {
                 tag(BlockTags.MINEABLE_WITH_AXE).add(block);
             } else if (block != scaffolding) {
                 tag(BlockTags.MINEABLE_WITH_PICKAXE).add(block);
-                if (!(block instanceof OBRedstoneMachineBlock)) tag(BlockTags.NEEDS_STONE_TOOL).add(block);
+                if (!(block instanceof OBRedstoneMachineBlock) && !(block instanceof OBXpWorkbenchBlock)) tag(BlockTags.NEEDS_STONE_TOOL).add(block);
             }
         });
 

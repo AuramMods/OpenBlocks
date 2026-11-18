@@ -11,6 +11,7 @@ import art.arcane.openblocks.block.entity.OBVacuumHopperBlockEntity;
 import art.arcane.openblocks.block.entity.OBXPBottlerBlockEntity;
 import art.arcane.openblocks.block.entity.OBXPDrainBlockEntity;
 import art.arcane.openblocks.block.entity.OBXPShowerBlockEntity;
+import art.arcane.openblocks.block.entity.OBXpWorkbenchBlockEntity;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -46,8 +47,10 @@ public final class OBBlockEntities {
     public static final RegistryObject<BlockEntityType<OBPlaceholderBlockEntity>> FAN = register("fan", OBBlocks.FAN);
     public static final RegistryObject<BlockEntityType<OBXPBottlerBlockEntity>> XP_BOTTLER = register("xp_bottler", OBXPBottlerBlockEntity::new, OBBlocks.XP_BOTTLER);
     public static final RegistryObject<BlockEntityType<OBPlaceholderBlockEntity>> VILLAGE_HIGHLIGHTER = register("village_highlighter", OBBlocks.VILLAGE_HIGHLIGHTER);
-    public static final RegistryObject<BlockEntityType<OBPlaceholderBlockEntity>> AUTO_ANVIL = register("auto_anvil", OBBlocks.AUTO_ANVIL);
-    public static final RegistryObject<BlockEntityType<OBPlaceholderBlockEntity>> AUTO_ENCHANTMENT_TABLE = register("auto_enchantment_table", OBBlocks.AUTO_ENCHANTMENT_TABLE);
+    public static final RegistryObject<BlockEntityType<OBXpWorkbenchBlockEntity>> AUTO_ANVIL = register("auto_anvil",
+            (pos, state) -> new OBXpWorkbenchBlockEntity(false, pos, state), OBBlocks.AUTO_ANVIL);
+    public static final RegistryObject<BlockEntityType<OBXpWorkbenchBlockEntity>> AUTO_ENCHANTMENT_TABLE = register("auto_enchantment_table",
+            (pos, state) -> new OBXpWorkbenchBlockEntity(true, pos, state), OBBlocks.AUTO_ENCHANTMENT_TABLE);
     public static final RegistryObject<BlockEntityType<OBXPDrainBlockEntity>> XP_DRAIN = register("xp_drain", OBXPDrainBlockEntity::new, OBBlocks.XP_DRAIN);
     public static final RegistryObject<BlockEntityType<OBRedstoneMachineBlockEntity>> BLOCK_BREAKER = register("block_breaker",
             (pos, state) -> new OBRedstoneMachineBlockEntity(Kind.BREAKER, pos, state), OBBlocks.BLOCK_BREAKER);

@@ -4,6 +4,7 @@ import art.arcane.openblocks.OpenBlocks;
 import art.arcane.openblocks.menu.OBRedstoneMachineMenu;
 import art.arcane.openblocks.menu.OBVacuumHopperMenu;
 import art.arcane.openblocks.menu.OBXPBottlerMenu;
+import art.arcane.openblocks.menu.OBXpWorkbenchMenu;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.inventory.ChestMenu;
 import net.minecraft.world.inventory.MenuType;
@@ -16,8 +17,10 @@ public final class OBMenuTypes {
 
     public static final DeferredRegister<MenuType<?>> MENU_TYPES = DeferredRegister.create(ForgeRegistries.MENU_TYPES, OpenBlocks.MODID);
 
-    public static final RegistryObject<MenuType<ChestMenu>> AUTO_ANVIL = register("auto_anvil");
-    public static final RegistryObject<MenuType<ChestMenu>> AUTO_ENCHANTMENT_TABLE = register("auto_enchantment_table");
+    public static final RegistryObject<MenuType<OBXpWorkbenchMenu>> AUTO_ANVIL = MENU_TYPES.register("auto_anvil",
+            () -> new MenuType<>(OBXpWorkbenchMenu::anvil, FeatureFlags.DEFAULT_FLAGS));
+    public static final RegistryObject<MenuType<OBXpWorkbenchMenu>> AUTO_ENCHANTMENT_TABLE = MENU_TYPES.register("auto_enchantment_table",
+            () -> new MenuType<>(OBXpWorkbenchMenu::enchantmentTable, FeatureFlags.DEFAULT_FLAGS));
     public static final RegistryObject<MenuType<ChestMenu>> BIG_BUTTON = register("big_button");
     public static final RegistryObject<MenuType<OBRedstoneMachineMenu>> BLOCK_PLACER = MENU_TYPES.register("block_placer",
             () -> new MenuType<>(OBRedstoneMachineMenu::blockPlacer, FeatureFlags.DEFAULT_FLAGS));

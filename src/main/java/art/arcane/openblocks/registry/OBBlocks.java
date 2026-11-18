@@ -18,6 +18,7 @@ import art.arcane.openblocks.block.OBVacuumHopperBlock;
 import art.arcane.openblocks.block.OBXPBottlerBlock;
 import art.arcane.openblocks.block.OBXPDrainBlock;
 import art.arcane.openblocks.block.OBXPShowerBlock;
+import art.arcane.openblocks.block.OBXpWorkbenchBlock;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -40,8 +41,6 @@ public final class OBBlocks {
     private static final VoxelShape SHAPE_FLAG = Block.box(7.0D, 0.0D, 7.0D, 9.0D, 16.0D, 9.0D);
     private static final VoxelShape SHAPE_TROPHY = Block.box(3.2D, 0.0D, 3.2D, 12.8D, 3.2D, 12.8D);
     private static final VoxelShape SHAPE_GOLDEN_EGG = Block.box(2.0D, 0.0D, 2.0D, 14.0D, 16.0D, 14.0D);
-    private static final VoxelShape SHAPE_AUTO_ENCHANT = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 12.0D, 16.0D);
-    private static final VoxelShape SHAPE_AUTO_ANVIL = Block.box(2.0D, 0.0D, 0.0D, 14.0D, 16.0D, 16.0D);
     private static final VoxelShape SHAPE_PAINT_CAN = Block.box(4.0D, 0.0D, 4.0D, 12.0D, 11.0D, 12.0D);
     private static final VoxelShape SHAPE_PAINT_MIXER = Block.box(2.0D, 0.0D, 2.0D, 14.0D, 16.0D, 14.0D);
     private static final VoxelShape SHAPE_PROJECTOR = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 8.0D, 16.0D);
@@ -134,6 +133,8 @@ public final class OBBlocks {
         if ("xp_bottler".equals(id)) return new OBXPBottlerBlock(properties);
         if ("xp_drain".equals(id)) return new OBXPDrainBlock(properties);
         if ("xp_shower".equals(id)) return new OBXPShowerBlock(properties);
+        if ("auto_anvil".equals(id)) return new OBXpWorkbenchBlock.Anvil(properties);
+        if ("auto_enchantment_table".equals(id)) return OBXpWorkbenchBlock.enchantmentTable(properties);
         if ("block_breaker".equals(id)) return new OBRedstoneMachineBlock(properties, Kind.BREAKER);
         if ("block_placer".equals(id)) return new OBRedstoneMachineBlock(properties, Kind.PLACER);
         if ("item_dropper".equals(id)) return new OBRedstoneMachineBlock(properties, Kind.DROPPER);
@@ -165,8 +166,6 @@ public final class OBBlocks {
             case "cannon" -> SHAPE_CANNON;
             case "fan" -> SHAPE_FAN;
             case "golden_egg" -> SHAPE_GOLDEN_EGG;
-            case "auto_anvil" -> SHAPE_AUTO_ANVIL;
-            case "auto_enchantment_table" -> SHAPE_AUTO_ENCHANT;
             case "paint_mixer" -> SHAPE_PAINT_MIXER;
             case "paint_can" -> SHAPE_PAINT_CAN;
             case "projector" -> SHAPE_PROJECTOR;
