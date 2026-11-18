@@ -1,9 +1,11 @@
 package art.arcane.openblocks.registry;
 
 import art.arcane.openblocks.OpenBlocks;
+import art.arcane.openblocks.block.OBRedstoneMachineBlock.Kind;
 import art.arcane.openblocks.block.entity.OBGraveBlockEntity;
 import art.arcane.openblocks.block.entity.OBHealBlockEntity;
 import art.arcane.openblocks.block.entity.OBPlaceholderBlockEntity;
+import art.arcane.openblocks.block.entity.OBRedstoneMachineBlockEntity;
 import art.arcane.openblocks.block.entity.OBTankBlockEntity;
 import art.arcane.openblocks.block.entity.OBVacuumHopperBlockEntity;
 import art.arcane.openblocks.block.entity.OBXPBottlerBlockEntity;
@@ -47,9 +49,12 @@ public final class OBBlockEntities {
     public static final RegistryObject<BlockEntityType<OBPlaceholderBlockEntity>> AUTO_ANVIL = register("auto_anvil", OBBlocks.AUTO_ANVIL);
     public static final RegistryObject<BlockEntityType<OBPlaceholderBlockEntity>> AUTO_ENCHANTMENT_TABLE = register("auto_enchantment_table", OBBlocks.AUTO_ENCHANTMENT_TABLE);
     public static final RegistryObject<BlockEntityType<OBXPDrainBlockEntity>> XP_DRAIN = register("xp_drain", OBXPDrainBlockEntity::new, OBBlocks.XP_DRAIN);
-    public static final RegistryObject<BlockEntityType<OBPlaceholderBlockEntity>> BLOCK_BREAKER = register("block_breaker", OBBlocks.BLOCK_BREAKER);
-    public static final RegistryObject<BlockEntityType<OBPlaceholderBlockEntity>> BLOCK_PLACER = register("block_placer", OBBlocks.BLOCK_PLACER);
-    public static final RegistryObject<BlockEntityType<OBPlaceholderBlockEntity>> ITEM_DROPPER = register("item_dropper", OBBlocks.ITEM_DROPPER);
+    public static final RegistryObject<BlockEntityType<OBRedstoneMachineBlockEntity>> BLOCK_BREAKER = register("block_breaker",
+            (pos, state) -> new OBRedstoneMachineBlockEntity(Kind.BREAKER, pos, state), OBBlocks.BLOCK_BREAKER);
+    public static final RegistryObject<BlockEntityType<OBRedstoneMachineBlockEntity>> BLOCK_PLACER = register("block_placer",
+            (pos, state) -> new OBRedstoneMachineBlockEntity(Kind.PLACER, pos, state), OBBlocks.BLOCK_PLACER);
+    public static final RegistryObject<BlockEntityType<OBRedstoneMachineBlockEntity>> ITEM_DROPPER = register("item_dropper",
+            (pos, state) -> new OBRedstoneMachineBlockEntity(Kind.DROPPER, pos, state), OBBlocks.ITEM_DROPPER);
     public static final RegistryObject<BlockEntityType<OBPlaceholderBlockEntity>> DONATION_STATION = register("donation_station", OBBlocks.DONATION_STATION);
     public static final RegistryObject<BlockEntityType<OBPlaceholderBlockEntity>> PAINT_MIXER = register("paint_mixer", OBBlocks.PAINT_MIXER);
     public static final RegistryObject<BlockEntityType<OBPlaceholderBlockEntity>> CANVAS = register("canvas", OBBlocks.CANVAS);

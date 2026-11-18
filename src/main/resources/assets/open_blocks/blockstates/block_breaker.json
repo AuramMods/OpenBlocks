@@ -1,5 +1,56 @@
 {
   "variants": {
-    "": { "model": "open_blocks:block/block_breaker" }
+    "facing=up,powered=false": {
+      "model": "open_blocks:block/block_breaker"
+    },
+    "facing=up,powered=true": {
+      "model": "open_blocks:block/block_breaker_active"
+    },
+    "facing=down,powered=false": {
+      "model": "open_blocks:block/block_breaker",
+      "x": 180
+    },
+    "facing=down,powered=true": {
+      "model": "open_blocks:block/block_breaker_active",
+      "x": 180
+    },
+    "facing=north,powered=false": {
+      "model": "open_blocks:block/block_breaker",
+      "x": 90
+    },
+    "facing=north,powered=true": {
+      "model": "open_blocks:block/block_breaker_active",
+      "x": 90
+    },
+    "facing=east,powered=false": {
+      "model": "open_blocks:block/block_breaker",
+      "x": 90,
+      "y": 90
+    },
+    "facing=east,powered=true": {
+      "model": "open_blocks:block/block_breaker_active",
+      "x": 90,
+      "y": 90
+    },
+    "facing=south,powered=false": {
+      "model": "open_blocks:block/block_breaker",
+      "x": 90,
+      "y": 180
+    },
+    "facing=south,powered=true": {
+      "model": "open_blocks:block/block_breaker_active",
+      "x": 90,
+      "y": 180
+    },
+    "facing=west,powered=false": {
+      "model": "open_blocks:block/block_breaker",
+      "x": 90,
+      "y": 270
+    },
+    "facing=west,powered=true": {
+      "model": "open_blocks:block/block_breaker_active",
+      "x": 90,
+      "y": 270
+    }
   }
 }

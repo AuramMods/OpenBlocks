@@ -1,5 +1,30 @@
 {
   "variants": {
-    "": { "model": "open_blocks:block/item_dropper" }
+    "facing=up": {
+      "model": "open_blocks:block/item_dropper",
+      "x": 180
+    },
+    "facing=down": {
+      "model": "open_blocks:block/item_dropper"
+    },
+    "facing=north": {
+      "model": "open_blocks:block/item_dropper",
+      "x": 90,
+      "y": 180
+    },
+    "facing=east": {
+      "model": "open_blocks:block/item_dropper",
+      "x": 90,
+      "y": 270
+    },
+    "facing=south": {
+      "model": "open_blocks:block/item_dropper",
+      "x": 90
+    },
+    "facing=west": {
+      "model": "open_blocks:block/item_dropper",
+      "x": 90,
+      "y": 90
+    }
   }
 }

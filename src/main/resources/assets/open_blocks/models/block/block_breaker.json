@@ -1,7 +1,8 @@
 {
-  "parent": "minecraft:block/cube_all",
+  "parent": "minecraft:block/cube_bottom_top",
   "textures": {
-    "all": "open_blocks:block/block_breaker_active",
-    "particle": "open_blocks:block/block_breaker_active"
+    "top": "open_blocks:block/block_breaker_inactive",
+    "bottom": "open_blocks:block/block_breaker_back",
+    "side": "open_blocks:block/block_breaker_side"
   }
 }

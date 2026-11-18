@@ -35,8 +35,13 @@ final class OBMachineScreenLayout {
     }
 
     static void drawPanels(final GuiGraphics graphics, final int left, final int top, final AbstractContainerMenu menu) {
-        panel(graphics, left, top, 176, HEIGHT);
+        drawInventoryPanel(graphics, left, top, 176, HEIGHT, menu);
         panel(graphics, left + CONTROL_PANEL, top, WIDTH - CONTROL_PANEL, HEIGHT);
+    }
+
+    static void drawInventoryPanel(final GuiGraphics graphics, final int left, final int top, final int width, final int height,
+            final AbstractContainerMenu menu) {
+        panel(graphics, left, top, width, height);
         for (final var slot : menu.slots) recess(graphics, left + slot.x - 1, top + slot.y - 1, 18, 18);
     }
 

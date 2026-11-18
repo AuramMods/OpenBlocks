@@ -1,6 +1,7 @@
 package art.arcane.openblocks.registry;
 
 import art.arcane.openblocks.OpenBlocks;
+import art.arcane.openblocks.menu.OBRedstoneMachineMenu;
 import art.arcane.openblocks.menu.OBVacuumHopperMenu;
 import art.arcane.openblocks.menu.OBXPBottlerMenu;
 import net.minecraft.world.flag.FeatureFlags;
@@ -18,11 +19,13 @@ public final class OBMenuTypes {
     public static final RegistryObject<MenuType<ChestMenu>> AUTO_ANVIL = register("auto_anvil");
     public static final RegistryObject<MenuType<ChestMenu>> AUTO_ENCHANTMENT_TABLE = register("auto_enchantment_table");
     public static final RegistryObject<MenuType<ChestMenu>> BIG_BUTTON = register("big_button");
-    public static final RegistryObject<MenuType<ChestMenu>> BLOCK_PLACER = register("block_placer");
+    public static final RegistryObject<MenuType<OBRedstoneMachineMenu>> BLOCK_PLACER = MENU_TYPES.register("block_placer",
+            () -> new MenuType<>(OBRedstoneMachineMenu::blockPlacer, FeatureFlags.DEFAULT_FLAGS));
     public static final RegistryObject<MenuType<ChestMenu>> DEV_NULL = register("dev_null");
     public static final RegistryObject<MenuType<ChestMenu>> DONATION_STATION = register("donation_station");
     public static final RegistryObject<MenuType<ChestMenu>> DRAWING_TABLE = register("drawing_table");
-    public static final RegistryObject<MenuType<ChestMenu>> ITEM_DROPPER = register("item_dropper");
+    public static final RegistryObject<MenuType<OBRedstoneMachineMenu>> ITEM_DROPPER = MENU_TYPES.register("item_dropper",
+            () -> new MenuType<>(OBRedstoneMachineMenu::itemDropper, FeatureFlags.DEFAULT_FLAGS));
     public static final RegistryObject<MenuType<ChestMenu>> LUGGAGE = register("luggage");
     public static final RegistryObject<MenuType<ChestMenu>> PAINT_MIXER = register("paint_mixer");
     public static final RegistryObject<MenuType<ChestMenu>> PROJECTOR = register("projector");

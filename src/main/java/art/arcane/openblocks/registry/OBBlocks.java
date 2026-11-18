@@ -7,6 +7,8 @@ import art.arcane.openblocks.block.OBGraveBlock;
 import art.arcane.openblocks.block.OBHealBlock;
 import art.arcane.openblocks.block.OBLadderBlock;
 import art.arcane.openblocks.block.OBPathBlock;
+import art.arcane.openblocks.block.OBRedstoneMachineBlock;
+import art.arcane.openblocks.block.OBRedstoneMachineBlock.Kind;
 import art.arcane.openblocks.block.OBRopeLadderBlock;
 import art.arcane.openblocks.block.OBScaffoldingBlock;
 import art.arcane.openblocks.block.OBShapeBlock;
@@ -132,6 +134,9 @@ public final class OBBlocks {
         if ("xp_bottler".equals(id)) return new OBXPBottlerBlock(properties);
         if ("xp_drain".equals(id)) return new OBXPDrainBlock(properties);
         if ("xp_shower".equals(id)) return new OBXPShowerBlock(properties);
+        if ("block_breaker".equals(id)) return new OBRedstoneMachineBlock(properties, Kind.BREAKER);
+        if ("block_placer".equals(id)) return new OBRedstoneMachineBlock(properties, Kind.PLACER);
+        if ("item_dropper".equals(id)) return new OBRedstoneMachineBlock(properties, Kind.DROPPER);
         if (shape != null) return new OBShapeBlock(properties, shape, collisionShape);
         return new Block(properties);
     }

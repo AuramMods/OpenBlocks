@@ -31,6 +31,10 @@ public final class OBServerConfig {
     public static final ForgeConfigSpec.BooleanValue TANK_CREATIVE_FLUIDS;
     public static final ForgeConfigSpec.IntValue XP_FLUID_RATIO;
     public static final ForgeConfigSpec.ConfigValue<List<? extends String>> XP_ADDITIONAL_FLUIDS;
+    public static final ForgeConfigSpec.IntValue BLOCK_BREAKER_ACTION_LIMIT;
+    public static final ForgeConfigSpec.ConfigValue<List<? extends String>> BLOCK_BREAKER_TOOLS;
+    public static final ForgeConfigSpec.IntValue BLOCK_PLACER_ACTION_LIMIT;
+    public static final ForgeConfigSpec.DoubleValue ITEM_DROPPER_MAX_SPEED;
 
     static {
         final var builder = new ForgeConfigSpec.Builder();
@@ -83,6 +87,21 @@ public final class OBServerConfig {
                 .defineInRange("xpToLiquidRatio", 20, 1, Integer.MAX_VALUE / 8);
         XP_ADDITIONAL_FLUIDS = builder.comment("Extra XP liquids in registry-id=millibuckets-per-point form. Unqualified legacy names match any namespace.")
                 .defineListAllowEmpty("additionalXpFluids", List.of("experience=20"), value -> value instanceof String);
+        builder.pop();
+        builder.push("breaker");
+        BLOCK_BREAKER_ACTION_LIMIT = builder.comment("Maximum number of break attempts per machine in one tick.")
+                .defineInRange("actionLimit", 16, 0, Integer.MAX_VALUE);
+        BLOCK_BREAKER_TOOLS = builder.comment("Item IDs to try in order when choosing a tool for the target block.")
+                .defineListAllowEmpty("fakePlayerBlockBreakTools", List.of("minecraft:diamond_pickaxe", "minecraft:diamond_shovel",
+                        "minecraft:diamond_axe", "minecraft:diamond_sword", "minecraft:shears"), value -> value instanceof String);
+        builder.pop();
+        builder.push("placer");
+        BLOCK_PLACER_ACTION_LIMIT = builder.comment("Maximum number of placement attempts per machine in one tick.")
+                .defineInRange("actionLimit", 16, 0, Integer.MAX_VALUE);
+        builder.pop();
+        builder.push("itemdropper");
+        ITEM_DROPPER_MAX_SPEED = builder.comment("Maximum launch speed selectable in the Item Dropper menu, in blocks per tick.")
+                .defineInRange("maxItemDropSpeed", 4.0, 0.0, Integer.MAX_VALUE / 10.0);
         builder.pop();
         SPEC = builder.build();
     }

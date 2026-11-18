@@ -130,7 +130,7 @@ Goal: move from "exists" to "works correctly".
 Suggested order:
 - [-] Transportation/domain: elevators, rope ladder, hang glider, crane/magnet
 - [-] Storage/domain: tanks, xp systems, vacuum hopper, donation station
-- [ ] Utility/domain: block breaker/placer/dropper, auto anvil/enchantment table
+- [-] Utility/domain: block breaker/placer/dropper, auto anvil/enchantment table
 - [ ] Visual/domain: canvas/paint/stencil/glyph/projector/sky block
 - [ ] Entity/domain: luggage/cartographer/mini-me/golden eye/etc
 - [ ] Fun/domain: trophies, flim-flam, dev null, pedometer, sounds/effects
@@ -185,7 +185,8 @@ Checklist:
 - [x] Restore the XP Drain and redstone-powered XP Shower. The drain transfers whole XP into a fluid receiver, and the shower releases falling XP orbs that a drain can collect.
 - [x] Restore the XP Bottler recipe, timed bottle production, directional item and fluid access, and configurable automation.
 - [x] Restore the Vacuum Hopper's item and XP collection, separate output faces, pause control, and persistent storage.
+- [x] Restore the Block Breaker, Block Placer, and Item Dropper, including redstone behavior, six-directional models, inventory access, and the Dropper's launch controls.
 - [ ] Continue block functionality sweep (depth pass order):
-  - block_breaker/block_placer/item_dropper + auto_anvil/auto_enchantment_table: tick/work cycles and inventory IO
+  - auto_anvil/auto_enchantment_table: timed work cycles, item and XP I/O, menus, and enchanting options
   - Cannon item projectiles: verify the Vacuum Hopper's interaction with falling projectiles when porting the Cannon
   - XP Bucket: reconcile the legacy source pickup and creative-tab settings with Forge's fluid bucket

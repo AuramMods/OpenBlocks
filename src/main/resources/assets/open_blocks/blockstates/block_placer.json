@@ -1,5 +1,30 @@
 {
   "variants": {
-    "": { "model": "open_blocks:block/block_placer" }
+    "facing=up": {
+      "model": "open_blocks:block/block_placer"
+    },
+    "facing=down": {
+      "model": "open_blocks:block/block_placer",
+      "x": 180
+    },
+    "facing=north": {
+      "model": "open_blocks:block/block_placer",
+      "x": 90
+    },
+    "facing=east": {
+      "model": "open_blocks:block/block_placer",
+      "x": 90,
+      "y": 90
+    },
+    "facing=south": {
+      "model": "open_blocks:block/block_placer",
+      "x": 90,
+      "y": 180
+    },
+    "facing=west": {
+      "model": "open_blocks:block/block_placer",
+      "x": 90,
+      "y": 270
+    }
   }
 }
