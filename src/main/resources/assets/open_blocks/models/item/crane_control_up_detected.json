@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "open_blocks:item/manipulator_base",
+    "layer1": "open_blocks:item/manipulator_lift_up",
+    "layer2": "open_blocks:item/manipulator_magnet_detected"
+  }
+}

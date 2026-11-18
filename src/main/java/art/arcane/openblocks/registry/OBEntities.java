@@ -5,6 +5,8 @@ import art.arcane.openblocks.entity.OBFallingExperienceOrb;
 import art.arcane.openblocks.entity.OBHangGlider;
 import art.arcane.openblocks.entity.OBItemProjectile;
 import art.arcane.openblocks.entity.OBLuggage;
+import art.arcane.openblocks.entity.OBMagnet;
+import art.arcane.openblocks.entity.OBMountedBlock;
 import art.arcane.openblocks.entity.OBPlaceholderEntity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
@@ -27,9 +29,11 @@ public final class OBEntities {
             () -> EntityType.Builder.of(OBHangGlider::new, MobCategory.MISC).noSave().noSummon()
                     .sized(0.0F, 0.0F).clientTrackingRange(4).updateInterval(1).setShouldReceiveVelocityUpdates(false)
                     .build(OpenBlocks.id("hang_glider").toString()));
-    public static final RegistryObject<EntityType<OBPlaceholderEntity>> MAGNET = register("magnet", 64, 1);
-    public static final RegistryObject<EntityType<OBPlaceholderEntity>> MOUNTED_BLOCK = register("mounted_block", 64, 1);
-    public static final RegistryObject<EntityType<OBPlaceholderEntity>> PLAYER_MAGNET = register("player_magnet", 64, 1);
+    public static final RegistryObject<EntityType<OBMagnet>> MAGNET = registerMagnet("magnet");
+    public static final RegistryObject<EntityType<OBMountedBlock>> MOUNTED_BLOCK = ENTITY_TYPES.register("mounted_block",
+            () -> EntityType.Builder.of(OBMountedBlock::new, MobCategory.MISC).noSummon()
+                    .sized(0.925F, 0.925F).clientTrackingRange(4).updateInterval(1).build(OpenBlocks.id("mounted_block").toString()));
+    public static final RegistryObject<EntityType<OBMagnet>> PLAYER_MAGNET = registerMagnet("player_magnet");
     public static final RegistryObject<EntityType<OBPlaceholderEntity>> CARTOGRAPHER = register("cartographer", 64, 8);
     public static final RegistryObject<EntityType<OBItemProjectile>> ITEM_PROJECTILE = ENTITY_TYPES.register("item_projectile",
             () -> EntityType.Builder.<OBItemProjectile>of(OBItemProjectile::new, MobCategory.MISC)
@@ -40,6 +44,11 @@ public final class OBEntities {
     public static final RegistryObject<EntityType<OBPlaceholderEntity>> GLYPH = register("glyph", 160, Integer.MAX_VALUE);
 
     private OBEntities() {}
+
+    private static RegistryObject<EntityType<OBMagnet>> registerMagnet(final String id) {
+        return ENTITY_TYPES.register(id, () -> EntityType.Builder.of(OBMagnet::new, MobCategory.MISC).noSummon().fireImmune()
+                .sized(0.5F, 0.5F).clientTrackingRange(4).updateInterval(1).build(OpenBlocks.id(id).toString()));
+    }
 
     private static RegistryObject<EntityType<OBPlaceholderEntity>> register(final String id, final int trackingRange, final int updateInterval) {
         return ENTITY_TYPES.register(id, () -> EntityType.Builder.<OBPlaceholderEntity>of(OBPlaceholderEntity::new, MobCategory.MISC)

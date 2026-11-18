@@ -138,18 +138,21 @@ public final class RedstoneMachineGameTests {
                 event.setCanceled(true);
             }
         };
-        MinecraftForge.EVENT_BUS.addListener(EventPriority.NORMAL, false, BlockEvent.BreakEvent.class, protect);
         helper.setBlock(TARGET, Blocks.STONE);
-        helper.setBlock(POWER, Blocks.REDSTONE_BLOCK);
-        helper.runAfterDelay(3, () -> {
-            MinecraftForge.EVENT_BUS.unregister(protect);
-            helper.assertBlockPresent(Blocks.STONE, TARGET);
-            helper.assertTrue(actors.size() == 1 && countDrops(helper, target, Items.COBBLESTONE) == 0,
-                    "A protected block was never offered to Forge, retried indefinitely, or dropped loot");
-            helper.setBlock(TARGET, Blocks.BEDROCK);
+        // Let the machine's initial power check run before testing a new redstone edge.
+        helper.runAfterDelay(2, () -> {
+            MinecraftForge.EVENT_BUS.addListener(EventPriority.NORMAL, false, BlockEvent.BreakEvent.class, protect);
+            helper.setBlock(POWER, Blocks.REDSTONE_BLOCK);
             helper.runAfterDelay(3, () -> {
-                helper.assertBlockPresent(Blocks.BEDROCK, TARGET);
-                helper.succeed();
+                MinecraftForge.EVENT_BUS.unregister(protect);
+                helper.assertBlockPresent(Blocks.STONE, TARGET);
+                helper.assertTrue(actors.size() == 1 && countDrops(helper, target, Items.COBBLESTONE) == 0,
+                        "Expected one protected break attempt and no drops. Break attempts: " + actors.size());
+                helper.setBlock(TARGET, Blocks.BEDROCK);
+                helper.runAfterDelay(3, () -> {
+                    helper.assertBlockPresent(Blocks.BEDROCK, TARGET);
+                    helper.succeed();
+                });
             });
         });
     }
@@ -240,21 +243,23 @@ public final class RedstoneMachineGameTests {
                 event.setCanceled(true);
             }
         };
-        MinecraftForge.EVENT_BUS.addListener(EventPriority.NORMAL, false, BlockEvent.EntityPlaceEvent.class, cancel);
         placer.items().setStackInSlot(3, new ItemStack(Items.GOLD_BLOCK, 2));
-        helper.setBlock(POWER, Blocks.REDSTONE_BLOCK);
-        helper.runAfterDelay(4, () -> {
-            MinecraftForge.EVENT_BUS.unregister(cancel);
-            helper.assertBlockPresent(Blocks.AIR, TARGET);
-            helper.assertTrue(positions.size() == 1 && placer.items().getStackInSlot(3).getCount() == 2
-                            && countDrops(helper, target, Items.GOLD_BLOCK) == 0,
-                    "A canceled placement retried indefinitely or changed the item count");
-            helper.setBlock(POWER, Blocks.AIR);
+        helper.runAfterDelay(2, () -> {
+            MinecraftForge.EVENT_BUS.addListener(EventPriority.NORMAL, false, BlockEvent.EntityPlaceEvent.class, cancel);
             helper.setBlock(POWER, Blocks.REDSTONE_BLOCK);
-            helper.runAfterDelay(3, () -> {
-                helper.assertBlockPresent(Blocks.GOLD_BLOCK, TARGET);
-                helper.assertTrue(placer.items().getStackInSlot(3).getCount() == 1, "The retried placement used the wrong quantity");
-                helper.succeed();
+            helper.runAfterDelay(4, () -> {
+                MinecraftForge.EVENT_BUS.unregister(cancel);
+                helper.assertBlockPresent(Blocks.AIR, TARGET);
+                helper.assertTrue(positions.size() == 1 && placer.items().getStackInSlot(3).getCount() == 2
+                                && countDrops(helper, target, Items.GOLD_BLOCK) == 0,
+                        "Expected one canceled placement attempt and an unchanged inventory. Placement attempts: " + positions.size());
+                helper.setBlock(POWER, Blocks.AIR);
+                helper.setBlock(POWER, Blocks.REDSTONE_BLOCK);
+                helper.runAfterDelay(3, () -> {
+                    helper.assertBlockPresent(Blocks.GOLD_BLOCK, TARGET);
+                    helper.assertTrue(placer.items().getStackInSlot(3).getCount() == 1, "The retried placement used the wrong quantity");
+                    helper.succeed();
+                });
             });
         });
     }

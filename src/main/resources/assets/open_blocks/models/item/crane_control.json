@@ -1,6 +1,66 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "open_blocks:item/manipulator_base"
-  }
+    "layer0": "open_blocks:item/manipulator_base",
+    "layer1": "open_blocks:item/manipulator_lift_idle",
+    "layer2": "open_blocks:item/manipulator_magnet_idle"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "open_blocks:lift": 0.0,
+        "open_blocks:magnet": 0.5
+      },
+      "model": "open_blocks:item/crane_control_idle_detected"
+    },
+    {
+      "predicate": {
+        "open_blocks:lift": 0.0,
+        "open_blocks:magnet": 1.0
+      },
+      "model": "open_blocks:item/crane_control_idle_locked"
+    },
+    {
+      "predicate": {
+        "open_blocks:lift": 0.5,
+        "open_blocks:magnet": 0.0
+      },
+      "model": "open_blocks:item/crane_control_up_idle"
+    },
+    {
+      "predicate": {
+        "open_blocks:lift": 0.5,
+        "open_blocks:magnet": 0.5
+      },
+      "model": "open_blocks:item/crane_control_up_detected"
+    },
+    {
+      "predicate": {
+        "open_blocks:lift": 0.5,
+        "open_blocks:magnet": 1.0
+      },
+      "model": "open_blocks:item/crane_control_up_locked"
+    },
+    {
+      "predicate": {
+        "open_blocks:lift": 1.0,
+        "open_blocks:magnet": 0.0
+      },
+      "model": "open_blocks:item/crane_control_down_idle"
+    },
+    {
+      "predicate": {
+        "open_blocks:lift": 1.0,
+        "open_blocks:magnet": 0.5
+      },
+      "model": "open_blocks:item/crane_control_down_detected"
+    },
+    {
+      "predicate": {
+        "open_blocks:lift": 1.0,
+        "open_blocks:magnet": 1.0
+      },
+      "model": "open_blocks:item/crane_control_down_locked"
+    }
+  ]
 }

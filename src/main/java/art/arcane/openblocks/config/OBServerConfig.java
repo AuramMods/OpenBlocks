@@ -48,6 +48,13 @@ public final class OBServerConfig {
     public static final ForgeConfigSpec.BooleanValue FAN_REDSTONE;
     public static final ForgeConfigSpec.BooleanValue DEV_NULL_SNEAK_GUI;
     public static final ForgeConfigSpec.BooleanValue HANG_GLIDER_THERMALS;
+    public static final ForgeConfigSpec.BooleanValue CRANE_COLLISIONS;
+    public static final ForgeConfigSpec.BooleanValue CRANE_SHIFT_DIRECTION;
+    public static final ForgeConfigSpec.BooleanValue MAGNET_PICK_ENTITIES;
+    public static final ForgeConfigSpec.BooleanValue MAGNET_PICK_BLOCKS;
+    public static final ForgeConfigSpec.ConfigValue<List<? extends String>> MAGNET_BLOCK_ALLOWLIST;
+    public static final ForgeConfigSpec.ConfigValue<List<? extends String>> MAGNET_ENTITY_ALLOWLIST;
+    public static final ForgeConfigSpec.ConfigValue<List<? extends String>> MAGNET_BLOCK_ENTITY_ALLOWLIST;
     public static final ForgeConfigSpec.BooleanValue SERIOUS_MODE;
 
     static {
@@ -150,6 +157,17 @@ public final class OBServerConfig {
         builder.push("hangglider");
         HANG_GLIDER_THERMALS = builder.comment("Enable daytime thermal lift and weather effects for the Hang Glider.")
                 .define("enableThermal", true);
+        builder.pop();
+        builder.push("crane");
+        CRANE_COLLISIONS = builder.define("doCraneCollisionCheck", false);
+        CRANE_SHIFT_DIRECTION = builder.comment("Hold sneak to lower the magnet. When false, each use reverses direction.").define("boringMode", true);
+        MAGNET_BLOCK_ALLOWLIST = builder.defineListAllowEmpty("magnetBlockWhitelist", List.of(), value -> value instanceof String);
+        MAGNET_ENTITY_ALLOWLIST = builder.defineListAllowEmpty("magnetEntityWhitelist", List.of(), value -> value instanceof String);
+        MAGNET_BLOCK_ENTITY_ALLOWLIST = builder.defineListAllowEmpty("magnetTileEntityWhitelist", List.of(), value -> value instanceof String);
+        builder.pop();
+        builder.push("magnet");
+        MAGNET_PICK_ENTITIES = builder.define("pickEntities", true);
+        MAGNET_PICK_BLOCKS = builder.define("pickBlocks", true);
         builder.pop();
         builder.push("tomfoolery");
         SERIOUS_MODE = builder.comment("Disable Tasty Clay digestion and the Be Silly action.")

@@ -128,7 +128,7 @@ Exit criteria:
 Goal: move from "exists" to "works correctly".
 
 Suggested order:
-- [-] Transportation/domain: crane and magnet
+- [-] Transportation/domain: finish the Miracle Magnet turtle upgrade for CC: Tweaked
 - [-] Storage/domain: tanks, xp systems, vacuum hopper, donation station
 - [-] Utility/domain: block breaker/placer/dropper, auto anvil/enchantment table
 - [ ] Visual/domain: canvas/paint/stencil/glyph/projector/sky block
@@ -196,3 +196,4 @@ Checklist:
 - [x] Restore Pedometer sampling, offhand use, route checks, original readout units, and its movement-driven item animation.
 - [x] Restore Luggage deployment, owner following, item collection, packing, both inventory sizes, lightning upgrades, and the original animated models.
 - [x] Restore Hang Glider deployment, steering, dive, fall protection, thermal lift, camera-specific rendering, and variometer controls.
+- [x] Restore the wearable Crane Backpack, Crane Control, and player magnet with block and entity pickup, protected cargo placement, and synchronized models.

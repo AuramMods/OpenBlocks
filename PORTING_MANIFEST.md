@@ -33,6 +33,12 @@ Current registry classes:
   - `src/main/java/art/arcane/openblocks/entity/OBHangGlider.java`
   - `src/main/java/art/arcane/openblocks/client/OBHangGliderRendering.java`
   - `src/main/java/art/arcane/openblocks/client/OBVariometer.java`
+- Wearable crane equipment, transport, and rendering:
+  - `src/main/java/art/arcane/openblocks/item/OBCraneBackpackItem.java`
+  - `src/main/java/art/arcane/openblocks/item/OBCraneControlItem.java`
+  - `src/main/java/art/arcane/openblocks/entity/OBMagnet.java`
+  - `src/main/java/art/arcane/openblocks/entity/OBMountedBlock.java`
+  - `src/main/java/art/arcane/openblocks/client/OBCraneRendering.java`
 - Sound register: `src/main/java/art/arcane/openblocks/registry/OBSounds.java`
 - Custom statistic register for Bricks dropped: `src/main/java/art/arcane/openblocks/registry/OBStats.java`
 - Enchantment register: `src/main/java/art/arcane/openblocks/registry/OBEnchantments.java`
@@ -98,7 +104,7 @@ Current scaffold counts:
 Current asset coverage:
 - Blockstates: `src/main/resources/assets/open_blocks/blockstates` (41 files)
 - Block models: `src/main/resources/assets/open_blocks/models/block` (41 files)
-- Item models: `src/main/resources/assets/open_blocks/models/item` (87 files)
+- Item models: `src/main/resources/assets/open_blocks/models/item` (95 files)
 - Language file: `src/main/resources/assets/open_blocks/lang/en_us.json`
 - Sound definitions: `src/main/resources/assets/open_blocks/sounds.json`
 - Sound assets: `src/main/resources/assets/open_blocks/sounds` (legacy OpenBlocks `.ogg` set copied)
@@ -328,8 +334,8 @@ Source: `old-1.12.2/src/main/java/openblocks/OpenBlocks.java`
 | crayon_glasses | ItemCrayonGlasses | `Items.crayonGlasses` | `crayonGlasses`, unlocalized `glasses.crayon` |
 | technicolor_glasses | ItemImaginationGlasses | `Items.technicolorGlasses` | `technicolorGlasses`, unlocalized `glasses.technicolor` |
 | serious_glasses | ItemImaginationGlasses | `Items.seriousGlasses` | `seriousGlasses`, unlocalized `glasses.admin` |
-| crane_control | ItemCraneControl | `Items.craneControl` | `craneControl` |
-| crane_backpack | ItemCraneBackpack | `Items.craneBackpack` | `craneBackpack` |
+| crane_control | ItemCraneControl | `Items.craneControl` | Hold use to raise or sneak-use to lower. Attack toggles attachment and the item layers show direction and lock state. |
+| crane_backpack | ItemCraneBackpack | `Items.craneBackpack` | Iron-tier chest equipment that deploys a player-bound magnet. |
 | slimalyzer | ItemSlimalyzer | `Items.slimalyzer` | - |
 | xp_bucket | ItemXpBucket | `Items.xpBucket` | `filledbucket` |
 | sleeping_bag | ItemSleepingBag | `Items.sleepingBag` | `sleepingBag` |
@@ -469,9 +475,9 @@ Registered mod entities:
 - `openblocks:luggage` -> `EntityLuggage` (legacy numeric ID constant `702`). `open_blocks:luggage` uses `OBLuggage` with owner following, grounded item collection, 27 or 54 slots, and synchronized lightning charge.
 - `openblocks:xp_orb_no_fly` -> `EntityXPOrbNoFly` (`709`)
 - `openblocks:hang_glider` -> `EntityHangGlider` (`701`). `open_blocks:hang_glider` uses `OBHangGlider`, with synchronized holder, hand, airborne state, and thermal seed. Equipped gliders are transient.
-- `openblocks:magnet` -> `EntityMagnet` (`703`)
-- `openblocks:mounted_block` -> `EntityMountedBlock` (`704`)
-- `openblocks:player_magnet` -> `EntityMagnet.PlayerBound` (`708`)
+- `openblocks:magnet` -> `EntityMagnet` (`703`). Shared magnet behavior is implemented in `OBMagnet`. The Miracle Magnet turtle upgrade still needs to bind and operate this variant.
+- `openblocks:mounted_block` -> `EntityMountedBlock` (`704`). `OBMountedBlock` stores block state and block entity data. A placement veto keeps the cargo available for another attempt.
+- `openblocks:player_magnet` -> `EntityMagnet.PlayerBound` (`708`). Worn equipment deploys `OBMagnet`, which follows the player and prioritizes eligible entities over blocks.
 - `openblocks:cartographer` -> `EntityCartographer` (`705`)
 - `openblocks:item_projectile` -> `EntityItemProjectile` (`706`)
 - `openblocks:golden_eye` -> `EntityGoldenEye` (`707`)
