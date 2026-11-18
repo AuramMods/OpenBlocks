@@ -1,5 +1,6 @@
 {
   "variants": {
-    "": { "model": "open_blocks:block/beartrap" }
+    "axis=x": {"model": "open_blocks:block/beartrap", "y": 90},
+    "axis=z": {"model": "open_blocks:block/beartrap"}
   }
 }

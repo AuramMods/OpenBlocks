@@ -193,4 +193,5 @@ Checklist:
 - [x] Restore the stone and wooden Big Buttons, including six-face placement, configurable redstone pulses, and wooden arrow activation.
 - [x] Restore the folding Target's redstone deployment, accuracy-based output, and arrow recovery.
 - [ ] Test and port the optional Flan's Mod projectile integration against its 1.20.1 implementation.
-- [ ] Continue the block functionality sweep with the Fan and Bear Trap.
+- [x] Restore the Fan's adjustable heading, analog airflow, config, and spinning blades, and the Bear Trap's jaws, mob capture, release and comparator output.
+- [ ] Continue the block functionality sweep with the Flag and Sky Block.

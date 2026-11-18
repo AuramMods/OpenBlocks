@@ -43,6 +43,9 @@ public final class OBServerConfig {
     public static final ForgeConfigSpec.IntValue SPRINKLER_CAPACITY;
     public static final ForgeConfigSpec.IntValue SPRINKLER_BONEMEAL_RATE;
     public static final ForgeConfigSpec.IntValue SPRINKLER_WATER_RATE;
+    public static final ForgeConfigSpec.DoubleValue FAN_FORCE;
+    public static final ForgeConfigSpec.DoubleValue FAN_RANGE;
+    public static final ForgeConfigSpec.BooleanValue FAN_REDSTONE;
 
     static {
         final var builder = new ForgeConfigSpec.Builder();
@@ -129,6 +132,13 @@ public final class OBServerConfig {
                 .defineInRange("bonemealConsumeRate", 600, 1, Integer.MAX_VALUE);
         SPRINKLER_WATER_RATE = builder.comment("Active ticks per millibucket of water consumed.")
                 .defineInRange("waterConsumeRate", 20, 1, Integer.MAX_VALUE);
+        builder.pop();
+        builder.push("fan");
+        FAN_FORCE = builder.comment("Maximum horizontal velocity added per tick at full power. Force falls off with distance.")
+                .defineInRange("fanForce", 0.05D, 0, 4.0D);
+        FAN_RANGE = builder.comment("Distance from the airflow cone's origin, in blocks.").defineInRange("fanRange", 10.0D, 0, 128.0D);
+        FAN_REDSTONE = builder.comment("Scale airflow and blade rotation by incoming redstone strength. Otherwise fans always run at full power.")
+                .define("isRedstoneActivated", true);
         builder.pop();
         SPEC = builder.build();
     }

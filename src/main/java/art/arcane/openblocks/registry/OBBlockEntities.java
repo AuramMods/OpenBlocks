@@ -2,9 +2,11 @@ package art.arcane.openblocks.registry;
 
 import art.arcane.openblocks.OpenBlocks;
 import art.arcane.openblocks.block.OBRedstoneMachineBlock.Kind;
+import art.arcane.openblocks.block.entity.OBBearTrapBlockEntity;
 import art.arcane.openblocks.block.entity.OBBigButtonBlockEntity;
 import art.arcane.openblocks.block.entity.OBCannonBlockEntity;
 import art.arcane.openblocks.block.entity.OBDonationStationBlockEntity;
+import art.arcane.openblocks.block.entity.OBFanBlockEntity;
 import art.arcane.openblocks.block.entity.OBFoldingTargetBlockEntity;
 import art.arcane.openblocks.block.entity.OBGraveBlockEntity;
 import art.arcane.openblocks.block.entity.OBHealBlockEntity;
@@ -42,7 +44,7 @@ public final class OBBlockEntities {
     public static final RegistryObject<BlockEntityType<OBPlaceholderBlockEntity>> FLAG = register("flag", OBBlocks.FLAG);
     public static final RegistryObject<BlockEntityType<OBTankBlockEntity>> TANK = register("tank", OBTankBlockEntity::new, OBBlocks.TANK);
     public static final RegistryObject<BlockEntityType<OBPlaceholderBlockEntity>> TROPHY = register("trophy", OBBlocks.TROPHY);
-    public static final RegistryObject<BlockEntityType<OBPlaceholderBlockEntity>> BEARTRAP = register("beartrap", OBBlocks.BEARTRAP);
+    public static final RegistryObject<BlockEntityType<OBBearTrapBlockEntity>> BEARTRAP = register("beartrap", OBBearTrapBlockEntity::new, OBBlocks.BEARTRAP);
     public static final RegistryObject<BlockEntityType<OBSprinklerBlockEntity>> SPRINKLER = register("sprinkler", OBSprinklerBlockEntity::new, OBBlocks.SPRINKLER);
     public static final RegistryObject<BlockEntityType<OBCannonBlockEntity>> CANNON = register("cannon", OBCannonBlockEntity::new, OBBlocks.CANNON);
     public static final RegistryObject<BlockEntityType<OBVacuumHopperBlockEntity>> VACUUM_HOPPER = register("vacuum_hopper", OBVacuumHopperBlockEntity::new, OBBlocks.VACUUM_HOPPER);
@@ -51,7 +53,7 @@ public final class OBBlockEntities {
     public static final RegistryObject<BlockEntityType<OBBigButtonBlockEntity>> BIG_BUTTON_WOOD = register("big_button_wood",
             (pos, state) -> new OBBigButtonBlockEntity(true, pos, state), OBBlocks.BIG_BUTTON_WOOD);
     public static final RegistryObject<BlockEntityType<OBPlaceholderBlockEntity>> IMAGINARY = register("imaginary", OBBlocks.IMAGINARY);
-    public static final RegistryObject<BlockEntityType<OBPlaceholderBlockEntity>> FAN = register("fan", OBBlocks.FAN);
+    public static final RegistryObject<BlockEntityType<OBFanBlockEntity>> FAN = register("fan", OBFanBlockEntity::new, OBBlocks.FAN);
     public static final RegistryObject<BlockEntityType<OBXPBottlerBlockEntity>> XP_BOTTLER = register("xp_bottler", OBXPBottlerBlockEntity::new, OBBlocks.XP_BOTTLER);
     public static final RegistryObject<BlockEntityType<OBPlaceholderBlockEntity>> VILLAGE_HIGHLIGHTER = register("village_highlighter", OBBlocks.VILLAGE_HIGHLIGHTER);
     public static final RegistryObject<BlockEntityType<OBXpWorkbenchBlockEntity>> AUTO_ANVIL = register("auto_anvil",

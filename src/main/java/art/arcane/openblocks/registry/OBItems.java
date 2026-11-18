@@ -1,6 +1,7 @@
 package art.arcane.openblocks.registry;
 
 import art.arcane.openblocks.OpenBlocks;
+import art.arcane.openblocks.item.OBAnimatedFloorItem;
 import art.arcane.openblocks.item.OBCannonItem;
 import art.arcane.openblocks.item.OBElevatorItem;
 import art.arcane.openblocks.item.OBPedometerItem;
@@ -43,7 +44,7 @@ public final class OBItems {
     public static final RegistryObject<Item> FLAG = registerBlockItem("flag", OBBlocks.FLAG);
     public static final RegistryObject<Item> TANK = registerItem("tank", () -> new OBTankItem(OBBlocks.TANK.get(), new Item.Properties()));
     public static final RegistryObject<Item> TROPHY = registerBlockItem("trophy", OBBlocks.TROPHY);
-    public static final RegistryObject<Item> BEARTRAP = registerBlockItem("beartrap", OBBlocks.BEARTRAP);
+    public static final RegistryObject<Item> BEARTRAP = registerItem("beartrap", () -> new OBAnimatedFloorItem(OBBlocks.BEARTRAP.get(), new Item.Properties()));
     public static final RegistryObject<Item> SPRINKLER = registerBlockItem("sprinkler", OBBlocks.SPRINKLER);
     public static final RegistryObject<Item> CANNON = registerItem("cannon", () -> new OBCannonItem(OBBlocks.CANNON.get(), new Item.Properties()));
     public static final RegistryObject<Item> VACUUM_HOPPER = registerBlockItem("vacuum_hopper", OBBlocks.VACUUM_HOPPER);
@@ -51,7 +52,7 @@ public final class OBItems {
     public static final RegistryObject<Item> BIG_BUTTON = registerBlockItem("big_button", OBBlocks.BIG_BUTTON);
     public static final RegistryObject<Item> BIG_BUTTON_WOOD = registerBlockItem("big_button_wood", OBBlocks.BIG_BUTTON_WOOD);
     public static final RegistryObject<Item> IMAGINARY = registerBlockItem("imaginary", OBBlocks.IMAGINARY);
-    public static final RegistryObject<Item> FAN = registerBlockItem("fan", OBBlocks.FAN);
+    public static final RegistryObject<Item> FAN = registerItem("fan", () -> new OBAnimatedFloorItem(OBBlocks.FAN.get(), new Item.Properties()));
     public static final RegistryObject<Item> XP_BOTTLER = registerBlockItem("xp_bottler", OBBlocks.XP_BOTTLER);
     public static final RegistryObject<Item> VILLAGE_HIGHLIGHTER = registerBlockItem("village_highlighter", OBBlocks.VILLAGE_HIGHLIGHTER);
     public static final RegistryObject<Item> PATH = registerBlockItem("path", OBBlocks.PATH);

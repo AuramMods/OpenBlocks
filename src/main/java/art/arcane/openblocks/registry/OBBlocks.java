@@ -1,11 +1,13 @@
 package art.arcane.openblocks.registry;
 
 import art.arcane.openblocks.OpenBlocks;
+import art.arcane.openblocks.block.OBBearTrapBlock;
 import art.arcane.openblocks.block.OBBigButtonBlock;
 import art.arcane.openblocks.block.OBCannonBlock;
 import art.arcane.openblocks.block.OBDonationStationBlock;
 import art.arcane.openblocks.block.OBElevatorBlock;
 import art.arcane.openblocks.block.OBElevatorRotatingBlock;
+import art.arcane.openblocks.block.OBFanBlock;
 import art.arcane.openblocks.block.OBFoldingTargetBlock;
 import art.arcane.openblocks.block.OBGraveBlock;
 import art.arcane.openblocks.block.OBHealBlock;
@@ -50,8 +52,6 @@ public final class OBBlocks {
     private static final VoxelShape SHAPE_PAINT_MIXER = Block.box(2.0D, 0.0D, 2.0D, 14.0D, 16.0D, 14.0D);
     private static final VoxelShape SHAPE_PROJECTOR = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 8.0D, 16.0D);
     private static final VoxelShape SHAPE_VILLAGE_HIGHLIGHTER = Block.box(2.0D, 0.0D, 1.0D, 14.0D, 16.0D, 15.0D);
-    private static final VoxelShape SHAPE_FAN = Block.box(3.0D, 0.0D, 3.0D, 13.0D, 16.0D, 13.0D);
-    private static final VoxelShape SHAPE_BEARTRAP = Block.box(1.6D, 0.0D, 1.6D, 14.4D, 6.4D, 14.4D);
     private static final VoxelShape SHAPE_GRAVE = Shapes.or(
             Block.box(0.0D, 0.0D, 0.0D, 16.0D, 1.0D, 16.0D),
             Block.box(2.0D, 1.0D, 14.0D, 14.0D, 16.0D, 16.0D));
@@ -143,6 +143,8 @@ public final class OBBlocks {
         if ("target".equals(id)) return new OBFoldingTargetBlock(properties.lightLevel(state -> 4));
         if ("big_button".equals(id)) return new OBBigButtonBlock(false, BlockBehaviour.Properties.of().sound(SoundType.STONE).strength(0.5F).noOcclusion());
         if ("big_button_wood".equals(id)) return new OBBigButtonBlock(true, BlockBehaviour.Properties.of().sound(SoundType.WOOD).strength(0.5F).noOcclusion());
+        if ("beartrap".equals(id)) return new OBBearTrapBlock(properties);
+        if ("fan".equals(id)) return new OBFanBlock(properties);
         if (shape != null) return new OBShapeBlock(properties, shape, collisionShape);
         return new Block(properties);
     }
@@ -165,8 +167,6 @@ public final class OBBlocks {
             case "flag" -> SHAPE_FLAG;
             case "grave" -> SHAPE_GRAVE;
             case "trophy" -> SHAPE_TROPHY;
-            case "beartrap" -> SHAPE_BEARTRAP;
-            case "fan" -> SHAPE_FAN;
             case "golden_egg" -> SHAPE_GOLDEN_EGG;
             case "paint_mixer" -> SHAPE_PAINT_MIXER;
             case "paint_can" -> SHAPE_PAINT_CAN;
