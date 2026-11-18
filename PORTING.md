@@ -133,7 +133,7 @@ Suggested order:
 - [-] Utility/domain: block breaker/placer/dropper, auto anvil/enchantment table
 - [ ] Visual/domain: canvas/paint/stencil/glyph/projector/sky block
 - [ ] Entity/domain: luggage/cartographer/mini-me/golden eye/etc
-- [ ] Fun/domain: trophies, flim-flam, dev null, pedometer, sounds/effects
+- [ ] Fun/domain: trophies, flim-flam, pedometer, sounds/effects
 
 Per-feature checklist template:
 - [ ] Registration complete
@@ -176,8 +176,7 @@ Checklist:
   - `pedometer_state`: expand from current explicit start/reset/report baseline to deeper parity (client-side speed property behavior + legacy unit/readout polish)
   - `bowels`: expand from current tasty-clay + brick-toss + death-drop hooks to full legacy behavior parity (keybound brick-drop path + sound/stat nuances)
   - `luck`: reconnect full flim-flam cooldown and forced-trigger logic (currently just raw value storage)
-- [ ] Wire custom advancement triggers into gameplay events:
-  - replace temporary hooks with legacy-accurate trigger sources (`brick_dropped` from boo/brick action path, `dev_null_stacked` from nested dev-null inventory depth)
+- [ ] Replace the temporary `brick_dropped` advancement hook with the legacy boo/brick action.
 - [ ] Finish legacy recipe migration for skipped recipe files:
   - revisit remaining metadata-collapsed conversions to restore accurate color and subtype behavior, including paintbrush variants
 - [x] Restore configurable sponge cleanup, Sponge on a Stick, scattered-stone path rendering, and the healing block's one-tick pulses.
@@ -195,4 +194,4 @@ Checklist:
 - [ ] Test and port the optional Flan's Mod projectile integration against its 1.20.1 implementation.
 - [x] Restore the Fan's adjustable heading, analog airflow, config, and spinning blades, and the Bear Trap's jaws, mob capture, release and comparator output.
 - [x] Restore Flag mounts, turning, all carpet colors, and color-preserving drops. Restore both Sky Block polarities, the torch conversion, and live sky rendering.
-- [ ] Port the Dev Null inventory and advance its trigger from the actual nesting depth.
+- [x] Restore the /dev/null inventory, world pickup filtering, overflow, forwarding block placement, and the true nesting advancement.

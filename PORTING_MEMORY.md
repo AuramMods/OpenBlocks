@@ -80,7 +80,12 @@
 - The packaged Forge 47.4.10 client, muted under Docker/Xvfb, rendered both active variants with blue daylight and then stars at night. Gold and stained glass in front remained visible. Both variants switched to the gray texture when deactivated. Stacked cyan and red flags on a fence and a blue wall flag rendered with their original cutouts. Live controls turned an upright flag ten degrees each way and cycled the magenta item to light blue with a short sneak-use.
 - A disposable save made with the previous 1.20.1 jar stored both blocks without block entities. Opening a copy on the updated headless server restored both entries and picked up the existing redstone signal. The saved region NBT confirms both repairs.
 - Reopening the multiplayer fixture with the final jar preserved the cyan flag's heading and both Sky Block polarities and redstone states. Switching the client setting off showed the normally lit animated gray texture. Enabling it again restored the live sky while keeping the foreground blocks visible.
-- Next, port the Dev Null and its nesting advancement, then continue the remaining feature sweep.
+- The /dev/null holds a single stack. Sneak-use in the air opens a menu that protects the backing hotbar slot. The device fills from matching world pickups and discards excess after all matching devices fill. Reserved drops and Forge pickup cancellation still apply. Block placement uses the stored block and rolls back its count if Forge cancels placement.
+- The GUI and held model show the stored item with nested frames. Five devices nested in one stack trigger Stack Overflow and show the legacy overflow effect. Existing advancement progress is preserved. The server setting `devnull.sneakClickToGui` and client setting `devnull.countColor` restore the legacy options.
+- Datagen and jar reobfuscation succeeded. All 96 standalone GameTests passed. The six /dev/null tests cover crafting, item NBT, filling multiple matching devices, pickup protection, placement rollback, live updates to the locked menu, and the actual nesting criterion and limit.
+- In packaged Forge 47.4.10 multiplayer, the muted Xvfb client shift-inserted 20 cobblestone. The menu updated to 61 and then 64 after live pickups. The extra nine cobblestone were discarded. Using the device placed one block and left 63. Five separate devices left Stack Overflow locked, while inserting the fifth nested device showed the correct toast and overflow model.
+- After a full dedicated-server restart, opening the same inventory showed the 63 cobblestone, the five-layer item, and the completed advancement. The placed block survived. The final client showed the configured cyan count and opened the menu with regular use in the air when the sneak requirement was disabled.
+- Next, restore the legacy brick action and advancement.
 
 ## Current Snapshot
 - Legacy codebase analyzed: `old-1.12.2`.
@@ -291,7 +296,7 @@
     - Brick item toss triggers `open_blocks:brick_dropped` when allowed (creative or positive bowels count, with decrement for non-creative).
     - Player death now drops up to 16 bricks based on bowels count and clears bowels state.
     - Server player tick now updates `open_blocks:pedometer_state` movement sampling when the player has a pedometer in the hotbar and tracking is active.
-    - Periodic placeholder dev-null depth approximation from inventory count triggers `open_blocks:dev_null_stacked`.
+    - The dev-null editor now triggers `open_blocks:dev_null_stacked` from the actual nested contents.
     - New explicit pedometer item flow is wired in `src/main/java/art/arcane/openblocks/item/OBPedometerItem.java`:
       - right-click starts tracking,
       - sneak-right-click resets tracking,
@@ -534,7 +539,7 @@
 - Move Phase 3 command/trigger work from placeholders to hooked gameplay paths:
   - deepen `flimflam` from current breadth-stage effects to legacy cost/weight/luck/blacklist behavior
   - deepen `ob_inventory` from current built-in targets + event-bridge payload schema + grave placement/claim/action-filter baseline to concrete subsystem integrations + full grave/backend parity
-  - replace temporary trigger hooks with legacy-accurate sources (boo/brick action and nested dev-null depth logic)
+  - use the legacy boo/brick action for its advancement trigger
 - Move Phase 3 capability work from placeholders to hooked gameplay paths:
   - expand pedometer from current explicit start/reset/report baseline to deeper parity (legacy unit formatting, client-side speed property behavior, polish on readout cadence)
   - expand brick/bowels behavior from current tasty-clay + brick toss + death-drop baseline to full legacy parity (keybound boo action path, whoops sound/stat behavior)

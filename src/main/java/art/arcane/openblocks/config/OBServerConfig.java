@@ -46,6 +46,7 @@ public final class OBServerConfig {
     public static final ForgeConfigSpec.DoubleValue FAN_FORCE;
     public static final ForgeConfigSpec.DoubleValue FAN_RANGE;
     public static final ForgeConfigSpec.BooleanValue FAN_REDSTONE;
+    public static final ForgeConfigSpec.BooleanValue DEV_NULL_SNEAK_GUI;
 
     static {
         final var builder = new ForgeConfigSpec.Builder();
@@ -139,6 +140,10 @@ public final class OBServerConfig {
         FAN_RANGE = builder.comment("Distance from the airflow cone's origin, in blocks.").defineInRange("fanRange", 10.0D, 0, 128.0D);
         FAN_REDSTONE = builder.comment("Scale airflow and blade rotation by incoming redstone strength. Otherwise fans always run at full power.")
                 .define("isRedstoneActivated", true);
+        builder.pop();
+        builder.push("devnull");
+        DEV_NULL_SNEAK_GUI = builder.comment("Require sneaking when opening the /dev/null by clicking the air.")
+                .define("sneakClickToGui", true);
         builder.pop();
         SPEC = builder.build();
     }

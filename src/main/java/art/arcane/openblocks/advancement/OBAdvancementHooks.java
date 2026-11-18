@@ -72,10 +72,6 @@ public final class OBAdvancementHooks {
         if (!(event.player instanceof ServerPlayer player)) return;
 
         tickPedometer(player);
-        if (player.tickCount % 20 != 0) return;
-
-        final int depth = approximateDevNullDepth(player);
-        if (depth > 0) OBCriterions.DEV_NULL_STACK.trigger(player, depth);
     }
 
     private static void tickPedometer(final ServerPlayer player) {
@@ -92,24 +88,5 @@ public final class OBAdvancementHooks {
         }
 
         return false;
-    }
-
-    // Placeholder while nested dev-null inventory semantics are not ported.
-    private static int approximateDevNullDepth(final ServerPlayer player) {
-        int depth = 0;
-
-        for (final ItemStack stack : player.getInventory().items) {
-            if (stack.is(OBItems.DEV_NULL.get())) depth += stack.getCount();
-        }
-
-        for (final ItemStack stack : player.getInventory().offhand) {
-            if (stack.is(OBItems.DEV_NULL.get())) depth += stack.getCount();
-        }
-
-        for (final ItemStack stack : player.getInventory().armor) {
-            if (stack.is(OBItems.DEV_NULL.get())) depth += stack.getCount();
-        }
-
-        return depth;
     }
 }

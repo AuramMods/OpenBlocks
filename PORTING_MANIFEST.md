@@ -194,8 +194,8 @@ Current validation status:
     - `tasty_clay` consume increments bowels count,
     - brick toss conditionally fires `brick_dropped` and decrements bowels for survival players,
     - `LivingDropsEvent` emits up to 16 brick drops from bowels count and clears stored bowels state,
-    - `PlayerTickEvent` now performs baseline pedometer sampling while a pedometer is present in hotbar and tracking is active,
-    - periodic placeholder inventory scan approximates dev-null depth and fires `dev_null_stacked`.
+    - `PlayerTickEvent` now performs baseline pedometer sampling while a pedometer is present in hotbar and tracking is active.
+  - `OBDevNullMenu` fires `dev_null_stacked` from the stored item's actual nesting depth after inventory edits. `OBDevNullPickup` fills exact matching stacks on pickup before discarding overflow.
   - `src/main/java/art/arcane/openblocks/registry/OBItems.java` now sets parity-critical item properties:
     - `tasty_clay` is edible,
     - `dev_null` and `generic_unstackable` are stack size 1.
@@ -335,7 +335,7 @@ Source: `old-1.12.2/src/main/java/openblocks/OpenBlocks.java`
 | generic_unstackable | ItemOBGenericUnstackable | `Items.genericUnstackable` | no default model; `genericUnstackable` |
 | cursor | ItemCursor | `Items.cursor` | - |
 | info_book | ItemInfoBook | `Items.infoBook` | `infoBook` |
-| dev_null | ItemDevNull | `Items.devNull` | `devnull` |
+| dev_null | ItemDevNull | `Items.devNull` | `devnull`. The 1.20.1 port uses `OBDevNullItem`, with one stored stack in item NBT. |
 | sponge_on_a_stick | ItemSpongeOnAStick | `Items.spongeonastick` | `spongeonastick` |
 | pedometer | ItemPedometer | `Items.pedometer` | - |
 | epic_eraser | ItemEpicEraser | `Items.epicEraser` | `epicEraser` |
@@ -526,7 +526,7 @@ Primary GUI source files:
 
 Non-tile GUI IDs via `OpenBlocksGuiHandler.GuiId`:
 - `luggage` -> `ContainerLuggage` / `GuiLuggage`
-- `devNull` -> `ContainerDevNull` / `GuiDevNull`
+- `devNull` -> `ContainerDevNull` / `GuiDevNull`. The 1.20.1 port keeps the `open_blocks:dev_null` menu ID with `OBDevNullMenu` and `OBDevNullScreen`.
 
 Tile-based container/gui providers (via `IHasGui` in tile entities):
 - TileEntityAutoEnchantmentTable -> ContainerAutoEnchantmentTable / GuiAutoEnchantmentTable
