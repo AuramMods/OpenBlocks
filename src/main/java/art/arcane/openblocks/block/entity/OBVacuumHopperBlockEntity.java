@@ -2,6 +2,7 @@ package art.arcane.openblocks.block.entity;
 
 import art.arcane.openblocks.block.OBVacuumHopperBlock;
 import art.arcane.openblocks.config.OBServerConfig;
+import art.arcane.openblocks.entity.OBItemProjectile;
 import art.arcane.openblocks.menu.OBVacuumHopperMenu;
 import art.arcane.openblocks.registry.OBBlockEntities;
 import art.arcane.openblocks.registry.OBFluids;
@@ -147,6 +148,7 @@ public final class OBVacuumHopperBlockEntity extends BlockEntity implements Menu
         if (!state.getValue(OBVacuumHopperBlock.ENABLED)) return;
         final int xpRatio = OBServerConfig.XP_FLUID_RATIO.get();
         for (final ItemEntity item : level.getEntitiesOfClass(ItemEntity.class, hopper.suctionArea, Entity::isAlive)) {
+            if (item instanceof OBItemProjectile projectile && !projectile.canBeVacuumed()) continue;
             if (item.distanceToSqr(hopper.center) < PICKUP_DISTANCE_SQR) hopper.collectItem(item);
             else if (ItemHandlerHelper.insertItemStacked(hopper.items, item.getItem(), true).getCount() < item.getItem().getCount()) hopper.attract(item);
         }

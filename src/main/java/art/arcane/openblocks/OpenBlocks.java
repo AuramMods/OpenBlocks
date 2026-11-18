@@ -3,6 +3,7 @@ package art.arcane.openblocks;
 import art.arcane.openblocks.advancement.OBCriterions;
 import art.arcane.openblocks.capability.OBCapabilities;
 import art.arcane.openblocks.config.OBServerConfig;
+import art.arcane.openblocks.integration.OBComputerCraftCannon;
 import art.arcane.openblocks.integration.OBComputerCraftDonations;
 import art.arcane.openblocks.network.OBNetwork;
 import art.arcane.openblocks.registry.OBBlocks;
@@ -23,6 +24,7 @@ import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 
 @Mod(OpenBlocks.MODID)
 public class OpenBlocks {
@@ -51,11 +53,18 @@ public class OpenBlocks {
         OBMenuTypes.MENU_TYPES.register(modEventBus);
         OBRecipeSerializers.RECIPE_SERIALIZERS.register(modEventBus);
         modEventBus.addListener(OBCapabilities::onRegisterCapabilities);
-        if (ModList.get().isLoaded("computercraft")) modEventBus.addListener(OBComputerCraftDonations::setup);
+        if (ModList.get().isLoaded("computercraft")) modEventBus.addListener(this::setupComputerCraft);
 
         context.registerConfig(ModConfig.Type.SERVER, OBServerConfig.SPEC);
         OBNetwork.register();
         OBCriterions.bootstrap();
         OBGameRules.bootstrap();
+    }
+
+    private void setupComputerCraft(final FMLCommonSetupEvent event) {
+        event.enqueueWork(() -> {
+            OBComputerCraftDonations.register();
+            OBComputerCraftCannon.register();
+        });
     }
 }

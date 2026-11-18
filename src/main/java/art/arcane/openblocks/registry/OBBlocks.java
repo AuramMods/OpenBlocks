@@ -1,6 +1,7 @@
 package art.arcane.openblocks.registry;
 
 import art.arcane.openblocks.OpenBlocks;
+import art.arcane.openblocks.block.OBCannonBlock;
 import art.arcane.openblocks.block.OBDonationStationBlock;
 import art.arcane.openblocks.block.OBElevatorBlock;
 import art.arcane.openblocks.block.OBElevatorRotatingBlock;
@@ -49,7 +50,6 @@ public final class OBBlocks {
     private static final VoxelShape SHAPE_VILLAGE_HIGHLIGHTER = Block.box(2.0D, 0.0D, 1.0D, 14.0D, 16.0D, 15.0D);
     private static final VoxelShape SHAPE_FAN = Block.box(3.0D, 0.0D, 3.0D, 13.0D, 16.0D, 13.0D);
     private static final VoxelShape SHAPE_BEARTRAP = Block.box(1.6D, 0.0D, 1.6D, 14.4D, 6.4D, 14.4D);
-    private static final VoxelShape SHAPE_CANNON = Block.box(4.8D, 0.0D, 4.8D, 9.6D, 11.2D, 11.2D);
     private static final VoxelShape SHAPE_GRAVE = Shapes.or(
             Block.box(0.0D, 0.0D, 0.0D, 16.0D, 1.0D, 16.0D),
             Block.box(2.0D, 1.0D, 14.0D, 14.0D, 16.0D, 16.0D));
@@ -141,6 +141,7 @@ public final class OBBlocks {
         if ("item_dropper".equals(id)) return new OBRedstoneMachineBlock(properties, Kind.DROPPER);
         if ("sprinkler".equals(id)) return new OBSprinklerBlock(BlockBehaviour.Properties.of().strength(1.0F).noOcclusion());
         if ("donation_station".equals(id)) return new OBDonationStationBlock(properties.strength(1.0F));
+        if ("cannon".equals(id)) return new OBCannonBlock(properties);
         if (shape != null) return new OBShapeBlock(properties, shape, collisionShape);
         return new Block(properties);
     }
@@ -165,7 +166,6 @@ public final class OBBlocks {
             case "grave" -> SHAPE_GRAVE;
             case "trophy" -> SHAPE_TROPHY;
             case "beartrap" -> SHAPE_BEARTRAP;
-            case "cannon" -> SHAPE_CANNON;
             case "fan" -> SHAPE_FAN;
             case "golden_egg" -> SHAPE_GOLDEN_EGG;
             case "paint_mixer" -> SHAPE_PAINT_MIXER;
@@ -179,7 +179,7 @@ public final class OBBlocks {
 
     private static VoxelShape collisionShapeFor(final String id, final VoxelShape shape) {
         return switch (id) {
-            case "path", "cannon", "flag" -> Shapes.empty();
+            case "path", "flag" -> Shapes.empty();
             default -> shape == null ? Shapes.block() : shape;
         };
     }

@@ -6,12 +6,11 @@ import dan200.computercraft.api.ComputerCraftAPI;
 import dan200.computercraft.api.lua.LuaFunction;
 import dan200.computercraft.api.peripheral.GenericPeripheral;
 import dan200.computercraft.api.peripheral.PeripheralType;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 
 public final class OBComputerCraftDonations implements GenericPeripheral {
 
-    public static void setup(final FMLCommonSetupEvent event) {
-        event.enqueueWork(() -> ComputerCraftAPI.registerGenericSource(new OBComputerCraftDonations()));
+    public static void register() {
+        ComputerCraftAPI.registerGenericSource(new OBComputerCraftDonations());
     }
 
     @Override public String id() { return "open_blocks:donation_station"; }

@@ -2,6 +2,7 @@ package art.arcane.openblocks.registry;
 
 import art.arcane.openblocks.OpenBlocks;
 import art.arcane.openblocks.entity.OBFallingExperienceOrb;
+import art.arcane.openblocks.entity.OBItemProjectile;
 import art.arcane.openblocks.entity.OBPlaceholderEntity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
@@ -22,7 +23,10 @@ public final class OBEntities {
     public static final RegistryObject<EntityType<OBPlaceholderEntity>> MOUNTED_BLOCK = register("mounted_block", 64, 1);
     public static final RegistryObject<EntityType<OBPlaceholderEntity>> PLAYER_MAGNET = register("player_magnet", 64, 1);
     public static final RegistryObject<EntityType<OBPlaceholderEntity>> CARTOGRAPHER = register("cartographer", 64, 8);
-    public static final RegistryObject<EntityType<OBPlaceholderEntity>> ITEM_PROJECTILE = register("item_projectile", 64, 1);
+    public static final RegistryObject<EntityType<OBItemProjectile>> ITEM_PROJECTILE = ENTITY_TYPES.register("item_projectile",
+            () -> EntityType.Builder.<OBItemProjectile>of(OBItemProjectile::new, MobCategory.MISC)
+                    .sized(0.25F, 0.25F).clientTrackingRange(4).updateInterval(1).setShouldReceiveVelocityUpdates(true)
+                    .build(OpenBlocks.id("item_projectile").toString()));
     public static final RegistryObject<EntityType<OBPlaceholderEntity>> GOLDEN_EYE = register("golden_eye", 64, 8);
     public static final RegistryObject<EntityType<OBPlaceholderEntity>> MINI_ME = register("mini_me", 64, 1);
     public static final RegistryObject<EntityType<OBPlaceholderEntity>> GLYPH = register("glyph", 160, Integer.MAX_VALUE);

@@ -1,8 +1,10 @@
 package art.arcane.openblocks.registry;
 
 import art.arcane.openblocks.OpenBlocks;
+import art.arcane.openblocks.item.OBCannonItem;
 import art.arcane.openblocks.item.OBElevatorItem;
 import art.arcane.openblocks.item.OBPedometerItem;
+import art.arcane.openblocks.item.OBPointerItem;
 import art.arcane.openblocks.item.OBScaffoldingItem;
 import art.arcane.openblocks.item.OBSpongeOnAStickItem;
 import art.arcane.openblocks.item.OBTankItem;
@@ -43,7 +45,7 @@ public final class OBItems {
     public static final RegistryObject<Item> TROPHY = registerBlockItem("trophy", OBBlocks.TROPHY);
     public static final RegistryObject<Item> BEARTRAP = registerBlockItem("beartrap", OBBlocks.BEARTRAP);
     public static final RegistryObject<Item> SPRINKLER = registerBlockItem("sprinkler", OBBlocks.SPRINKLER);
-    public static final RegistryObject<Item> CANNON = registerBlockItem("cannon", OBBlocks.CANNON);
+    public static final RegistryObject<Item> CANNON = registerItem("cannon", () -> new OBCannonItem(OBBlocks.CANNON.get(), new Item.Properties()));
     public static final RegistryObject<Item> VACUUM_HOPPER = registerBlockItem("vacuum_hopper", OBBlocks.VACUUM_HOPPER);
     public static final RegistryObject<Item> SPONGE = registerBlockItem("sponge", OBBlocks.SPONGE);
     public static final RegistryObject<Item> BIG_BUTTON = registerBlockItem("big_button", OBBlocks.BIG_BUTTON);
@@ -91,7 +93,7 @@ public final class OBItems {
     public static final RegistryObject<Item> ASSISTANT_BASE = registerItem("assistant_base");
     public static final RegistryObject<Item> UNPREPARED_STENCIL = registerItem("unprepared_stencil");
     public static final RegistryObject<Item> SKETCHING_PENCIL = registerItem("sketching_pencil");
-    public static final RegistryObject<Item> POINTER = registerItem("pointer", new Item.Properties().stacksTo(1));
+    public static final RegistryObject<Item> POINTER = registerItem("pointer", () -> new OBPointerItem(new Item.Properties().stacksTo(1)));
     public static final RegistryObject<Item> LUGGAGE = registerItem("luggage");
     public static final RegistryObject<Item> SONIC_GLASSES = registerItem("sonic_glasses");
     public static final RegistryObject<Item> PENCIL_GLASSES = registerItem("pencil_glasses");

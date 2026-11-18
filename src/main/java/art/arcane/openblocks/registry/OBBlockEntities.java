@@ -2,6 +2,7 @@ package art.arcane.openblocks.registry;
 
 import art.arcane.openblocks.OpenBlocks;
 import art.arcane.openblocks.block.OBRedstoneMachineBlock.Kind;
+import art.arcane.openblocks.block.entity.OBCannonBlockEntity;
 import art.arcane.openblocks.block.entity.OBDonationStationBlockEntity;
 import art.arcane.openblocks.block.entity.OBGraveBlockEntity;
 import art.arcane.openblocks.block.entity.OBHealBlockEntity;
@@ -41,7 +42,7 @@ public final class OBBlockEntities {
     public static final RegistryObject<BlockEntityType<OBPlaceholderBlockEntity>> TROPHY = register("trophy", OBBlocks.TROPHY);
     public static final RegistryObject<BlockEntityType<OBPlaceholderBlockEntity>> BEARTRAP = register("beartrap", OBBlocks.BEARTRAP);
     public static final RegistryObject<BlockEntityType<OBSprinklerBlockEntity>> SPRINKLER = register("sprinkler", OBSprinklerBlockEntity::new, OBBlocks.SPRINKLER);
-    public static final RegistryObject<BlockEntityType<OBPlaceholderBlockEntity>> CANNON = register("cannon", OBBlocks.CANNON);
+    public static final RegistryObject<BlockEntityType<OBCannonBlockEntity>> CANNON = register("cannon", OBCannonBlockEntity::new, OBBlocks.CANNON);
     public static final RegistryObject<BlockEntityType<OBVacuumHopperBlockEntity>> VACUUM_HOPPER = register("vacuum_hopper", OBVacuumHopperBlockEntity::new, OBBlocks.VACUUM_HOPPER);
     public static final RegistryObject<BlockEntityType<OBPlaceholderBlockEntity>> BIG_BUTTON = register("big_button", OBBlocks.BIG_BUTTON);
     public static final RegistryObject<BlockEntityType<OBPlaceholderBlockEntity>> BIG_BUTTON_WOOD = register("big_button_wood", OBBlocks.BIG_BUTTON_WOOD);
