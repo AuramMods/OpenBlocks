@@ -290,7 +290,8 @@ Current validation status:
   - The Flim-Flam book recipe counts one emerald per occupied slot, up to four. The client displays generated item history on Alt by default. Existing ordinary item lore takes precedence.
   - Current command parity:
     - `luck` reads/writes `open_blocks:luck` capability state.
-    - `flimflam` supports all 17 legacy effect IDs. Operators can run named effects independently of the automatic rules. Snowballs, teleport, mount, encase, dummy creepers, random potions, and skyblock still use preliminary actions.
+    - `flimflam` supports all 17 legacy effect IDs. Operators can run named effects independently of the automatic rules. Snowballs are ownerless and the teleport pearl is owned by the target. Mount chooses an eligible mob and uses normal riding rules. Dummy creepers use vanilla AI, a charged aura, and a saved explosion radius of zero. The potion action picks two distinct effects from the original ranges.
+    - Encase fills available cells in the original dirt shell. Skyblock places five ice blocks at the legacy Y 250 cap and accounts for shorter dimensions. Both honor Forge block placement checks and restore original states if placement is canceled. Skyblock also honors a denied teleport and requires clear arrival space.
     - `ob_inventory` now supports main + built-in sub-inventory dump/restore/spawn:
       - dumps written to `<world>/data/inventory-*.dat`,
       - restore loads stored main inventory onto target player,
@@ -527,7 +528,7 @@ Source: `old-1.12.2/src/main/java/openblocks/Config.java`
 - Registered enchantments:
   - `openblocks:explosive` (`EnchantmentExplosive`) → `open_blocks:explosive`. Unstable uses `OBArmorEnchantment` and `OBUnstableArmor` for books, armor reactions, and the boots' landing bounce.
   - `openblocks:last_stand` (`EnchantmentLastStand`) → `open_blocks:last_stand`. `OBLastStand` uses the original OpenCalc engine and spends experience against the incoming damage.
-  - `openblocks:flim_flam` (`EnchantmentFlimFlam`)
+  - `openblocks:flim_flam` (`EnchantmentFlimFlam`) → `open_blocks:flim_flam`. `OBFlimFlam` handles equipment, luck and combat. `OBFlimFlamEffects` handles the original effects and operator commands.
 - Object holders:
   - `OpenBlocks.Enchantments` in `OpenBlocks.java`
 

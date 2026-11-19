@@ -12,9 +12,13 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -24,13 +28,11 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.animal.Sheep;
 import net.minecraft.world.entity.animal.Squid;
 import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Snowball;
 import net.minecraft.world.entity.projectile.ThrownEnderpearl;
 import net.minecraft.world.item.ItemStack;
@@ -45,10 +47,16 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.util.BlockSnapshot;
+import net.minecraftforge.event.ForgeEventFactory;
+import net.minecraftforge.event.entity.EntityTeleportEvent;
 import net.minecraftforge.event.entity.item.ItemTossEvent;
 import org.apache.commons.lang3.StringUtils;
 
@@ -67,6 +75,7 @@ public final class OBFlimFlamEffects {
     private static final int CREEPER_COUNT = 15;
     private static final int SEARCH_RADIUS_MOBS = 20;
     private static final int SEARCH_RADIUS_MOUNT = 40;
+    private static final int PRANK_PLACEMENT_FLAGS = Block.UPDATE_KNOWN_SHAPE | Block.UPDATE_SUPPRESS_DROPS;
 
     private static final List<String> SQUID_NAMES = List.of("Fancy Hat", "Hello there!", "Look at my hat!",
             "My hat is amazing!", "Ceci n'est pas une pipe", "???");
@@ -336,17 +345,18 @@ public final class OBFlimFlamEffects {
     }
 
     private static boolean snowballs(final ServerPlayer target) {
+        final ServerLevel level = target.serverLevel();
+        boolean spawned = false;
         for (int i = 0; i < SNOWBALL_COUNT; i++) {
-            final Snowball snowball = new Snowball(target.level(), target);
-            snowball.setPos(target.getX(), target.getY() + 4.0, target.getZ());
+            final Snowball snowball = new Snowball(level, target.getX(), target.getY() + 4.0, target.getZ());
             snowball.setDeltaMovement(
                     target.getRandom().nextGaussian() * 0.05,
                     1.0,
                     target.getRandom().nextGaussian() * 0.05);
-            target.serverLevel().addFreshEntity(snowball);
+            spawned |= level.addFreshEntity(snowball);
         }
 
-        return true;
+        return spawned;
     }
 
     private static boolean teleport(final ServerPlayer target) {
@@ -361,42 +371,32 @@ public final class OBFlimFlamEffects {
 
     private static boolean mount(final ServerPlayer target) {
         final AABB around = target.getBoundingBox().inflate(SEARCH_RADIUS_MOUNT);
-        final List<LivingEntity> mobs = target.serverLevel().getEntitiesOfClass(
-                LivingEntity.class,
-                around,
-                entity -> entity != target && !(entity instanceof Player) && !(entity instanceof Creeper) && !(entity instanceof Squid));
+        final List<Mob> mobs = target.serverLevel().getEntitiesOfClass(Mob.class, around,
+                entity -> entity.isAlive() && !(entity instanceof Creeper) && !(entity instanceof Squid));
         if (mobs.isEmpty()) return false;
 
-        final LivingEntity selected = mobs.get(target.getRandom().nextInt(mobs.size()));
-        return target.startRiding(selected, true);
+        final Mob selected = mobs.get(target.getRandom().nextInt(mobs.size()));
+        return target.startRiding(selected);
     }
 
     private static boolean encase(final ServerPlayer target) {
-        final int playerX = Mth.floor(target.getX());
-        final int playerY = Mth.floor(target.getBoundingBox().minY) - 1;
-        final int playerZ = Mth.floor(target.getZ());
-        boolean changed = false;
-
-        for (int y = playerY; y <= playerY + 3; y++) {
-            for (int x = playerX - 1; x <= playerX + 1; x++) {
-                for (int z = playerZ - 1; z <= playerZ + 1; z++) {
-                    final boolean isGap = y < playerY + 3 && x == playerX && z == playerZ;
-                    if (isGap) continue;
-
-                    final BlockPos pos = new BlockPos(x, y, z);
-                    if (target.level().isEmptyBlock(pos)) {
-                        changed |= target.level().setBlock(pos, Blocks.DIRT.defaultBlockState(), 3);
-                    }
-                }
+        final ServerLevel level = target.serverLevel();
+        final BlockPos floor = target.blockPosition().below();
+        final Map<BlockPos, BlockState> blocks = new LinkedHashMap<>();
+        for (final BlockPos pos : BlockPos.betweenClosed(floor.offset(-1, 0, -1), floor.offset(1, 3, 1))) {
+            final boolean gap = pos.getX() == floor.getX() && pos.getZ() == floor.getZ() && pos.getY() < floor.getY() + 3;
+            if (!gap && level.isInWorldBounds(pos) && level.hasChunkAt(pos) && level.isEmptyBlock(pos)) {
+                blocks.put(pos.immutable(), Blocks.DIRT.defaultBlockState());
             }
         }
 
-        final BlockPos torchPos = new BlockPos(playerX, playerY + 2, playerZ);
-        if (target.level().isEmptyBlock(torchPos) && Blocks.TORCH.defaultBlockState().canSurvive(target.level(), torchPos)) {
-            changed |= target.level().setBlock(torchPos, Blocks.TORCH.defaultBlockState(), 3);
+        final BlockPos torchPos = floor.above(2);
+        final BlockState torch = Blocks.TORCH.defaultBlockState();
+        if (level.isEmptyBlock(torchPos) && torch.canSurvive(level, torchPos)) {
+            blocks.put(torchPos, torch);
         }
 
-        return changed;
+        return placePrankBlocks(target, blocks);
     }
 
     private static boolean creepers(final ServerPlayer target) {
@@ -408,8 +408,11 @@ public final class OBFlimFlamEffects {
             final double y = target.getY() + 5.0 * (1.0 + target.getRandom().nextDouble());
             final double z = target.getZ() + 20.0 * (target.getRandom().nextDouble() - 0.5);
             creeper.moveTo(x, y, z, target.getYRot(), target.getXRot());
-            creeper.setNoAi(true);
-            creeper.setCustomName(Component.literal("Dummy Creeper"));
+            final CompoundTag state = new CompoundTag();
+            creeper.addAdditionalSaveData(state);
+            state.putBoolean("powered", true);
+            state.putByte("ExplosionRadius", (byte) 0);
+            creeper.readAdditionalSaveData(state);
             spawned |= target.serverLevel().addFreshEntity(creeper);
         }
 
@@ -427,44 +430,75 @@ public final class OBFlimFlamEffects {
     }
 
     private static boolean effect(final ServerPlayer target) {
-        final List<EffectMeta> effects = new ArrayList<>(EFFECT_POOL);
-        if (effects.size() < 2) return false;
-        Collections.shuffle(effects);
+        final int first = target.getRandom().nextInt(EFFECT_POOL.size());
+        final int second = target.getRandom().nextInt(EFFECT_POOL.size() - 1);
+        final boolean applied = applyEffect(target, EFFECT_POOL.get(first));
+        return applyEffect(target, EFFECT_POOL.get(second >= first ? second + 1 : second)) || applied;
+    }
 
-        for (int i = 0; i < 2; i++) {
-            final EffectMeta selected = effects.get(i);
-            final int duration = selected.durationMin + target.getRandom().nextInt(selected.durationMax - selected.durationMin + 1);
-            final int level = selected.levelMin + target.getRandom().nextInt(selected.levelMax - selected.levelMin + 1);
-            target.addEffect(new MobEffectInstance(selected.effect, duration, level));
-        }
-
-        return true;
+    private static boolean applyEffect(final ServerPlayer target, final EffectMeta selected) {
+        final int duration = selected.durationMin + target.getRandom().nextInt(selected.durationMax - selected.durationMin + 1);
+        final int level = selected.levelMin + target.getRandom().nextInt(selected.levelMax - selected.levelMin + 1);
+        return target.addEffect(new MobEffectInstance(selected.effect, duration, level));
     }
 
     private static boolean skyblock(final ServerPlayer target) {
-        final var level = target.serverLevel();
-        if (level.dimensionType().ultraWarm()) return false;
+        final ServerLevel level = target.serverLevel();
+        if (level.dimension() == Level.NETHER || level.dimensionType().ultraWarm()) return false;
 
-        final int maxY = level.getMaxBuildHeight() - 6;
-        final int trapY = Mth.clamp(target.blockPosition().getY() + 150, level.getMinBuildHeight() + 5, maxY);
-        final BlockPos center = new BlockPos(target.blockPosition().getX(), trapY, target.blockPosition().getZ());
-        final BlockPos[] blocks = new BlockPos[] {
-                center.below(),
-                center.east(),
-                center.north(),
-                center.south(),
-                center.west()
-        };
+        final BlockPos origin = target.blockPosition();
+        final int trapY = Math.min(origin.getY() + 150, Math.min(250, level.getMaxBuildHeight() - 3));
+        final BlockPos center = origin.atY(trapY);
+        final BlockPos feet = center.above();
+        if (!level.isEmptyBlock(center) || !level.isEmptyBlock(feet) || !level.isEmptyBlock(feet.above())) return false;
 
-        for (final BlockPos pos : blocks) {
-            if (!level.isEmptyBlock(pos)) return false;
+        final Vec3 destination = Vec3.atBottomCenterOf(feet);
+        final var teleport = new EntityTeleportEvent(target, destination.x, destination.y, destination.z);
+        if (MinecraftForge.EVENT_BUS.post(teleport) || !teleport.getTarget().equals(destination)) return false;
+
+        final Map<BlockPos, BlockState> blocks = new LinkedHashMap<>();
+        final BlockState ice = Blocks.ICE.defaultBlockState();
+        blocks.put(center.below(), ice);
+        for (final Direction side : Direction.Plane.HORIZONTAL) {
+            blocks.put(center.relative(side), ice);
+        }
+        if (!placePrankBlocks(target, blocks)) return false;
+
+        target.stopRiding();
+        target.teleportTo(destination.x, destination.y, destination.z);
+        return true;
+    }
+
+    private static boolean placePrankBlocks(final ServerPlayer target, final Map<BlockPos, BlockState> blocks) {
+        if (blocks.isEmpty()) return false;
+        final ServerLevel level = target.serverLevel();
+        final List<BlockSnapshot> placed = new ArrayList<>(blocks.size());
+        boolean accepted = false;
+        try {
+            for (final var entry : blocks.entrySet()) {
+                final BlockPos pos = entry.getKey();
+                if (!level.isInWorldBounds(pos) || !level.hasChunkAt(pos) || !level.getWorldBorder().isWithinBounds(pos)
+                        || !level.mayInteract(target, pos) || !level.isEmptyBlock(pos)) return false;
+                final var snapshot = BlockSnapshot.create(level.dimension(), level, pos, PRANK_PLACEMENT_FLAGS);
+                if (!level.setBlock(pos, entry.getValue(), PRANK_PLACEMENT_FLAGS)) return false;
+                placed.add(snapshot);
+            }
+            final boolean denied = placed.size() == 1
+                    ? ForgeEventFactory.onBlockPlace(target, placed.get(0), Direction.UP)
+                    : ForgeEventFactory.onMultiBlockPlace(target, List.copyOf(placed), Direction.UP);
+            if (denied || placed.stream().anyMatch(snapshot -> snapshot.getCurrentBlock() != blocks.get(snapshot.getPos()))) return false;
+            accepted = true;
+        } finally {
+            if (!accepted) {
+                for (int i = placed.size() - 1; i >= 0; i--) placed.get(i).restore(true, false);
+            }
         }
 
-        for (final BlockPos pos : blocks) {
-            if (!level.setBlock(pos, Blocks.ICE.defaultBlockState(), 3)) return false;
+        for (final BlockSnapshot snapshot : placed) {
+            final BlockPos pos = snapshot.getPos();
+            final BlockState state = blocks.get(pos);
+            level.markAndNotifyBlock(pos, level.getChunkAt(pos), snapshot.getReplacedBlock(), state, Block.UPDATE_ALL, Block.UPDATE_LIMIT);
         }
-
-        target.teleportTo(center.getX() + 0.5D, center.getY() + 1.0D, center.getZ() + 0.5D);
         return true;
     }
 

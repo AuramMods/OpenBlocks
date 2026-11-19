@@ -133,7 +133,7 @@ Suggested order:
 - [-] Utility/domain: block breaker/placer/dropper, auto anvil/enchantment table
 - [x] Visual/domain: canvas, paint, stencils, and glyphs
 - [-] Entity/domain: mini-me, golden eye, and the remaining entities in the manifest
-- [-] Fun/domain: mob trophies and the Flim-Flam combat and luck rules are restored. Seven Flim-Flam actions still need behavior parity.
+- [x] Fun/domain: mob trophies, Flim-Flam combat and luck, and the 17 prank actions.
 
 Per-feature checklist template:
 - [ ] Registration complete
@@ -162,13 +162,13 @@ Checklist:
 - [-] Restore state variants across recipes, creative entries, and models. Paint brushes, paint cans, canvas surfaces, prepared stencils, and glyphs are restored.
 - [ ] Run a muted client in an isolated or background graphical session to verify models, transparency, and face culling.
 - [ ] Reconcile crafting and acquisition against the full legacy recipe inventory.
-- [ ] Finish legacy behavior for the Flim-Flam snowball, teleport, mount, encase, dummy creeper, random potion, and skyblock actions.
+- [x] Restore and verify the Flim-Flam snowball, teleport, mount, encase, dummy creeper, random potion, and skyblock actions.
 - [ ] Deepen `/ob_inventory` parity beyond current built-in + event-bridge baseline:
   - add first concrete subsystem consumers/producers for `OBInventoryEvent` payloads (legacy-style arbitrary subsystem parity in practice, not just schema support)
   - reconnect gravestone/inventory-backend integrations to reuse the dump pipeline (grave placement + claim now wired; subsystem-specific restore UX and backend consumers still pending)
 - [ ] Deepen grave parity from current place+claim skeleton:
   - expand `OBGraveDropsEvent` parity beyond current action filtering (hook concrete listeners/producers and mirror more legacy filtering/consumption flows)
-  - carry richer grave metadata/behavior (owner restrictions, richer death-message formatting, base-placement/facing details) into block/entity state
+  - restore owner identity and epitaph rendering, styled death messages, grave base and facing, and the legacy shovel interaction in block and entity state
   - harden grave placement edge-cases (destructive fallback policy, cross-dimension guarantees, failure-path UX/messages)
 - [ ] Finish legacy recipe migration for skipped recipe files and remaining metadata-collapsed color or subtype conversions.
 - [x] Restore configurable sponge cleanup, Sponge on a Stick, scattered-stone path rendering, and the healing block's one-tick pulses.
