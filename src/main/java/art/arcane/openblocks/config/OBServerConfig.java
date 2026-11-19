@@ -80,6 +80,10 @@ public final class OBServerConfig {
     public static final ForgeConfigSpec.BooleanValue UNSTABLE_GRIEF;
     public static final ForgeConfigSpec.BooleanValue LAST_STAND_ENABLED;
     public static final ForgeConfigSpec.ConfigValue<String> LAST_STAND_FORMULA;
+    public static final ForgeConfigSpec.BooleanValue FLIM_FLAM_ENABLED;
+    public static final ForgeConfigSpec.ConfigValue<List<? extends String>> FLIM_FLAM_BLACKLIST;
+    public static final ForgeConfigSpec.BooleanValue FLIM_FLAM_REVERSE_BLACKLIST;
+    public static final ForgeConfigSpec.BooleanValue FLIM_FLAM_SAFE_ONLY;
 
     static {
         final var builder = new ForgeConfigSpec.Builder();
@@ -91,6 +95,7 @@ public final class OBServerConfig {
         UNSTABLE_ENABLED = builder.define("explosiveEnchantment", true);
         UNSTABLE_GRIEF = builder.comment("Allow Unstable III blasts to break blocks.").define("explosiveEnchantGrief", true);
         LAST_STAND_ENABLED = builder.define("lastStandEnchantment", true);
+        FLIM_FLAM_ENABLED = builder.define("flimFlamEnchantment", true);
         LAST_STAND_FORMULA = builder.comment("XP cost when a hit would leave less than half a heart. Variables are hp, dmg, ench and xp.")
                 .define("lastStandFormula", "max(1, 50*(1-(hp-dmg))/ench)");
         builder.pop();
@@ -251,6 +256,10 @@ public final class OBServerConfig {
         builder.push("tomfoolery");
         SERIOUS_MODE = builder.comment("Disable Tasty Clay digestion and the Be Silly action.")
                 .define("weAreSeriousPeople", true);
+        FLIM_FLAM_BLACKLIST = builder.comment("Effect IDs to exclude from the Flim-Flam enchantment.")
+                .defineListAllowEmpty("flimFlamBlacklist", List.of(), value -> value instanceof String);
+        FLIM_FLAM_REVERSE_BLACKLIST = builder.comment("Use the effect list as an allowlist.").define("reverseBlacklist", false);
+        FLIM_FLAM_SAFE_ONLY = builder.comment("Limit automatic Flim-Flam effects to the original safe group.").define("safeOnly", false);
         builder.pop();
         SPEC = builder.build();
     }

@@ -102,14 +102,13 @@ public final class OBCommands {
 
     private static int queryLuck(final CommandContext<CommandSourceStack> ctx, final ServerPlayer player) {
         final int luck = getLuck(player);
-        ctx.getSource().sendSuccess(() -> Component.literal("Luck for " + player.getGameProfile().getName() + ": " + luck), false);
+        ctx.getSource().sendSuccess(() -> Component.translatable("commands.open_blocks.luck.current", player.getScoreboardName(), luck), false);
         return luck;
     }
 
     private static int modifyLuck(final CommandContext<CommandSourceStack> ctx, final ServerPlayer player, final int amount) {
         final int result = addLuck(player, amount);
-        ctx.getSource().sendSuccess(() -> Component.literal(
-                "Adjusted luck for " + player.getGameProfile().getName() + " by " + amount + ". New value: " + result), true);
+        ctx.getSource().sendSuccess(() -> Component.translatable("commands.open_blocks.luck.adjusted", player.getScoreboardName(), result), false);
         return result;
     }
 
@@ -118,29 +117,27 @@ public final class OBCommands {
         if (effectName == null) {
             chosenEffect = OBFlimFlamEffects.randomEffectName(player);
             if (chosenEffect.isEmpty()) {
-                ctx.getSource().sendFailure(Component.literal("No flimflam effects are registered."));
+                ctx.getSource().sendFailure(Component.translatable("commands.open_blocks.flimflam.none"));
                 return 0;
             }
         } else {
             chosenEffect = effectName.toLowerCase(Locale.ROOT);
             if (!OBFlimFlamEffects.hasEffect(chosenEffect)) {
-                ctx.getSource().sendFailure(Component.literal("Unknown flimflam effect: " + effectName));
+                ctx.getSource().sendFailure(Component.translatable("commands.open_blocks.flimflam.unknown", effectName));
                 return 0;
             }
         }
 
         final boolean result = OBFlimFlamEffects.execute(chosenEffect, player);
         if (!result) {
-            ctx.getSource().sendFailure(Component.literal(
-                    "Flimflam '" + chosenEffect + "' failed for " + player.getGameProfile().getName() + "."));
+            ctx.getSource().sendFailure(Component.translatable("commands.open_blocks.flimflam.failed", chosenEffect, player.getScoreboardName()));
             return 0;
         }
 
-        ctx.getSource().sendSuccess(() -> Component.literal(
-                "Triggered flimflam '" + chosenEffect + "' on " + player.getGameProfile().getName() + "."), true);
+        ctx.getSource().sendSuccess(() -> Component.translatable("commands.open_blocks.flimflam.success", player.getScoreboardName(), chosenEffect), false);
 
         if (!player.equals(ctx.getSource().getEntity())) {
-            player.sendSystemMessage(Component.literal("You were flimflammed with '" + chosenEffect + "'."));
+            player.sendSystemMessage(Component.translatable("commands.open_blocks.flimflam.target"));
         }
 
         return 1;

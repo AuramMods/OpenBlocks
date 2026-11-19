@@ -163,7 +163,7 @@ public final class OBCapabilities {
         }
 
         public int addLuck(final int delta) {
-            this.luck += delta;
+            this.luck = (int) Math.max(Integer.MIN_VALUE, Math.min(Integer.MAX_VALUE, (long) this.luck + delta));
             return this.luck;
         }
 

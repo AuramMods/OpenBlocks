@@ -1,11 +1,15 @@
 package art.arcane.openblocks.recipe;
 
+import art.arcane.openblocks.OpenBlocks;
 import art.arcane.openblocks.registry.OBEnchantments;
 import art.arcane.openblocks.registry.OBRecipeSerializers;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.EnchantedBookItem;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.CraftingBookCategory;
@@ -16,19 +20,21 @@ import net.minecraft.world.level.Level;
 
 public class OBFlimFlamBookRecipe extends CustomRecipe {
 
+    private static final TagKey<Item> EMERALDS = TagKey.create(Registries.ITEM, OpenBlocks.id("legacy_ore_dict/gem_emerald"));
+
     public OBFlimFlamBookRecipe(final ResourceLocation id, final CraftingBookCategory category) {
         super(id, category);
     }
 
     @Override
     public boolean matches(final CraftingContainer container, final Level level) {
-        return emeraldCost(container) > 0 && OBEnchantments.FLIM_FLAM.isPresent();
+        return OBEnchantments.FLIM_FLAM.get().isDiscoverable() && emeraldCost(container) > 0;
     }
 
     @Override
     public ItemStack assemble(final CraftingContainer container, final RegistryAccess registryAccess) {
         final int level = emeraldCost(container);
-        if (level <= 0 || !OBEnchantments.FLIM_FLAM.isPresent()) return ItemStack.EMPTY;
+        if (level <= 0 || !OBEnchantments.FLIM_FLAM.get().isDiscoverable()) return ItemStack.EMPTY;
 
         return EnchantedBookItem.createForEnchantment(new EnchantmentInstance(OBEnchantments.FLIM_FLAM.get(), level));
     }
@@ -52,14 +58,12 @@ public class OBFlimFlamBookRecipe extends CustomRecipe {
             if (stack.isEmpty()) continue;
 
             if (stack.is(Items.BOOK)) {
-                books += stack.getCount();
-                if (books > 1) return 0;
+                if (++books > 1) return 0;
                 continue;
             }
 
-            if (stack.is(Items.EMERALD)) {
-                emeralds += stack.getCount();
-                if (emeralds > 4) return 0;
+            if (stack.is(EMERALDS)) {
+                if (++emeralds > 4) return 0;
                 continue;
             }
 

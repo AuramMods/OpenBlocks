@@ -15,6 +15,7 @@ public final class OBClientConfig {
     public static final ForgeConfigSpec.DoubleValue GUIDE_RENDER_DISTANCE_SQ;
     public static final ForgeConfigSpec.DoubleValue SONIC_GLASSES_OPACITY;
     public static final ForgeConfigSpec.BooleanValue SONIC_GLASSES_USE_TEXTURE;
+    public static final ForgeConfigSpec.IntValue SILLY_LORE_DISPLAY;
 
     public static final ForgeConfigSpec.DoubleValue IMAGINARY_FADE;
 
@@ -32,6 +33,8 @@ public final class OBClientConfig {
         SERIOUS_MODE = builder.comment("Disable the Be Silly key on this client.").define("weAreSeriousPeople", true);
         BOO_WHILE_TYPING = builder.comment("Allow the Be Silly key to activate while a screen is open.")
                 .define("doItWhileTyping", false);
+        SILLY_LORE_DISPLAY = builder.comment("Flim-Flam history visibility. 0 hides it, 1 shows it with Alt held, and 2 always shows it.")
+                .defineInRange("sillyLoreDisplay", 1, 0, 2);
         builder.pop();
         builder.push("projector");
         PROJECTOR_CONE = builder.define("renderHolographicCone", true);

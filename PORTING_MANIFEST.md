@@ -161,7 +161,8 @@ Current registry classes:
   - `src/main/java/art/arcane/openblocks/block/OBRopeLadderBlock.java`
   - `src/main/java/art/arcane/openblocks/block/OBSpongeBlock.java`
 - Game rule registration: `src/main/java/art/arcane/openblocks/world/OBGameRules.java`
-- Command flimflam effect registry: `src/main/java/art/arcane/openblocks/command/OBFlimFlamEffects.java`
+- Flim-Flam combat and luck: `src/main/java/art/arcane/openblocks/enchantment/OBFlimFlam.java`
+- Flim-Flam effect registry: `src/main/java/art/arcane/openblocks/command/OBFlimFlamEffects.java`
 - Capability registration/attachment:
   - `src/main/java/art/arcane/openblocks/capability/OBCapabilities.java`
 - Custom advancement trigger bootstrap:
@@ -285,10 +286,11 @@ Current validation status:
   - `OBFanBlockEntity` saves a continuous heading and applies distance-scaled horizontal airflow in a cone. Incoming signal controls force and blade speed. `OBBearTrapBlockEntity` captures eligible mobs, holds them at its base, releases on use or redstone, and exposes a comparator signal. `OBFloorDeviceRendering` animates both blocks from their synchronized state and renders their models as items.
   - `OBFlagBlock` restores floor, wall, fence, and stacked mounting, and `OBFlagRendering` uses each block's saved color and bearing. `OBSkyRendering` composites the live sky from the Forge render stages with ordinary depth testing. `OBDecorationChunkUpgrade` restores missing block entities for those two blocks in existing 1.20.1 chunks.
   - `src/main/java/art/arcane/openblocks/grave/OBGraveHooks.java` now writes grave backup dumps, posts/consumes `OBGraveDropsEvent` action filtering, searches for valid placement nearby, places grave blocks on successful death handling, and clears only stored grave drops when grave placement succeeds.
-  - `src/main/java/art/arcane/openblocks/command/OBFlimFlamEffects.java` now provides executable breadth-stage actions for all legacy `/flimflam` effect IDs.
+  - Flim-Flam uses sword levels and one-third of the defender's total armor levels to determine who loses luck. The tick handler uses the saved cooldown and forced-effect flag. Automatic effects honor the original costs, weights, thresholds, safety, blacklist, and reverse blacklist.
+  - The Flim-Flam book recipe counts one emerald per occupied slot, up to four. The client displays generated item history on Alt by default. Existing ordinary item lore takes precedence.
   - Current command parity:
     - `luck` reads/writes `open_blocks:luck` capability state.
-    - `flimflam` now executes a 17-effect action map with legacy ID names preserved; deeper legacy parity (luck/cost/weight/blacklist semantics and exact per-effect behavior) remains pending.
+    - `flimflam` supports all 17 legacy effect IDs. Operators can run named effects independently of the automatic rules. Snowballs, teleport, mount, encase, dummy creepers, random potions, and skyblock still use preliminary actions.
     - `ob_inventory` now supports main + built-in sub-inventory dump/restore/spawn:
       - dumps written to `<world>/data/inventory-*.dat`,
       - restore loads stored main inventory onto target player,

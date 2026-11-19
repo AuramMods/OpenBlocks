@@ -110,7 +110,7 @@ public final class OBCreativeTabs {
     @SubscribeEvent
     public static void includeEnchantedBooks(final BuildCreativeModeTabContentsEvent event) {
         if (event.getTab() != OPEN_BLOCKS_TAB.get()) return;
-        for (final var entry : List.of(OBEnchantments.EXPLOSIVE, OBEnchantments.LAST_STAND)) {
+        for (final var entry : List.of(OBEnchantments.EXPLOSIVE, OBEnchantments.LAST_STAND, OBEnchantments.FLIM_FLAM)) {
             final var enchantment = entry.get();
             if (!enchantment.isDiscoverable()) continue;
             for (int level = enchantment.getMinLevel(); level <= enchantment.getMaxLevel(); level++) {

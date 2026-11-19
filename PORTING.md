@@ -133,7 +133,7 @@ Suggested order:
 - [-] Utility/domain: block breaker/placer/dropper, auto anvil/enchantment table
 - [x] Visual/domain: canvas, paint, stencils, and glyphs
 - [-] Entity/domain: mini-me, golden eye, and the remaining entities in the manifest
-- [-] Fun/domain: mob trophies are restored. Flim-Flam and the remaining sound and effect parity are pending.
+- [-] Fun/domain: mob trophies and the Flim-Flam combat and luck rules are restored. Seven Flim-Flam actions still need behavior parity.
 
 Per-feature checklist template:
 - [ ] Registration complete
@@ -162,9 +162,7 @@ Checklist:
 - [-] Restore state variants across recipes, creative entries, and models. Paint brushes, paint cans, canvas surfaces, prepared stencils, and glyphs are restored.
 - [ ] Run a muted client in an isolated or background graphical session to verify models, transparency, and face culling.
 - [ ] Reconcile crafting and acquisition against the full legacy recipe inventory.
-- [ ] Deepen `/flimflam` parity beyond current breadth-stage action wiring:
-  - reconnect legacy luck/cost/weight and safe/blacklist gating behavior
-  - tune per-effect details from thin stubs toward legacy-accurate behavior
+- [ ] Finish legacy behavior for the Flim-Flam snowball, teleport, mount, encase, dummy creeper, random potion, and skyblock actions.
 - [ ] Deepen `/ob_inventory` parity beyond current built-in + event-bridge baseline:
   - add first concrete subsystem consumers/producers for `OBInventoryEvent` payloads (legacy-style arbitrary subsystem parity in practice, not just schema support)
   - reconnect gravestone/inventory-backend integrations to reuse the dump pipeline (grave placement + claim now wired; subsystem-specific restore UX and backend consumers still pending)
@@ -172,8 +170,6 @@ Checklist:
   - expand `OBGraveDropsEvent` parity beyond current action filtering (hook concrete listeners/producers and mirror more legacy filtering/consumption flows)
   - carry richer grave metadata/behavior (owner restrictions, richer death-message formatting, base-placement/facing details) into block/entity state
   - harden grave placement edge-cases (destructive fallback policy, cross-dimension guarantees, failure-path UX/messages)
-- [ ] Replace capability placeholders with gameplay hooks:
-  - `luck`: reconnect full flim-flam cooldown and forced-trigger logic (currently just raw value storage)
 - [ ] Finish legacy recipe migration for skipped recipe files and remaining metadata-collapsed color or subtype conversions.
 - [x] Restore configurable sponge cleanup, Sponge on a Stick, scattered-stone path rendering, and the healing block's one-tick pulses.
 - [x] Restore tank block and item storage, connected transfer and rendering, XP and bucket exchange, and the Liquid XP block assets.
@@ -214,4 +210,4 @@ Checklist:
 - [x] Restore the Wrench's face-based rotation and the Epic Eraser's lore removal and 15 uses.
 - [x] Restore the Information Book with its catalogues and live recipe previews, and the Cursor with linked block interactions and XP costs.
 - [x] Restore Unstable's armor blasts and landing bounce, Last Stand's configurable XP protection, and both enchantments' acquisition and book entries.
-- [ ] Restore Flim-Flam enchantment gameplay and its command and luck rules.
+- [x] Restore Flim-Flam sword and armor acquisition, combat luck and cooldown, weighted selection, safety and list filters, item history, and the operator commands.
