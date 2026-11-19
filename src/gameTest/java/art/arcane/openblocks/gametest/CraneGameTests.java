@@ -7,6 +7,7 @@ import art.arcane.openblocks.registry.OBEntities;
 import art.arcane.openblocks.registry.OBItems;
 import com.mojang.authlib.GameProfile;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -48,6 +49,10 @@ public final class CraneGameTests {
                 Items.GOLD_NUGGET, Items.REDSTONE, Items.GOLD_NUGGET, Items.IRON_INGOT, Items.REDSTONE, Items.IRON_INGOT);
         helper.assertTrue(ComponentRecipeGameTests.craft(helper, control).is(OBItems.CRANE_CONTROL.get()),
                 "The legacy ingots, nuggets, and dust could not craft the controller");
+        final var miracleMagnet = ComponentRecipeGameTests.input(helper, Items.REDSTONE, Items.ENDER_PEARL, Items.REDSTONE,
+                Items.ENDER_PEARL, OBItems.CRANE_MAGNET.get(), Items.ENDER_PEARL, Items.REDSTONE, Items.ENDER_PEARL, Items.REDSTONE);
+        helper.assertTrue(ComponentRecipeGameTests.craft(helper, miracleMagnet).is(OBItems.MIRACLE_MAGNET.get()),
+                "Redstone, ender pearls, and the Crane Magnet could not craft the Miracle Magnet");
         helper.succeed();
     }
 
@@ -186,6 +191,65 @@ public final class CraneGameTests {
         helper.assertTrue(restored.toggle(player), "Restored cargo could not be released");
         checkChest(helper, DESTINATION);
         restored.discard();
+        helper.succeed();
+    }
+
+    @GameTest(template = "empty")
+    public static void remoteMagnetFollowsItsControllerAndHonorsSpawnCancellation(final GameTestHelper helper) {
+        final FakePlayer actor = player(helper);
+        final Vec3 origin = helper.absoluteVec(new Vec3(2.5, 4, 2.5));
+        final var target = new AtomicReference<>(origin);
+        final Consumer<EntityJoinLevelEvent> cancel = event -> {
+            if (event.getEntity() instanceof OBMagnet remote && remote.position().equals(origin)) event.setCanceled(true);
+        };
+        MinecraftForge.EVENT_BUS.addListener(EventPriority.NORMAL, false, EntityJoinLevelEvent.class, cancel);
+        try {
+            helper.assertTrue(OBMagnet.deployRemote(helper.getLevel(), actor.getGameProfile(), origin, target::get) == null,
+                    "A denied remote magnet spawn was reported as a successful activation");
+        } finally {
+            MinecraftForge.EVENT_BUS.unregister(cancel);
+        }
+        final OBMagnet magnet = OBMagnet.deployRemote(helper.getLevel(), actor.getGameProfile(), origin, target::get);
+        helper.assertTrue(magnet != null && magnet.getType() == OBEntities.MAGNET.get() && magnet.holder() == null,
+                "Remote activation unexpectedly required a player backpack");
+        target.set(origin.add(2, 1, 0));
+        for (int tick = 0; tick < 20; tick++) magnet.tick();
+        helper.assertTrue(magnet.position().distanceTo(target.get()) < 0.002, "The remote magnet missed its new target");
+        target.set(null);
+        magnet.tick();
+        helper.assertTrue(magnet.isRemoved(), "The remote magnet ignored its disconnected controller");
+        helper.succeed();
+    }
+
+    @GameTest(template = "empty")
+    public static void inactiveRemoteMagnetRecoversSavedCargoUsingItsOwner(final GameTestHelper helper) {
+        final FakePlayer actor = player(helper);
+        fillChest(helper);
+        final Vec3 origin = Vec3.atBottomCenterOf(helper.absolutePos(SOURCE).above());
+        final OBMagnet magnet = OBMagnet.deployRemote(helper.getLevel(), actor.getGameProfile(), origin, () -> origin);
+        helper.assertTrue(magnet != null && magnet.toggle(actor), "The remote magnet did not mount the chest");
+        setMagnetAt(magnet, helper.absolutePos(DESTINATION).above());
+        final CompoundTag data = new CompoundTag();
+        helper.assertTrue(magnet.save(data) && data.contains("MachineOwner"), "The remote magnet lost the owner's protection identity");
+        magnet.getFirstPassenger().discard();
+        magnet.discard();
+        final var loaded = EntityType.loadEntityRecursive(data, helper.getLevel(), entity -> entity);
+        helper.assertTrue(loaded instanceof OBMagnet && loaded.getFirstPassenger() instanceof OBMountedBlock,
+                "The restored remote magnet lost the chest it carried");
+        final BlockPos destination = helper.absolutePos(DESTINATION);
+        final AtomicReference<UUID> placedBy = new AtomicReference<>();
+        final Consumer<BlockEvent.EntityPlaceEvent> observe = event -> {
+            if (event.getPos().equals(destination) && event.getEntity() instanceof FakePlayer player) placedBy.set(player.getUUID());
+        };
+        MinecraftForge.EVENT_BUS.addListener(EventPriority.NORMAL, false, BlockEvent.EntityPlaceEvent.class, observe);
+        try {
+            loaded.tick();
+        } finally {
+            MinecraftForge.EVENT_BUS.unregister(observe);
+        }
+        helper.assertTrue(loaded.isRemoved() && actor.getUUID().equals(placedBy.get()), "The unloaded controller's cargo bypassed its owner identity");
+        helper.assertBlockPresent(Blocks.AIR, SOURCE);
+        checkChest(helper, DESTINATION);
         helper.succeed();
     }
 

@@ -39,6 +39,11 @@ Current registry classes:
   - `src/main/java/art/arcane/openblocks/entity/OBMagnet.java`
   - `src/main/java/art/arcane/openblocks/entity/OBMountedBlock.java`
   - `src/main/java/art/arcane/openblocks/client/OBCraneRendering.java`
+- Miracle Magnet integration and client presentation:
+  - `src/main/java/art/arcane/openblocks/integration/OBComputerCraftMagnet.java`
+  - `src/main/java/art/arcane/openblocks/integration/OBTurtleMagnetPeripheral.java`
+  - `src/main/java/art/arcane/openblocks/client/OBComputerCraftMagnetClient.java`
+  - `src/main/resources/data/open_blocks/computercraft/turtle_upgrades/magnet_turtle.json`
 - Sound register: `src/main/java/art/arcane/openblocks/registry/OBSounds.java`
 - Custom statistic register for Bricks dropped: `src/main/java/art/arcane/openblocks/registry/OBStats.java`
 - Enchantment register: `src/main/java/art/arcane/openblocks/registry/OBEnchantments.java`
@@ -378,7 +383,7 @@ Source:
 - `Items.genericUnstackable` (`ItemOBGenericUnstackable`) variants:
   - `pointer`
 
-The 1.20.1 port registers the listed active variants as distinct `open_blocks` items and routes converted recipe inputs and outputs to those IDs. The old `generic` and `generic_unstackable` IDs remain loadable for existing worlds. Old generic stacks contain no subtype to recover. The old unstackable ID has a conversion recipe for its only variant, the pointer. Pointer behavior and the Miracle Magnet's conditional integration are tracked with their feature ports.
+The 1.20.1 port registers the listed active variants as distinct `open_blocks` items and routes converted recipe inputs and outputs to those IDs. The old `generic` and `generic_unstackable` IDs remain loadable for existing worlds. Old generic stacks contain no subtype to recover. The old unstackable ID has a conversion recipe for its only variant, the pointer. The Miracle Magnet is craftable as `open_blocks:miracle_magnet` and also equips as `open_blocks:magnet_turtle` when CC: Tweaked is installed.
 
 ## Legacy Creative Tab Behavior (Model/Lang Parity Critical)
 Primary sources:
@@ -475,7 +480,7 @@ Registered mod entities:
 - `openblocks:luggage` -> `EntityLuggage` (legacy numeric ID constant `702`). `open_blocks:luggage` uses `OBLuggage` with owner following, grounded item collection, 27 or 54 slots, and synchronized lightning charge.
 - `openblocks:xp_orb_no_fly` -> `EntityXPOrbNoFly` (`709`)
 - `openblocks:hang_glider` -> `EntityHangGlider` (`701`). `open_blocks:hang_glider` uses `OBHangGlider`, with synchronized holder, hand, airborne state, and thermal seed. Equipped gliders are transient.
-- `openblocks:magnet` -> `EntityMagnet` (`703`). Shared magnet behavior is implemented in `OBMagnet`. The Miracle Magnet turtle upgrade still needs to bind and operate this variant.
+- `openblocks:magnet` -> `EntityMagnet` (`703`). The `openblocks_magnet` turtle peripheral commands this variant of `OBMagnet`. It recovers carried blocks with the turtle owner's Forge identity when its controller goes away.
 - `openblocks:mounted_block` -> `EntityMountedBlock` (`704`). `OBMountedBlock` stores block state and block entity data. A placement veto keeps the cargo available for another attempt.
 - `openblocks:player_magnet` -> `EntityMagnet.PlayerBound` (`708`). Worn equipment deploys `OBMagnet`, which follows the player and prioritizes eligible entities over blocks.
 - `openblocks:cartographer` -> `EntityCartographer` (`705`)

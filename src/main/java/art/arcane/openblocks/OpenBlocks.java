@@ -2,10 +2,12 @@ package art.arcane.openblocks;
 
 import art.arcane.openblocks.advancement.OBCriterions;
 import art.arcane.openblocks.capability.OBCapabilities;
+import art.arcane.openblocks.client.OBComputerCraftMagnetClient;
 import art.arcane.openblocks.config.OBClientConfig;
 import art.arcane.openblocks.config.OBServerConfig;
 import art.arcane.openblocks.integration.OBComputerCraftCannon;
 import art.arcane.openblocks.integration.OBComputerCraftDonations;
+import art.arcane.openblocks.integration.OBComputerCraftMagnet;
 import art.arcane.openblocks.network.OBNetwork;
 import art.arcane.openblocks.registry.OBBlocks;
 import art.arcane.openblocks.registry.OBBlockEntities;
@@ -21,12 +23,14 @@ import art.arcane.openblocks.registry.OBSounds;
 import art.arcane.openblocks.registry.OBStats;
 import art.arcane.openblocks.world.OBGameRules;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 
 @Mod(OpenBlocks.MODID)
 public class OpenBlocks {
@@ -56,7 +60,11 @@ public class OpenBlocks {
         OBMenuTypes.MENU_TYPES.register(modEventBus);
         OBRecipeSerializers.RECIPE_SERIALIZERS.register(modEventBus);
         modEventBus.addListener(OBCapabilities::onRegisterCapabilities);
-        if (ModList.get().isLoaded("computercraft")) modEventBus.addListener(this::setupComputerCraft);
+        if (ModList.get().isLoaded("computercraft")) {
+            modEventBus.addListener(this::setupComputerCraft);
+            OBComputerCraftMagnet.register(modEventBus);
+            if (FMLEnvironment.dist == Dist.CLIENT) OBComputerCraftMagnetClient.register(modEventBus);
+        }
 
         context.registerConfig(ModConfig.Type.SERVER, OBServerConfig.SPEC);
         context.registerConfig(ModConfig.Type.CLIENT, OBClientConfig.SPEC);

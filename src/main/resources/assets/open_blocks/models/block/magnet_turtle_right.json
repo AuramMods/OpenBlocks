@@ -1,0 +1,4 @@
+{
+  "parent": "computercraft:block/turtle_upgrade_base_right",
+  "textures": { "texture": "open_blocks:block/magnet_upgrade" }
+}

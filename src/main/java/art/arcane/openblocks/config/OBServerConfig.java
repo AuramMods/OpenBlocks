@@ -50,6 +50,9 @@ public final class OBServerConfig {
     public static final ForgeConfigSpec.BooleanValue HANG_GLIDER_THERMALS;
     public static final ForgeConfigSpec.BooleanValue CRANE_COLLISIONS;
     public static final ForgeConfigSpec.BooleanValue CRANE_SHIFT_DIRECTION;
+    public static final ForgeConfigSpec.BooleanValue TURTLE_MAGNET_ENABLED;
+    public static final ForgeConfigSpec.DoubleValue TURTLE_MAGNET_RANGE;
+    public static final ForgeConfigSpec.DoubleValue TURTLE_MAGNET_RECALL_RANGE;
     public static final ForgeConfigSpec.BooleanValue MAGNET_PICK_ENTITIES;
     public static final ForgeConfigSpec.BooleanValue MAGNET_PICK_BLOCKS;
     public static final ForgeConfigSpec.ConfigValue<List<? extends String>> MAGNET_BLOCK_ALLOWLIST;
@@ -161,6 +164,10 @@ public final class OBServerConfig {
         builder.push("crane");
         CRANE_COLLISIONS = builder.define("doCraneCollisionCheck", false);
         CRANE_SHIFT_DIRECTION = builder.comment("Hold sneak to lower the magnet. When false, each use reverses direction.").define("boringMode", true);
+        TURTLE_MAGNET_ENABLED = builder.comment("Allow CC: Tweaked turtles to deploy a Miracle Magnet.").define("addTurtles", true);
+        TURTLE_MAGNET_RANGE = builder.comment("Maximum target offset on each turtle axis.").defineInRange("turtleMagnetRange", 32.0D, 0.0D, 1024.0D);
+        TURTLE_MAGNET_RECALL_RANGE = builder.comment("Maximum distance at which a turtle can deactivate its magnet.")
+                .defineInRange("turtleMagnetDeactivateRange", 3.0D, 0.0D, 1024.0D);
         MAGNET_BLOCK_ALLOWLIST = builder.defineListAllowEmpty("magnetBlockWhitelist", List.of(), value -> value instanceof String);
         MAGNET_ENTITY_ALLOWLIST = builder.defineListAllowEmpty("magnetEntityWhitelist", List.of(), value -> value instanceof String);
         MAGNET_BLOCK_ENTITY_ALLOWLIST = builder.defineListAllowEmpty("magnetTileEntityWhitelist", List.of(), value -> value instanceof String);

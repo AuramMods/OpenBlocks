@@ -106,6 +106,7 @@ dependencies {
     compileOnly(fg.deobf("mezz.jei:jei-${minecraft_version}-forge-api:${jei_version}"))
     compileOnly("cc.tweaked:cc-tweaked-1.20.1-core-api:1.120.2")
     compileOnly("cc.tweaked:cc-tweaked-1.20.1-common-api:1.120.2")
+    compileOnly("cc.tweaked:cc-tweaked-1.20.1-forge-api:1.120.2")
     if (!standalone) {
         runtimeOnly fg.deobf("curse.maven:projecte-226410:4901949")
         runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge:${jei_version}")

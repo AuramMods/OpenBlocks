@@ -2,6 +2,7 @@ package art.arcane.openblocks.entity;
 
 import art.arcane.openblocks.config.OBServerConfig;
 import art.arcane.openblocks.registry.OBEntities;
+import com.mojang.authlib.GameProfile;
 import com.mojang.logging.LogUtils;
 import java.util.Set;
 import java.util.UUID;
@@ -38,6 +39,7 @@ import net.minecraft.world.level.block.state.properties.ChestType;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.BlockSnapshot;
+import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.network.NetworkHooks;
@@ -55,6 +57,7 @@ public final class OBMountedBlock extends Entity {
     @Nullable private CompoundTag contents;
     @Nullable private BlockPos source;
     @Nullable private UUID owner;
+    @Nullable private GameProfile machineOwner;
 
     public OBMountedBlock(final EntityType<? extends OBMountedBlock> type, final Level level) {
         super(type, level);
@@ -105,6 +108,7 @@ public final class OBMountedBlock extends Entity {
         cargo.contents = data;
         cargo.source = pos.immutable();
         cargo.owner = actor.getUUID();
+        cargo.machineOwner = magnet.machineOwner();
         cargo.entityData.set(BLOCK_STATE, Block.getId(state));
         magnet.alignToCargo(cargo);
         level.updateNeighborsAt(pos, state.getBlock());
@@ -191,7 +195,10 @@ public final class OBMountedBlock extends Entity {
                 final Vec3 safe = Vec3.atBottomCenterOf(source);
                 setPos(safe.x, safe.y, safe.z);
             }
-            if (tickCount % 20 == 0 && owner != null && server.getPlayerByUUID(owner) instanceof ServerPlayer player) recover(player);
+            if (tickCount % 20 == 0) {
+                if (machineOwner != null) recover(FakePlayerFactory.get(server, machineOwner));
+                else if (owner != null && server.getPlayerByUUID(owner) instanceof ServerPlayer player) recover(player);
+            }
         }
         super.tick();
     }
@@ -219,6 +226,7 @@ public final class OBMountedBlock extends Entity {
         contents = tag.contains("BlockEntity", Tag.TAG_COMPOUND) ? tag.getCompound("BlockEntity").copy() : null;
         source = tag.contains("Source", Tag.TAG_COMPOUND) ? NbtUtils.readBlockPos(tag.getCompound("Source")) : null;
         owner = tag.hasUUID("Owner") ? tag.getUUID("Owner") : null;
+        machineOwner = tag.contains("MachineOwner") ? NbtUtils.readGameProfile(tag.getCompound("MachineOwner")) : null;
     }
 
     @Override
@@ -227,6 +235,7 @@ public final class OBMountedBlock extends Entity {
         if (contents != null) tag.put("BlockEntity", contents.copy());
         if (source != null) tag.put("Source", NbtUtils.writeBlockPos(source));
         if (owner != null) tag.putUUID("Owner", owner);
+        if (machineOwner != null) tag.put("MachineOwner", NbtUtils.writeGameProfile(new CompoundTag(), machineOwner));
     }
 
     @Override

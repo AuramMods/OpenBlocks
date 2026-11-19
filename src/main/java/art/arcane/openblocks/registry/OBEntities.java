@@ -47,7 +47,7 @@ public final class OBEntities {
 
     private static RegistryObject<EntityType<OBMagnet>> registerMagnet(final String id) {
         return ENTITY_TYPES.register(id, () -> EntityType.Builder.of(OBMagnet::new, MobCategory.MISC).noSummon().fireImmune()
-                .sized(0.5F, 0.5F).clientTrackingRange(4).updateInterval(1).build(OpenBlocks.id(id).toString()));
+                .sized(OBMagnet.SIZE, OBMagnet.SIZE).clientTrackingRange(4).updateInterval(1).build(OpenBlocks.id(id).toString()));
     }
 
     private static RegistryObject<EntityType<OBPlaceholderEntity>> register(final String id, final int trackingRange, final int updateInterval) {
