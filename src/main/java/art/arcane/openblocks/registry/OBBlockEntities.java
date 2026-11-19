@@ -13,6 +13,7 @@ import art.arcane.openblocks.block.entity.OBGraveBlockEntity;
 import art.arcane.openblocks.block.entity.OBHealBlockEntity;
 import art.arcane.openblocks.block.entity.OBPlaceholderBlockEntity;
 import art.arcane.openblocks.block.entity.OBCanvasBlockEntity;
+import art.arcane.openblocks.block.entity.OBDrawingTableBlockEntity;
 import art.arcane.openblocks.block.entity.OBPaintCanBlockEntity;
 import art.arcane.openblocks.block.entity.OBPaintMixerBlockEntity;
 import art.arcane.openblocks.block.entity.OBProjectorBlockEntity;
@@ -79,7 +80,7 @@ public final class OBBlockEntities {
     public static final RegistryObject<BlockEntityType<OBPaintCanBlockEntity>> PAINT_CAN = register("paint_can", OBPaintCanBlockEntity::new, OBBlocks.PAINT_CAN);
     public static final RegistryObject<BlockEntityType<OBCanvasBlockEntity>> CANVAS_GLASS = register("canvas_glass", (pos, state) -> canvas(true, pos, state), OBBlocks.CANVAS_GLASS);
     public static final RegistryObject<BlockEntityType<OBProjectorBlockEntity>> PROJECTOR = register("projector", OBProjectorBlockEntity::new, OBBlocks.PROJECTOR);
-    public static final RegistryObject<BlockEntityType<OBPlaceholderBlockEntity>> DRAWING_TABLE = register("drawing_table", OBBlocks.DRAWING_TABLE);
+    public static final RegistryObject<BlockEntityType<OBDrawingTableBlockEntity>> DRAWING_TABLE = register("drawing_table", OBDrawingTableBlockEntity::new, OBBlocks.DRAWING_TABLE);
     public static final RegistryObject<BlockEntityType<OBSkyBlockEntity>> SKY = register("sky", OBSkyBlockEntity::new, OBBlocks.SKY);
     public static final RegistryObject<BlockEntityType<OBXPShowerBlockEntity>> XP_SHOWER = register("xp_shower", OBXPShowerBlockEntity::new, OBBlocks.XP_SHOWER);
     public static final RegistryObject<BlockEntityType<OBPlaceholderBlockEntity>> GOLDEN_EGG = register("golden_egg", OBBlocks.GOLDEN_EGG);

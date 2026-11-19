@@ -10,6 +10,7 @@ import art.arcane.openblocks.item.OBDevNullItem;
 import art.arcane.openblocks.item.OBElevatorItem;
 import art.arcane.openblocks.item.OBEmptyMapItem;
 import art.arcane.openblocks.item.OBFlagItem;
+import art.arcane.openblocks.item.OBGlyphItem;
 import art.arcane.openblocks.item.OBHangGliderItem;
 import art.arcane.openblocks.item.OBHeightMapItem;
 import art.arcane.openblocks.item.OBLuggageItem;
@@ -18,6 +19,7 @@ import art.arcane.openblocks.item.OBPaintBrushItem;
 import art.arcane.openblocks.item.OBPaintCanItem;
 import art.arcane.openblocks.item.OBPointerItem;
 import art.arcane.openblocks.item.OBSqueegeeItem;
+import art.arcane.openblocks.item.OBStencilItem;
 import art.arcane.openblocks.item.OBScaffoldingItem;
 import art.arcane.openblocks.item.OBSkyItem;
 import art.arcane.openblocks.item.OBSpongeOnAStickItem;
@@ -120,7 +122,7 @@ public final class OBItems {
     public static final RegistryObject<Item> XP_BUCKET = registerBucketItem("xp_bucket");
     public static final RegistryObject<Item> SLEEPING_BAG = registerItem("sleeping_bag");
     public static final RegistryObject<Item> PAINTBRUSH = registerItem("paintbrush", OBPaintBrushItem::new);
-    public static final RegistryObject<Item> STENCIL = registerItem("stencil");
+    public static final RegistryObject<Item> STENCIL = registerItem("stencil", OBStencilItem::new);
     public static final RegistryObject<Item> SQUEEGEE = registerItem("squeegee", OBSqueegeeItem::new);
     public static final RegistryObject<Item> HEIGHT_MAP = registerItem("height_map", OBHeightMapItem::new);
     public static final RegistryObject<Item> EMPTY_MAP = registerItem("empty_map", OBEmptyMapItem::new);
@@ -135,7 +137,7 @@ public final class OBItems {
     public static final RegistryObject<Item> PEDOMETER = registerItem("pedometer", OBPedometerItem::new);
     public static final RegistryObject<Item> EPIC_ERASER = registerItem("epic_eraser");
     public static final RegistryObject<Item> WRENCH = registerItem("wrench");
-    public static final RegistryObject<Item> GLYPH = registerItem("glyph");
+    public static final RegistryObject<Item> GLYPH = registerItem("glyph", OBGlyphItem::new);
 
     // Keep the scaffold IDs loadable in existing worlds.
     public static final RegistryObject<Item> GENERIC = ITEMS.register("generic", () -> new Item(new Item.Properties()));

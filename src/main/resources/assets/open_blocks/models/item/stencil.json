@@ -2,5 +2,97 @@
   "parent": "minecraft:item/generated",
   "textures": {
     "layer0": "open_blocks:item/stencil"
-  }
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "open_blocks:stencil_pattern": 1
+      },
+      "model": "open_blocks:item/stencil/creeper_face"
+    },
+    {
+      "predicate": {
+        "open_blocks:stencil_pattern": 2
+      },
+      "model": "open_blocks:item/stencil/border"
+    },
+    {
+      "predicate": {
+        "open_blocks:stencil_pattern": 3
+      },
+      "model": "open_blocks:item/stencil/stripes"
+    },
+    {
+      "predicate": {
+        "open_blocks:stencil_pattern": 4
+      },
+      "model": "open_blocks:item/stencil/corner"
+    },
+    {
+      "predicate": {
+        "open_blocks:stencil_pattern": 5
+      },
+      "model": "open_blocks:item/stencil/corner2"
+    },
+    {
+      "predicate": {
+        "open_blocks:stencil_pattern": 6
+      },
+      "model": "open_blocks:item/stencil/corner3"
+    },
+    {
+      "predicate": {
+        "open_blocks:stencil_pattern": 7
+      },
+      "model": "open_blocks:item/stencil/hole"
+    },
+    {
+      "predicate": {
+        "open_blocks:stencil_pattern": 8
+      },
+      "model": "open_blocks:item/stencil/spiral"
+    },
+    {
+      "predicate": {
+        "open_blocks:stencil_pattern": 9
+      },
+      "model": "open_blocks:item/stencil/thickstripes"
+    },
+    {
+      "predicate": {
+        "open_blocks:stencil_pattern": 10
+      },
+      "model": "open_blocks:item/stencil/splat"
+    },
+    {
+      "predicate": {
+        "open_blocks:stencil_pattern": 11
+      },
+      "model": "open_blocks:item/stencil/storage"
+    },
+    {
+      "predicate": {
+        "open_blocks:stencil_pattern": 12
+      },
+      "model": "open_blocks:item/stencil/heart"
+    },
+    {
+      "predicate": {
+        "open_blocks:stencil_pattern": 13
+      },
+      "model": "open_blocks:item/stencil/heart2"
+    },
+    {
+      "predicate": {
+        "open_blocks:stencil_pattern": 14
+      },
+      "model": "open_blocks:item/stencil/music"
+    },
+    {
+      "predicate": {
+        "open_blocks:stencil_pattern": 15
+      },
+      "model": "open_blocks:item/stencil/balloon"
+    }
+  ]
 }

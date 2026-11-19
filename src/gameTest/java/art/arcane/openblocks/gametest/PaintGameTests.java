@@ -281,6 +281,8 @@ public final class PaintGameTests {
     }
 
     private static InteractionResult use(final Player player, final BlockPos pos, final Direction face) {
-        return player.getMainHandItem().useOn(new UseOnContext(player, InteractionHand.MAIN_HAND, hit(pos, face)));
+        final var context = new UseOnContext(player, InteractionHand.MAIN_HAND, hit(pos, face));
+        final var first = player.getMainHandItem().onItemUseFirst(context);
+        return first == InteractionResult.PASS ? player.getMainHandItem().useOn(context) : first;
     }
 }

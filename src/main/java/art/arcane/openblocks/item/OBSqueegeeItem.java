@@ -6,6 +6,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 
 public final class OBSqueegeeItem extends Item {
@@ -15,14 +16,15 @@ public final class OBSqueegeeItem extends Item {
     }
 
     @Override
-    public InteractionResult useOn(final UseOnContext context) {
+    public InteractionResult onItemUseFirst(final ItemStack stack, final UseOnContext context) {
         final var level = context.getLevel();
         final var pos = context.getClickedPos();
         final var player = context.getPlayer();
         final Direction face = context.getClickedFace();
         if (!(level.getBlockEntity(pos) instanceof OBCanvasBlockEntity canvas) || player == null
                 || !level.mayInteract(player, pos) || !player.mayUseItemAt(pos, face, context.getItemInHand())) return InteractionResult.PASS;
-        if (!level.isClientSide() && canvas.rinse(player.isShiftKeyDown() ? Direction.values() : new Direction[]{face})) {
+        if (!level.isClientSide()) {
+            if (!canvas.rinse(player, face, player.isShiftKeyDown())) return InteractionResult.FAIL;
             level.playSound(null, pos, OBSounds.SQUEEGEE_USE.get(), SoundSource.PLAYERS, 1, 1);
         }
         return InteractionResult.sidedSuccess(level.isClientSide());

@@ -11,6 +11,7 @@ public final class OBClientConfig {
     public static final ForgeConfigSpec.BooleanValue BOO_WHILE_TYPING;
     public static final ForgeConfigSpec.BooleanValue PROJECTOR_CONE;
     public static final ForgeConfigSpec.IntValue PROJECTOR_BRIGHTNESS;
+    public static final ForgeConfigSpec.BooleanValue GLYPHS_IN_SEARCH;
 
     static {
         final var builder = new ForgeConfigSpec.Builder();
@@ -31,6 +32,9 @@ public final class OBClientConfig {
         PROJECTOR_CONE = builder.define("renderHolographicCone", true);
         PROJECTOR_BRIGHTNESS = builder.comment("Brightness of the holographic cone. Use -1 for world lighting.")
                 .defineInRange("brightness", -1, -1, 255);
+        builder.pop();
+        builder.push("glyphs");
+        GLYPHS_IN_SEARCH = builder.comment("Include every printable glyph in the creative search tab.").define("showInCreativeSearch", false);
         builder.pop();
         SPEC = builder.build();
     }

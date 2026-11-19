@@ -2,13 +2,17 @@ package art.arcane.openblocks.registry;
 
 import art.arcane.openblocks.OpenBlocks;
 import art.arcane.openblocks.block.entity.OBTankBlockEntity;
+import art.arcane.openblocks.config.OBClientConfig;
 import art.arcane.openblocks.config.OBServerConfig;
 import art.arcane.openblocks.item.OBElevatorItem;
 import art.arcane.openblocks.item.OBEmptyMapItem;
+import art.arcane.openblocks.item.OBGlyphItem;
 import art.arcane.openblocks.item.OBPaintBrushItem;
 import art.arcane.openblocks.item.OBPaintCanItem;
 import art.arcane.openblocks.item.OBPaintColors;
 import art.arcane.openblocks.item.OBSkyItem;
+import art.arcane.openblocks.item.OBStencilItem;
+import art.arcane.openblocks.item.OBStencilPattern;
 import art.arcane.openblocks.item.OBTankItem;
 import art.arcane.openblocks.world.OBHeightMapData;
 import net.minecraft.core.registries.Registries;
@@ -46,6 +50,19 @@ public final class OBCreativeTabs {
                         } else if (item instanceof OBPaintBrushItem) {
                             output.accept(item);
                             for (final DyeColor dye : DyeColor.values()) output.accept(OBPaintBrushItem.create(OBPaintColors.palette(dye)));
+                        } else if (item instanceof OBStencilItem) {
+                            for (final var pattern : OBStencilPattern.values()) output.accept(OBStencilItem.create(pattern, 1));
+                        } else if (item instanceof OBGlyphItem) {
+                            final boolean search = OBClientConfig.SPEC.isLoaded() && OBClientConfig.GLYPHS_IN_SEARCH.get();
+                            for (int index = 0; index < OBGlyphItem.COUNT; index++) {
+                                if (!OBGlyphItem.available(index)) continue;
+                                final boolean displayed = OBGlyphItem.CREATIVE_CHARACTERS.indexOf(OBGlyphItem.character(index)) >= 0;
+                                if (displayed || search) {
+                                    output.accept(OBGlyphItem.create(index, 1), displayed
+                                            ? (search ? CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS : CreativeModeTab.TabVisibility.PARENT_TAB_ONLY)
+                                            : CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);
+                                }
+                            }
                         } else {
                             output.accept(item);
                             if (item instanceof OBSkyItem) output.accept(OBSkyItem.create(true));

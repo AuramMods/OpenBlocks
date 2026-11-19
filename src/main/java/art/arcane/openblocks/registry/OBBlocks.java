@@ -15,6 +15,7 @@ import art.arcane.openblocks.block.OBHealBlock;
 import art.arcane.openblocks.block.OBLadderBlock;
 import art.arcane.openblocks.block.OBPathBlock;
 import art.arcane.openblocks.block.OBCanvasBlock;
+import art.arcane.openblocks.block.OBDrawingTableBlock;
 import art.arcane.openblocks.block.OBPaintCanBlock;
 import art.arcane.openblocks.block.OBPaintMixerBlock;
 import art.arcane.openblocks.block.OBProjectorBlock;
@@ -148,6 +149,7 @@ public final class OBBlocks {
         if ("beartrap".equals(id)) return new OBBearTrapBlock(properties);
         if ("fan".equals(id)) return new OBFanBlock(properties);
         if ("flag".equals(id)) return new OBFlagBlock(BlockBehaviour.Properties.of().noCollission().instabreak().sound(SoundType.WOOD));
+        if ("drawing_table".equals(id)) return new OBDrawingTableBlock(BlockBehaviour.Properties.copy(Blocks.CRAFTING_TABLE));
         if ("paint_mixer".equals(id)) return new OBPaintMixerBlock(properties);
         if ("paint_can".equals(id)) return new OBPaintCanBlock(BlockBehaviour.Properties.of().instabreak().noOcclusion().sound(SoundType.METAL));
         if ("canvas".equals(id)) return new OBCanvasBlock(BlockBehaviour.Properties.copy(Blocks.SPONGE), false);

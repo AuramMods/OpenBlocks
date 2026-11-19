@@ -4,6 +4,7 @@ import art.arcane.openblocks.OpenBlocks;
 import art.arcane.openblocks.entity.OBLuggage;
 import art.arcane.openblocks.menu.OBBigButtonMenu;
 import art.arcane.openblocks.menu.OBDevNullMenu;
+import art.arcane.openblocks.menu.OBDrawingTableMenu;
 import art.arcane.openblocks.menu.OBPaintMixerMenu;
 import art.arcane.openblocks.menu.OBProjectorMenu;
 import art.arcane.openblocks.menu.OBRedstoneMachineMenu;
@@ -35,7 +36,8 @@ public final class OBMenuTypes {
             () -> IForgeMenuType.create(OBDevNullMenu::new));
     public static final RegistryObject<MenuType<OBUtilityInventoryMenu>> DONATION_STATION = MENU_TYPES.register("donation_station",
             () -> new MenuType<>(OBUtilityInventoryMenu::donationStation, FeatureFlags.DEFAULT_FLAGS));
-    public static final RegistryObject<MenuType<ChestMenu>> DRAWING_TABLE = register("drawing_table");
+    public static final RegistryObject<MenuType<OBDrawingTableMenu>> DRAWING_TABLE = MENU_TYPES.register("drawing_table",
+            () -> IForgeMenuType.create(OBDrawingTableMenu::new));
     public static final RegistryObject<MenuType<OBRedstoneMachineMenu>> ITEM_DROPPER = MENU_TYPES.register("item_dropper",
             () -> new MenuType<>(OBRedstoneMachineMenu::itemDropper, FeatureFlags.DEFAULT_FLAGS));
     public static final RegistryObject<MenuType<ChestMenu>> LUGGAGE = MENU_TYPES.register("luggage",
@@ -53,7 +55,4 @@ public final class OBMenuTypes {
 
     private OBMenuTypes() {}
 
-    private static RegistryObject<MenuType<ChestMenu>> register(final String id) {
-        return MENU_TYPES.register(id, () -> IForgeMenuType.create((windowId, inventory, data) -> ChestMenu.threeRows(windowId, inventory)));
-    }
 }

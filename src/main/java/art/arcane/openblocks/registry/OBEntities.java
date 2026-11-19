@@ -3,6 +3,7 @@ package art.arcane.openblocks.registry;
 import art.arcane.openblocks.OpenBlocks;
 import art.arcane.openblocks.entity.OBCartographer;
 import art.arcane.openblocks.entity.OBFallingExperienceOrb;
+import art.arcane.openblocks.entity.OBGlyph;
 import art.arcane.openblocks.entity.OBHangGlider;
 import art.arcane.openblocks.entity.OBItemProjectile;
 import art.arcane.openblocks.entity.OBLuggage;
@@ -44,7 +45,10 @@ public final class OBEntities {
                     .build(OpenBlocks.id("item_projectile").toString()));
     public static final RegistryObject<EntityType<OBPlaceholderEntity>> GOLDEN_EYE = register("golden_eye", 64, 8);
     public static final RegistryObject<EntityType<OBPlaceholderEntity>> MINI_ME = register("mini_me", 64, 1);
-    public static final RegistryObject<EntityType<OBPlaceholderEntity>> GLYPH = register("glyph", 160, Integer.MAX_VALUE);
+    public static final RegistryObject<EntityType<OBGlyph>> GLYPH = ENTITY_TYPES.register("glyph",
+            () -> EntityType.Builder.of(OBGlyph::new, MobCategory.MISC)
+                    .sized(0.5F, 0.5F).clientTrackingRange(10).updateInterval(Integer.MAX_VALUE).setShouldReceiveVelocityUpdates(false)
+                    .build(OpenBlocks.id("glyph").toString()));
 
     private OBEntities() {}
 

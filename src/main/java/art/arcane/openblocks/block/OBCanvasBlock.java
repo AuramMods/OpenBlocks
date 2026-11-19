@@ -5,12 +5,15 @@ import art.arcane.openblocks.block.entity.OBCanvasBlockEntity;
 import art.arcane.openblocks.config.OBServerConfig;
 import art.arcane.openblocks.registry.OBBlockEntities;
 import art.arcane.openblocks.registry.OBBlocks;
+import art.arcane.openblocks.registry.OBItems;
 import java.util.List;
 import javax.annotation.Nullable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -39,6 +42,7 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -69,6 +73,28 @@ public final class OBCanvasBlock extends BaseEntityBlock implements SimpleWaterl
     @Override
     public boolean applyPaint(final Level level, final BlockPos pos, final int rgb, final Direction... faces) {
         return level.getBlockEntity(pos) instanceof OBCanvasBlockEntity canvas && canvas.paint(rgb, faces);
+    }
+
+    @Override
+    public InteractionResult use(final BlockState state, final Level level, final BlockPos pos, final Player player,
+            final InteractionHand hand, final BlockHitResult hit) {
+        final ItemStack held = player.getItemInHand(hand);
+        if (hand != InteractionHand.MAIN_HAND || held.is(OBItems.PAINTBRUSH.get()) || held.is(OBItems.SQUEEGEE.get())
+                || held.is(OBItems.STENCIL.get()) || !level.mayInteract(player, pos)
+                || !(level.getBlockEntity(pos) instanceof OBCanvasBlockEntity canvas)
+                || canvas.face(hit.getDirection()).cover() == null) return InteractionResult.PASS;
+        if (!level.isClientSide()) {
+            if (player.isShiftKeyDown()) canvas.recoverStencil(player, hit.getDirection());
+            else canvas.rotateStencil(hit.getDirection());
+        }
+        return InteractionResult.sidedSuccess(level.isClientSide());
+    }
+
+    @Override
+    public void onRemove(final BlockState state, final Level level, final BlockPos pos, final BlockState replacement, final boolean moving) {
+        if (!state.is(replacement.getBlock()) && !level.isClientSide() && !level.restoringBlockSnapshots && !level.captureBlockSnapshots
+                && level.getBlockEntity(pos) instanceof OBCanvasBlockEntity canvas) canvas.dropStencils();
+        super.onRemove(state, level, pos, replacement, moving);
     }
 
     public static boolean canWrap(final Level level, final BlockPos pos, final BlockState state) {

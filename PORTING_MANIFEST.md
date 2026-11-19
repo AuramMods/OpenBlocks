@@ -66,6 +66,15 @@ Current registry classes:
   - `src/main/java/art/arcane/openblocks/item/OBPaintBrushItem.java`
   - `src/main/java/art/arcane/openblocks/block/entity/OBCanvasBlockEntity.java`
   - `src/main/java/art/arcane/openblocks/client/OBCanvasRendering.java`
+- Drawing Table, stencils and glyphs:
+  - `src/main/java/art/arcane/openblocks/block/entity/OBDrawingTableBlockEntity.java`
+  - `src/main/java/art/arcane/openblocks/menu/OBDrawingTableMenu.java`
+  - `src/main/java/art/arcane/openblocks/client/OBDrawingTableScreen.java`
+  - `src/main/java/art/arcane/openblocks/item/OBStencilPattern.java`
+  - `src/main/java/art/arcane/openblocks/item/OBStencilItem.java`
+  - `src/main/java/art/arcane/openblocks/item/OBGlyphItem.java`
+  - `src/main/java/art/arcane/openblocks/entity/OBGlyph.java`
+  - `src/main/java/art/arcane/openblocks/client/OBGlyphRendering.java`
 - Sound register: `src/main/java/art/arcane/openblocks/registry/OBSounds.java`
 - Custom statistic register for Bricks dropped: `src/main/java/art/arcane/openblocks/registry/OBStats.java`
 - Enchantment register: `src/main/java/art/arcane/openblocks/registry/OBEnchantments.java`
@@ -342,7 +351,7 @@ Source: `old-1.12.2/src/main/java/openblocks/OpenBlocks.java`
 | paint_can | BlockPaintCan | `Blocks.paintCan` | TileEntityPaintCan | ItemPaintCan | `paintcan`. Color and up to 30 brush charges survive breaking and placement. |
 | canvas_glass | BlockCanvasGlass | `Blocks.canvasGlass` | TileEntityCanvasGlass | default | `canvasglass`. Wraps painted blocks with a non-solid render shape, while retaining their model and render layer. |
 | projector | BlockProjector | `Blocks.projector` | TileEntityProjector | One automation-accessible map slot, rotatable terrain and liquid hologram, and interactive preview | Optional `openblocks_projector` peripheral |
-| drawing_table | BlockDrawingTable | `Blocks.drawingTable` | TileEntityDrawingTable | default | `drawingtable` |
+| drawing_table | BlockDrawingTable | `Blocks.drawingTable` | TileEntityDrawingTable | default | `drawingtable`. Uses blank sheets for stencil and glyph output, and prints text as separate glyph items. |
 | sky | BlockSky | `Blocks.sky` | TileEntitySky | ItemSkyBlock | 1.20.1 uses `OBSkyBlock`, `OBSkyBlockEntity`, and `OBSkyItem`. The original ID carries both polarities. `OBSkyRendering` uses Forge render stages to display the current dimension's sky. |
 | xp_shower | BlockXPShower | `Blocks.xpShower` | TileEntityXPShower | default | `xpshower` |
 | golden_egg | BlockGoldenEgg | `Blocks.goldenEgg` | TileEntityGoldenEgg | default | `goldenegg` |
@@ -367,7 +376,7 @@ Source: `old-1.12.2/src/main/java/openblocks/OpenBlocks.java`
 | xp_bucket | ItemXpBucket | `Items.xpBucket` | `filledbucket` |
 | sleeping_bag | ItemSleepingBag | `Items.sleepingBag` | `sleepingBag` |
 | paintbrush | ItemPaintBrush | `Items.paintBrush` | `paintBrush`. Sixteen dye recipes or arbitrary RGB from a can. Paints one face, or all faces while sneaking. |
-| stencil | ItemStencil | `Items.stencil` | no default model |
+| stencil | ItemStencil | `Items.stencil` | 15 cutout patterns. Attaches to a face and can be rotated or recovered. |
 | squeegee | ItemSqueegee | `Items.squeegee` | Cleans the selected face or the whole block while sneaking. The original wrapped block returns once clean. |
 | height_map | ItemHeightMap | `Items.heightMap` | The Cartographer produces a surveyed map. Copies with the same ID share terrain and liquid data across dimensions. |
 | empty_map | ItemEmptyMap | `Items.emptyMap` | Blank map with five scales from 1:1 through 1:16. Resize in a crafting grid or clone a surveyed map at the same scale. |
@@ -382,7 +391,7 @@ Source: `old-1.12.2/src/main/java/openblocks/OpenBlocks.java`
 | pedometer | ItemPedometer | `Items.pedometer` | `OBPedometerItem` restores start, report, and sneak-reset in both hands. The `open_blocks:speed` predicate switches to the original moving model at 0.1 blocks per tick. |
 | epic_eraser | ItemEpicEraser | `Items.epicEraser` | `epicEraser` |
 | wrench | ItemWrench | `Items.wrench` | - |
-| glyph | ItemGlyph | `Items.glyph` | - |
+| glyph | ItemGlyph | `Items.glyph` | Preserves the character on a printable half-block wall plate. |
 
 ## Meta Item Registries
 Source:
@@ -509,7 +518,7 @@ Registered mod entities:
 - `openblocks:item_projectile` -> `EntityItemProjectile` (`706`)
 - `openblocks:golden_eye` -> `EntityGoldenEye` (`707`)
 - `openblocks:mini_me` -> `EntityMiniMe` (`710`)
-- `openblocks:glyph` -> `EntityGlyph` (`711`)
+- `openblocks:glyph` -> `EntityGlyph` (`711`). `OBGlyph` saves and synchronizes its character, wall anchor, facing, and 1/16-block offsets.
 
 Entity package inventory:
 - `old-1.12.2/src/main/java/openblocks/common/entity`
@@ -576,7 +585,7 @@ Tile-based container/gui providers (via `IHasGui` in tile entities):
 - TileEntityAutoEnchantmentTable -> ContainerAutoEnchantmentTable / GuiAutoEnchantmentTable
 - TileEntityDonationStation -> ContainerDonationStation / GuiDonationStation
 - TileEntityProjector -> ContainerProjector / GuiProjector
-- TileEntityDrawingTable -> ContainerDrawingTable / GuiDrawingTable
+- TileEntityDrawingTable -> ContainerDrawingTable / GuiDrawingTable. The 1.20.1 port uses `OBDrawingTableMenu` and `OBDrawingTableScreen` with both output modes.
 - TileEntityBigButton -> ContainerBigButton / GuiBigButton
 - TileEntityItemDropper -> ContainerItemDropper / GuiItemDropper
 - TileEntitySprinkler -> ContainerSprinkler / GuiSprinkler

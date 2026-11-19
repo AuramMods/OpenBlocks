@@ -2,8 +2,10 @@ package art.arcane.openblocks.network;
 
 import art.arcane.openblocks.OpenBlocks;
 import art.arcane.openblocks.block.OBElevatorTravel;
+import art.arcane.openblocks.block.entity.OBDrawingTableBlockEntity;
 import art.arcane.openblocks.block.entity.OBProjectorBlockEntity;
 import art.arcane.openblocks.client.OBProjectorRendering;
+import art.arcane.openblocks.menu.OBDrawingTableMenu;
 import art.arcane.openblocks.menu.OBPaintMixerMenu;
 import art.arcane.openblocks.menu.OBRedstoneMachineMenu;
 import art.arcane.openblocks.player.OBBrickActions;
@@ -20,7 +22,7 @@ import net.minecraftforge.network.simple.SimpleChannel;
 
 public final class OBNetwork {
 
-    private static final String VERSION = "5";
+    private static final String VERSION = "6";
     private static final SimpleChannel CHANNEL = NetworkRegistry.ChannelBuilder.named(OpenBlocks.id("main"))
             .networkProtocolVersion(() -> VERSION)
             .clientAcceptedVersions(VERSION::equals)
@@ -82,6 +84,19 @@ public final class OBNetwork {
                             && menu.containerId == message.containerId()) menu.requestColor(sender, message.rgb());
                 })
                 .add();
+        CHANNEL.messageBuilder(PrintGlyphs.class, 6, NetworkDirection.PLAY_TO_SERVER)
+                .encoder((message, buf) -> buf.writeVarInt(message.containerId()).writeUtf(message.text(), OBDrawingTableBlockEntity.MAX_PRINT_LENGTH))
+                .decoder(buf -> new PrintGlyphs(buf.readVarInt(), buf.readUtf(OBDrawingTableBlockEntity.MAX_PRINT_LENGTH)))
+                .consumerMainThread((message, context) -> {
+                    final var sender = context.get().getSender();
+                    if (sender != null && sender.containerMenu instanceof OBDrawingTableMenu menu
+                            && menu.containerId == message.containerId()) menu.print(sender, message.text());
+                })
+                .add();
+    }
+
+    public static void requestGlyphPrint(final int containerId, final String text) {
+        CHANNEL.sendToServer(new PrintGlyphs(containerId, text));
     }
 
     public static void requestPaintMix(final int containerId, final int rgb) {
@@ -107,6 +122,8 @@ public final class OBNetwork {
     public static void sendProjection(final ServerPlayer player, final BlockPos pos, final int map, final CompoundTag data) {
         CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), new Projection(player.level().dimension().location(), pos, map, data));
     }
+
+    private record PrintGlyphs(int containerId, String text) {}
 
     private record MixPaint(int containerId, int rgb) {}
 

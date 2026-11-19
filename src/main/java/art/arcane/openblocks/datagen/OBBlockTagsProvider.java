@@ -29,9 +29,10 @@ public class OBBlockTagsProvider extends BlockTagsProvider {
         final var donationStation = OBBlocks.DONATION_STATION.get();
         final var stoneButton = OBBlocks.BIG_BUTTON.get();
         final var woodButton = OBBlocks.BIG_BUTTON_WOOD.get();
+        final var drawingTable = OBBlocks.DRAWING_TABLE.get();
         OBBlocks.all().forEach(entry -> {
             final var block = entry.get();
-            if (block == ladder || block == ropeLadder || block == woodButton) {
+            if (block == ladder || block == ropeLadder || block == woodButton || block == drawingTable) {
                 tag(BlockTags.MINEABLE_WITH_AXE).add(block);
             } else if (block != scaffolding && !(block instanceof OBCanvasBlock) && block != OBBlocks.PAINT_CAN.get()) {
                 tag(BlockTags.MINEABLE_WITH_PICKAXE).add(block);

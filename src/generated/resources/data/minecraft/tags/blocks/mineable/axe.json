@@ -2,6 +2,7 @@
   "values": [
     "open_blocks:ladder",
     "open_blocks:big_button_wood",
-    "open_blocks:rope_ladder"
+    "open_blocks:rope_ladder",
+    "open_blocks:drawing_table"
   ]
 }

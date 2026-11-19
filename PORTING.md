@@ -131,7 +131,7 @@ Suggested order:
 - [x] Transportation/domain: Hang Glider, Luggage, wearable crane, and Miracle Magnet turtle upgrade
 - [-] Storage/domain: tanks, xp systems, vacuum hopper, donation station
 - [-] Utility/domain: block breaker/placer/dropper, auto anvil/enchantment table
-- [-] Visual/domain: finish canvas, paint, stencils, and glyphs
+- [x] Visual/domain: canvas, paint, stencils, and glyphs
 - [-] Entity/domain: mini-me, golden eye, and the remaining entities in the manifest
 - [ ] Fun/domain: trophies, flim-flam, sounds/effects
 
@@ -159,7 +159,7 @@ Checklist:
 - [x] Restore distinct legacy crafting components across recipes, creative entries, and models.
 - [x] Restore elevator colors and movement activation. Headless tests cover server behavior and item color through crafting, placement, and drops. A packaged client verified Space, Shift, color matching, and rotation in single-player using a silent virtual display.
 - [x] Restore Jaded Ladder trapdoor behavior, directional rope ladders, and temporary scaffolding. The standalone suite verifies climbing, redstone, placement rollback, rope drop accounting, decay and fuel.
-- [-] Restore painting and other remaining state variants across recipes, creative entries, and models. The mixer, paint cans, brushes, and canvas surfaces are restored. Prepared stencils and their Drawing Table are next.
+- [-] Restore state variants across recipes, creative entries, and models. Paint brushes, paint cans, canvas surfaces, prepared stencils, and glyphs are restored.
 - [ ] Run a muted client in an isolated or background graphical session to verify models, transparency, and face culling.
 - [ ] Extend recipe coverage beyond custom special recipe placeholders (core craft paths for major blocks/items).
 - [ ] Deepen `/flimflam` parity beyond current breadth-stage action wiring:
@@ -200,4 +200,6 @@ Checklist:
 - [x] Restore the Cartographer, world-saved terrain and liquid surveys, map resizing and cloning, and the assistant's progress display.
 - [x] Restore the Projector's single-map inventory, rotating hologram, interactive preview, live survey updates, and optional CC: Tweaked map editing.
 - [x] Restore the Paint Mixer, paint cans, dyed brushes and their recipes, face-by-face canvas painting, and the squeegee.
-- [ ] Restore the Drawing Table and prepared stencils, including multiple painted layers and their rendering.
+- [x] Restore the Drawing Table and prepared stencils, including multiple painted layers and sheet recovery.
+- [x] Restore glyph selection, text printing, hand and wall models, and wall placement on the 1/16-block grid.
+- [ ] Restore Guide and Builder Guide shapes, controls, and previews.
