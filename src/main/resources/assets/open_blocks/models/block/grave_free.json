@@ -1,7 +1,8 @@
 {
     "textures": {
         "stone_back": "open_blocks:block/grave_back",
-        "stone_front": "open_blocks:block/grave_front"
+        "stone_front": "open_blocks:block/grave_front",
+        "particle": "open_blocks:block/grave_front"
     },
     "elements": [
         {

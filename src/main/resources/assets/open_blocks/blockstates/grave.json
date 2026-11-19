@@ -1,5 +1,12 @@
 {
   "variants": {
-    "": { "model": "open_blocks:block/grave" }
+    "facing=north,base=true": { "model": "open_blocks:block/grave_ground" },
+    "facing=east,base=true": { "model": "open_blocks:block/grave_ground", "y": 90 },
+    "facing=south,base=true": { "model": "open_blocks:block/grave_ground", "y": 180 },
+    "facing=west,base=true": { "model": "open_blocks:block/grave_ground", "y": 270 },
+    "facing=north,base=false": { "model": "open_blocks:block/grave_free" },
+    "facing=east,base=false": { "model": "open_blocks:block/grave_free", "y": 90 },
+    "facing=south,base=false": { "model": "open_blocks:block/grave_free", "y": 180 },
+    "facing=west,base=false": { "model": "open_blocks:block/grave_free", "y": 270 }
   }
 }

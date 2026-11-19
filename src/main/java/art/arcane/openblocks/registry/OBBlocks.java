@@ -57,9 +57,6 @@ public final class OBBlocks {
 
     private static final List<RegistryObject<Block>> CREATIVE_ORDER = new ArrayList<>();
     private static final VoxelShape SHAPE_PATH = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 1.6D, 16.0D);
-    private static final VoxelShape SHAPE_GRAVE = Shapes.or(
-            Block.box(0.0D, 0.0D, 0.0D, 16.0D, 1.0D, 16.0D),
-            Block.box(2.0D, 1.0D, 14.0D, 14.0D, 16.0D, 16.0D));
 
     public static final RegistryObject<Block> LADDER = register("ladder");
     public static final RegistryObject<Block> GUIDE = register("guide");
@@ -133,7 +130,8 @@ public final class OBBlocks {
         if ("heal".equals(id)) return new OBHealBlock(properties);
         if ("path".equals(id)) return new OBPathBlock(properties, shape, collisionShape);
         if ("sponge".equals(id)) return new OBSpongeBlock(BlockBehaviour.Properties.copy(Blocks.SPONGE));
-        if ("grave".equals(id)) return new OBGraveBlock(properties, shape, collisionShape);
+        if ("grave".equals(id)) return new OBGraveBlock(properties.strength(1.5F, 2000.0F)
+                .pushReaction(net.minecraft.world.level.material.PushReaction.BLOCK));
         if ("trophy".equals(id)) return new OBTrophyBlock(properties);
         if ("village_highlighter".equals(id)) return new OBVillageHighlighterBlock(properties);
         if ("tank".equals(id)) return new OBTankBlock(properties);
@@ -183,7 +181,6 @@ public final class OBBlocks {
     private static VoxelShape shapeFor(final String id) {
         return switch (id) {
             case "path" -> SHAPE_PATH;
-            case "grave" -> SHAPE_GRAVE;
             default -> null;
         };
     }

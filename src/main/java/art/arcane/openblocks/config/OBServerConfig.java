@@ -19,6 +19,14 @@ public final class OBServerConfig {
     public static final ForgeConfigSpec.IntValue SCAFFOLDING_DESPAWN_RATE;
     public static final ForgeConfigSpec.BooleanValue GRAVE_BACKUPS;
     public static final ForgeConfigSpec.DoubleValue GRAVE_SPECIAL_ACTION;
+    public static final ForgeConfigSpec.BooleanValue GRAVE_DESTRUCTIVE;
+    public static final ForgeConfigSpec.IntValue GRAVE_SPAWN_RANGE;
+    public static final ForgeConfigSpec.BooleanValue GRAVE_REQUIRES_ITEM;
+    public static final ForgeConfigSpec.BooleanValue GRAVE_ADD_BASE;
+    public static final ForgeConfigSpec.IntValue GRAVE_MIN_Y;
+    public static final ForgeConfigSpec.IntValue GRAVE_MAX_Y;
+    public static final ForgeConfigSpec.BooleanValue GRAVE_AMBIENT_MOBS;
+    public static final ForgeConfigSpec.DoubleValue GRAVE_AMBIENT_RATE;
     public static final ForgeConfigSpec.IntValue SPONGE_RANGE;
     public static final ForgeConfigSpec.BooleanValue SPONGE_BLOCK_UPDATE;
     public static final ForgeConfigSpec.IntValue SPONGE_STICK_RANGE;
@@ -128,6 +136,17 @@ public final class OBServerConfig {
         GRAVE_BACKUPS = builder.comment("Keep a separate administrator recovery file for grave loot.").define("storeContents", true);
         GRAVE_SPECIAL_ACTION = builder.comment("Chance that a successful dig plays the grave sound and starts a short thunderstorm.")
                 .defineInRange("specialActionFrequency", 0.03D, 0.0D, 1.0D);
+        GRAVE_DESTRUCTIVE = builder.comment("Replace suitable solid blocks only if the initial search finds no space.").define("destructiveGraves", false);
+        GRAVE_SPAWN_RANGE = builder.comment("The search extends by half this value along each axis.").defineInRange("spawnRange", 10, 0, 64);
+        GRAVE_REQUIRES_ITEM = builder.define("requiresGraveInInv", false);
+        GRAVE_ADD_BASE = builder.define("canSpawnBase", true);
+        GRAVE_MIN_Y = builder.comment("Use the smallest integer for six blocks above the dimension floor.")
+                .defineInRange("minimalPosY", Integer.MIN_VALUE, Integer.MIN_VALUE, Integer.MAX_VALUE);
+        GRAVE_MAX_Y = builder.comment("Use the largest integer for six blocks below the dimension ceiling.")
+                .defineInRange("maximalPosY", Integer.MAX_VALUE, Integer.MIN_VALUE, Integer.MAX_VALUE);
+        GRAVE_AMBIENT_MOBS = builder.define("spawnSkeletons", true);
+        GRAVE_AMBIENT_RATE = builder.comment("Per-tick chance to try spawning a skeleton or bat at a grave.")
+                .defineInRange("skeletonSpawnRate", 0.002D, 0.0D, 1.0D);
         builder.pop();
         builder.push("sponge");
         SPONGE_RANGE = builder.comment("Liquid removal radius of the sponge block.")

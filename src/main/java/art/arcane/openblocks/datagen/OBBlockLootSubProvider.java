@@ -2,6 +2,7 @@ package art.arcane.openblocks.datagen;
 
 import art.arcane.openblocks.block.OBElevatorBlock;
 import art.arcane.openblocks.block.OBFlagBlock;
+import art.arcane.openblocks.block.OBGraveBlock;
 import art.arcane.openblocks.block.OBImaginaryBlock;
 import art.arcane.openblocks.block.OBRopeLadderBlock;
 import art.arcane.openblocks.block.OBSkyBlock;
@@ -56,7 +57,7 @@ public class OBBlockLootSubProvider extends BlockLootSubProvider {
                         .setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(OBRopeLadderBlock.RECOVERABLE, true));
                 add(block, LootTable.lootTable().withPool(applyExplosionCondition(block,
                         LootPool.lootPool().setRolls(ConstantValue.exactly(1)).add(LootItem.lootTableItem(block).when(recoverable)))));
-            } else if (block instanceof OBImaginaryBlock) {
+            } else if (block instanceof OBImaginaryBlock || block instanceof OBGraveBlock) {
                 add(block, noDrop());
             } else if (block instanceof OBTrophyBlock) {
                 add(block, createSingleItemTable(block).apply(CopyNbtFunction.copyData(ContextNbtProvider.BLOCK_ENTITY)

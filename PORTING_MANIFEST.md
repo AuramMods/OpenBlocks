@@ -147,10 +147,12 @@ Current registry classes:
 - Command inventory death-dump hook: `src/main/java/art/arcane/openblocks/command/OBInventoryHooks.java`
 - Command inventory subsystem event bridge: `src/main/java/art/arcane/openblocks/api/OBInventoryEvent.java`
 - Grave drop action event API: `src/main/java/art/arcane/openblocks/api/OBGraveDropsEvent.java`
+- Grave placement event API: `src/main/java/art/arcane/openblocks/api/OBGraveSpawnEvent.java`
 - Grave block + placement/claim wiring:
   - `src/main/java/art/arcane/openblocks/block/OBGraveBlock.java`
   - `src/main/java/art/arcane/openblocks/block/entity/OBGraveBlockEntity.java`
   - `src/main/java/art/arcane/openblocks/grave/OBGraveHooks.java`
+  - `src/main/java/art/arcane/openblocks/client/OBGraveRendering.java`
 - Block functionality sweep classes:
   - `src/main/java/art/arcane/openblocks/block/OBElevatorBlock.java`
   - `src/main/java/art/arcane/openblocks/block/OBElevatorRotatingBlock.java`
@@ -254,6 +256,7 @@ Current validation status:
   - `src/main/java/art/arcane/openblocks/api/OBGraveDropsEvent.java` now mirrors legacy grave drop-action event semantics (`STORE`/`DROP`/`DELETE`) for grave filtering hooks.
   - `src/main/java/art/arcane/openblocks/world/OBGameRules.java` now registers legacy grave gamerule key `openblocks:spawn_graves` (default `true`).
   - `OBGraveBlockEntity` stores live loot, owner identity, and the styled death message. Older 1.20.1 graves still read their referenced dump. A shovel releases the complete loot set, spends two durability, and leaves the memorial in place. A denied item spawn rolls back any earlier drops in the same dig. Occupied graves reject ordinary mining.
+  - Graves synchronize the epitaph and occupied flag. Existing grave entities use the saved owner name if they have no separate epitaph. The headstone model and hitbox follow the placement direction and adjust to the support block. Graves have their legacy blast resistance and empty block drops. Manual placement creates an empty memorial with the placer's name or the item's custom name.
   - `OBHealBlockEntity` applies one tick each of Regeneration and Saturation every 20 server ticks to nearby non-creative players.
   - `OBElevatorBlock` and `OBElevatorRotatingBlock` share a dye color blockstate. Rotating elevators store their facing in blockstate and set yaw on arrival.
   - `OBElevatorTravel` handles jump/sneak requests from `OBElevatorControls` and `OBNetwork`. It validates the player's position and destination on the server. The world server config controls range, block rules, overrides, centering, clearance and XP costs.
@@ -286,6 +289,8 @@ Current validation status:
   - `OBFanBlockEntity` saves a continuous heading and applies distance-scaled horizontal airflow in a cone. Incoming signal controls force and blade speed. `OBBearTrapBlockEntity` captures eligible mobs, holds them at its base, releases on use or redstone, and exposes a comparator signal. `OBFloorDeviceRendering` animates both blocks from their synchronized state and renders their models as items.
   - `OBFlagBlock` restores floor, wall, fence, and stacked mounting, and `OBFlagRendering` uses each block's saved color and bearing. `OBSkyRendering` composites the live sky from the Forge render stages with ordinary depth testing. `OBDecorationChunkUpgrade` restores missing block entities for those two blocks in existing 1.20.1 chunks.
   - `OBGraveHooks` filters death drops through `OBGraveDropsEvent`, stages the placement through Forge, and removes stored drops only after a grave accepts them. If placement fails, the original world drops remain. `graves.storeContents` optionally writes an administrator recovery file with the placement result and location. `graves.specialActionFrequency` controls the legacy grave-robbing sound and thunderstorm.
+  - `OBGraveSpawnEvent` can change the placement position, epitaph, death message, and loot. The default search stays six blocks inside the world's vertical limits, and the `graves` settings can override both heights. Destructive fallback honors Forge break and placement checks and protects block entities and multiblock structures. A carried grave is consumed only on success when required.
+  - Ambient grave spawns use the original rate, seven-block neighborhood, five-hostile limit, and equal skeleton and bat selection. They use current vanilla position rules, Forge spawn events, the mob-spawning gamerule, and difficulty.
   - Flim-Flam uses sword levels and one-third of the defender's total armor levels to determine who loses luck. The tick handler uses the saved cooldown and forced-effect flag. Automatic effects honor the original costs, weights, thresholds, safety, blacklist, and reverse blacklist.
   - The Flim-Flam book recipe counts one emerald per occupied slot, up to four. The client displays generated item history on Alt by default. Existing ordinary item lore takes precedence.
   - Current command parity:
@@ -300,7 +305,7 @@ Current validation status:
       - store/restore now also round-trip arbitrary sub-inventory payload maps through `OBInventoryEvent.Store`/`OBInventoryEvent.Load`,
       - dump root now includes player `Location` metadata (`X`,`Y`,`Z`,`Dimension`) for future grave/backend integrations.
       - grave backup lookup preserves the original timestamp punctuation, and its main target keeps every item slot. Restoring a grave backup releases overflow before changing player slots and rolls back the released items if a drop is denied.
-    - legacy arbitrary subsystem payload consumers and producers remain pending, along with the grave placement event, placement configuration, and memorial renderer.
+    - legacy arbitrary subsystem payload consumers and producers remain pending.
   - `/luck` state storage now reads/writes through `OBCapabilities` (`open_blocks:luck`) rather than ad-hoc player persistent data.
   - `OBCapabilities` registers `open_blocks:luck`, `open_blocks:pedometer_state`, and `open_blocks:bowels`. It carries luck through clones, preserves stored bricks on non-death clones, and preserves a Pedometer route on non-death clones within the same dimension.
   - `OBCapabilities.PedometerState` keeps the sampled route and report data. The player capability provider restores access to the same data when Forge revives capabilities after a dimension change or during a respawn copy.

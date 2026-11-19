@@ -167,10 +167,8 @@ Checklist:
 - [ ] Deepen `/ob_inventory` parity beyond current built-in + event-bridge baseline:
   - add first concrete subsystem consumers/producers for `OBInventoryEvent` payloads (legacy-style arbitrary subsystem parity in practice, not just schema support)
   - verify full inventory and external subsystem restore behavior against the legacy commands
-- [ ] Deepen grave parity from current place+claim skeleton:
-  - expand `OBGraveDropsEvent` parity beyond current action filtering (hook concrete listeners/producers and mirror more legacy filtering/consumption flows)
-  - render the saved owner or memorial name and restore the original grave base and facing, blast resistance, and skeleton and bat spawning
-  - restore the legacy grave placement event and configuration for search range, bounds, base, destructive fallback, and consuming a carried grave
+- [x] Restore the grave placement event, legacy search order, height bounds, dirt base, destructive fallback, and optional consumption of a carried grave.
+- [x] Restore grave facing, epitaph and model variants, blast resistance, and ambient skeleton and bat spawning.
 - [ ] Finish legacy recipe migration for skipped recipe files and remaining metadata-collapsed color or subtype conversions.
 - [x] Restore configurable sponge cleanup, Sponge on a Stick, scattered-stone path rendering, and the healing block's one-tick pulses.
 - [x] Restore tank block and item storage, connected transfer and rendering, XP and bucket exchange, and the Liquid XP block assets.

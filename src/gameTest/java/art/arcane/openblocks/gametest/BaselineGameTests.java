@@ -106,7 +106,7 @@ public final class BaselineGameTests {
             public void sendSystemMessage(Component message) {}
         };
         final BlockPos testPos = helper.absolutePos(new BlockPos(3, 1, 3));
-        final Vec3 pos = Vec3.atCenterOf(testPos.atY(level.getMinBuildHeight() - 5));
+        final Vec3 pos = Vec3.atCenterOf(testPos.offset(30_010_000, 0, 0));
         player.setPos(pos.x, pos.y, pos.z);
         final ItemEntity store = new ItemEntity(level, pos.x, pos.y, pos.z, new ItemStack(Items.DIAMOND));
         final ItemEntity drop = new ItemEntity(level, pos.x, pos.y, pos.z, new ItemStack(Items.GOLD_INGOT));
