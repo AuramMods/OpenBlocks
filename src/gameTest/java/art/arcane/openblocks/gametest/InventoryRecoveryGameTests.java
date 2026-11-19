@@ -4,6 +4,17 @@ import art.arcane.openblocks.OpenBlocks;
 import art.arcane.openblocks.api.OBInventoryEvent;
 import art.arcane.openblocks.command.OBInventoryStore;
 import art.arcane.openblocks.config.OBServerConfig;
+import art.arcane.openblocks.item.OBDevNullItem;
+import art.arcane.openblocks.item.OBElevatorItem;
+import art.arcane.openblocks.item.OBGlyphItem;
+import art.arcane.openblocks.item.OBImaginaryItem;
+import art.arcane.openblocks.item.OBPaintBrushItem;
+import art.arcane.openblocks.item.OBSkyItem;
+import art.arcane.openblocks.item.OBStencilItem;
+import art.arcane.openblocks.item.OBStencilPattern;
+import art.arcane.openblocks.item.OBTankItem;
+import art.arcane.openblocks.registry.OBFluids;
+import art.arcane.openblocks.registry.OBItems;
 import com.mojang.authlib.GameProfile;
 import java.io.IOException;
 import java.util.List;
@@ -16,10 +27,13 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtIo;
 import net.minecraft.nbt.StringTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.nbt.TagParser;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
@@ -181,7 +195,7 @@ public final class InventoryRecoveryGameTests {
                             && player.getInventory().offhand.get(0).is(Items.SHIELD),
                     "Vanilla data fixes must preserve the sword's metadata, colored wool, and the original offhand slot");
 
-            entries.add(legacyItem(9, "openblocks:generic", 1, 1));
+            entries.add(legacyItem(9, "openblocks:generic", 8, 1));
             NbtIo.writeCompressed(root, path.toFile());
             boolean rejected = false;
             try {
@@ -201,6 +215,88 @@ public final class InventoryRecoveryGameTests {
                 helper.fail("A list of the wrong NBT type must never clear the player inventory");
             } catch (final IOException expected) {
                 helper.assertTrue(player.getInventory().getItem(0) == restoredSword, "Malformed data must leave existing items untouched");
+            }
+        } finally {
+            OBInventoryStore.deleteDump(level, id);
+        }
+        helper.succeed();
+    }
+
+    @GameTest(template = "empty")
+    public static void legacyOpenBlocksItemsKeepVariantsDamageAndNestedContents(final GameTestHelper helper) throws Exception {
+        final var player = player(helper, "LegacyOpenBlocksInventory");
+        final var level = helper.getLevel();
+        final String id = "LegacyOpenBlocksInventory-2018-04-05_10.20.30-command-0";
+        final var file = OBInventoryStore.resolveDumpPath(level, id);
+        final var root = TagParser.parseTag("""
+                {Type:"command",Inventory:{size:41,Items:[
+                  {Slot:0b,id:"openblocks:generic",Count:2b,Damage:0s},
+                  {Slot:1b,id:"openblocks:paintBrush",Count:1b,Damage:7s,tag:{
+                    color:11685080,display:{Name:"Saved Brush",Lore:["Original paint"]},ench:[{id:34s,lvl:2s}]}},
+                  {Slot:2b,id:"openblocks:elevator",Count:1b,Damage:14s},
+                  {Slot:3b,id:"openblocks:sky",Count:1b,Damage:1s},
+                  {Slot:4b,id:"openblocks:stencil",Count:3b,Damage:13s},
+                  {Slot:5b,id:"openblocks:glyph",Count:2b,Damage:65s},
+                  {Slot:6b,id:"openblocks:imaginary",Count:1b,Damage:1s,tag:{Color:11259375,Uses:7.5f,Mode:3}},
+                  {Slot:7b,id:"openblocks:tank",Count:1b,Damage:0s,tag:{tank:{FluidName:"xpjuice",Amount:4200}}},
+                  {Slot:8b,id:"openblocks:dev_null",Count:1b,Damage:0s,tag:{inventory:{size:1,Items:[
+                    {Slot:0b,id:"minecraft:wool",Count:8b,Damage:11s}]}}},
+                  {Slot:9b,id:"openblocks:luggage",Count:1b,Damage:0s,tag:{size:54,Items:[
+                    {Slot:42b,id:"openblocks:generic",Count:4b,Damage:7s}]}},
+                  {Slot:10b,id:"minecraft:purple_shulker_box",Count:1b,Damage:0s,tag:{BlockEntityTag:{Items:[
+                    {Slot:3b,id:"openblocks:generic",Count:6b,Damage:5s}]}}},
+                  {Slot:40b,id:"openblocks:generic_unstackable",Count:1b,Damage:0s}
+                ]}}
+                """);
+        java.nio.file.Files.createDirectories(file.getParent());
+        try {
+            NbtIo.writeCompressed(root, file.toFile());
+            helper.assertTrue(OBInventoryStore.restoreInventory(player, id), "The OpenBlocks 1.12.2 inventory did not restore");
+            final var inventory = player.getInventory();
+            helper.assertTrue(inventory.getItem(0).is(OBItems.GLIDER_WING.get()) && inventory.getItem(0).getCount() == 2
+                    && inventory.offhand.get(0).is(OBItems.POINTER.get()), "Generic item metadata did not resolve to its distinct item");
+            final ItemStack brush = inventory.getItem(1);
+            final String lore = brush.getTagElement("display").getList("Lore", Tag.TAG_STRING).getString(0);
+            helper.assertTrue(brush.is(OBItems.PAINTBRUSH.get()) && brush.getDamageValue() == 7
+                            && OBPaintBrushItem.color(brush) == 11685080 && brush.getHoverName().getString().equals("Saved Brush")
+                            && Component.Serializer.fromJson(lore).getString().equals("Original paint")
+                            && EnchantmentHelper.getItemEnchantmentLevel(Enchantments.UNBREAKING, brush) == 2,
+                    "The paint brush lost its RGB, wear, name, lore, or enchantment");
+            helper.assertTrue(OBElevatorItem.getColor(inventory.getItem(2)) == DyeColor.RED && OBSkyItem.isInverted(inventory.getItem(3))
+                            && OBStencilItem.pattern(inventory.getItem(4)) == OBStencilPattern.MUSIC && inventory.getItem(4).getCount() == 3
+                            && OBGlyphItem.character(OBGlyphItem.index(inventory.getItem(5))) == 'A',
+                    "Block, stencil, or glyph metadata was lost");
+            final ItemStack crayon = inventory.getItem(6);
+            final var fluid = OBTankItem.contents(inventory.getItem(7));
+            helper.assertTrue(OBImaginaryItem.color(crayon) == 11259375 && OBImaginaryItem.uses(crayon) == 7.5F
+                            && OBImaginaryItem.mode(crayon) == OBImaginaryItem.Mode.STAIRS
+                            && fluid.getFluid() == OBFluids.XP_JUICE.get() && fluid.getAmount() == 4200,
+                    "The legacy crayon settings or tank's Liquid XP changed during import");
+            final var stored = OBDevNullItem.getStored(inventory.getItem(8));
+            final var packed = inventory.getItem(9).getTag();
+            final var luggageItem = packed.getList("Items", Tag.TAG_COMPOUND).getCompound(0);
+            final ItemStack memory = ItemStack.of(luggageItem);
+            helper.assertTrue(stored.is(Items.BLUE_WOOL) && stored.getCount() == 8 && packed.getInt("size") == 54
+                            && luggageItem.getByte("Slot") == 42 && memory.is(OBItems.MAP_MEMORY.get()) && memory.getCount() == 4,
+                    "A nested inventory lost an item, its old slot, or its variant");
+            final var shulkerItem = inventory.getItem(10).getTagElement("BlockEntityTag").getList("Items", Tag.TAG_COMPOUND).getCompound(0);
+            final var line = ItemStack.of(shulkerItem);
+            helper.assertTrue(shulkerItem.getByte("Slot") == 3 && line.is(OBItems.LINE.get()) && line.getCount() == 6,
+                    "The shulker box lost its OpenBlocks item");
+            final var spawned = OBInventoryStore.getSpawnStacks(level, id, "main", 9);
+            helper.assertTrue(spawned.size() == 1 && ItemStack.isSameItemSameTags(spawned.get(0), inventory.getItem(9)),
+                    "Indexed spawning used different migration rules from restore");
+
+            root.getCompound("Inventory").getList("Items", Tag.TAG_COMPOUND)
+                    .getCompound(9).getCompound("tag").getList("Items", Tag.TAG_COMPOUND)
+                    .getCompound(0).putString("id", "openblocks:height_map");
+            NbtIo.writeCompressed(root, file.toFile());
+            try {
+                OBInventoryStore.restoreInventory(player, id);
+                helper.fail("A packed map with old world data references must stop restore");
+            } catch (final IOException expected) {
+                helper.assertTrue(expected.getMessage().contains("openblocks:height_map") && inventory.getItem(1) == brush,
+                        "An unsupported item nested in luggage replaced part of the destination inventory");
             }
         } finally {
             OBInventoryStore.deleteDump(level, id);

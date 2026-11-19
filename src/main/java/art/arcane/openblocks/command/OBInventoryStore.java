@@ -1,7 +1,6 @@
 package art.arcane.openblocks.command;
 
 import art.arcane.openblocks.api.OBInventoryEvent;
-import com.mojang.serialization.Dynamic;
 import java.io.IOException;
 import java.nio.file.AtomicMoveNotSupportedException;
 import java.nio.file.Files;
@@ -24,9 +23,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtIo;
-import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
@@ -35,9 +32,6 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.LevelResource;
 import net.minecraft.world.phys.Vec3;
-import net.minecraft.SharedConstants;
-import net.minecraft.util.datafix.DataFixers;
-import net.minecraft.util.datafix.fixes.References;
 import net.minecraftforge.common.MinecraftForge;
 
 public final class OBInventoryStore {
@@ -68,7 +62,6 @@ public final class OBInventoryStore {
     private static final int ARMOR_SLOT_COUNT = 4;
     private static final int OFFHAND_SLOT = 150;
     private static final int PLAYER_SLOTS = MAIN_SLOTS + ARMOR_SLOT_COUNT + 1;
-    private static final int LEGACY_DATA_VERSION = 1343;
 
     private static final Pattern SAFE_CHARS = Pattern.compile("[^A-Za-z0-9_-]");
     private static final Pattern SAFE_DUMP_ID_CHARS = Pattern.compile("[^A-Za-z0-9_.-]");
@@ -329,14 +322,14 @@ public final class OBInventoryStore {
         return new Snapshot(main, subs, grave);
     }
 
-    private static ListTag requireItemList(final Tag tag) throws IOException {
+    static ListTag requireItemList(final Tag tag) throws IOException {
         if (!(tag instanceof ListTag list) || (!list.isEmpty() && list.getElementType() != Tag.TAG_COMPOUND)) {
             throw new IOException("Inventory must contain a list of item stacks");
         }
         return list;
     }
 
-    private static NavigableMap<Integer, ItemStack> decodeStacks(final ListTag list, final boolean legacy, final boolean playerSlots,
+    static NavigableMap<Integer, ItemStack> decodeStacks(final ListTag list, final boolean legacy, final boolean playerSlots,
             final long size) throws IOException {
         final var result = new TreeMap<Integer, ItemStack>();
         for (int i = 0; i < list.size(); i++) {
@@ -345,33 +338,11 @@ public final class OBInventoryStore {
             final int savedSlot = readSlotIndex(tag);
             final int slot = playerSlots ? playerSlot(savedSlot) : savedSlot;
             if (slot < 0 || slot >= size || result.containsKey(slot)) throw new IOException("Invalid or duplicate inventory slot " + savedSlot);
-            final ItemStack stack = ItemStack.of(legacy ? updateLegacyItem(tag) : tag);
+            final ItemStack stack = ItemStack.of(legacy ? OBLegacyInventory.convertStack(tag) : tag);
             if (stack.isEmpty()) throw new IOException("Could not read item '" + tag.getString("id") + "' in slot " + savedSlot);
             result.put(slot, stack);
         }
         return result;
-    }
-
-    private static CompoundTag updateLegacyItem(final CompoundTag stack) throws IOException {
-        requireVanillaLegacyItems(stack);
-        final Tag updated = DataFixers.getDataFixer().update(References.ITEM_STACK, new Dynamic<>(NbtOps.INSTANCE, stack.copy()),
-                LEGACY_DATA_VERSION, SharedConstants.getCurrentVersion().getDataVersion().getVersion()).getValue();
-        if (updated instanceof CompoundTag tag) return tag;
-        throw new IOException("Could not convert legacy item '" + stack.getString("id") + "'");
-    }
-
-    private static void requireVanillaLegacyItems(final Tag data) throws IOException {
-        if (data instanceof CompoundTag tag) {
-            if (tag.contains("id", Tag.TAG_STRING) && tag.contains("Count", Tag.TAG_ANY_NUMERIC) && tag.getInt("Count") > 0) {
-                final ResourceLocation id = ResourceLocation.tryParse(tag.getString("id"));
-                if (id == null || !"minecraft".equals(id.getNamespace())) {
-                    throw new IOException("Legacy modded item '" + tag.getString("id") + "' needs its own migration");
-                }
-            }
-            for (final String key : tag.getAllKeys()) requireVanillaLegacyItems(tag.get(key));
-        } else if (data instanceof ListTag list) {
-            for (final Tag entry : list) requireVanillaLegacyItems(entry);
-        }
     }
 
     private static int playerSlot(final int savedSlot) {

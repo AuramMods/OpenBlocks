@@ -147,7 +147,7 @@ Per-feature checklist template:
 Goal: stabilize and protect the port.
 
 Checklist:
-- [-] Validate old-world migration behavior where practical. Earlier 1.20.1 saves and flattened registry aliases are verified. Native 1.12.2 data needs conversion before opening it in 1.20.1.
+- [-] Validate old-world migration behavior where practical. Earlier 1.20.1 saves and flattened registry aliases are verified. The inventory recovery commands read OpenModsLib backups with supported OpenBlocks items. Native 1.12.2 worlds require separate conversion before opening in 1.20.1.
 - [x] Verify Forge registry remaps and deferred block-entity ID repair on a disposable 1.20.1 save.
 - [x] Add regression tests for critical gameplay flows.
 - [ ] Multiplayer sanity pass.
@@ -164,7 +164,7 @@ Checklist:
 - [x] Reconcile crafting and acquisition against the full legacy recipe inventory. Verify the expected ingredients and outputs in Forge and record the items obtained outside ordinary recipes.
 - [x] Restore and verify the Flim-Flam snowball, teleport, mount, encase, dummy creeper, random potion, and skyblock actions.
 - [x] Restore grave-owned loot, optional recovery files, the two-point shovel cost, and the persistent empty memorial. Verify rejected drops, older dump-backed graves, and backup recovery beyond ordinary player slots.
-- [x] Verify `/ob_inventory` store, restore, and spawn for the full player inventory, ender chest, and Forge extension payloads. Restore the death backup switch and support vanilla-item 1.12.2 inventory dumps.
+- [x] Verify `/ob_inventory` store, restore, and spawn for the full player inventory, ender chest, and Forge extension payloads. Restore the death backup switch and support 1.12.2 inventory dumps with vanilla and supported OpenBlocks items.
 - [x] Restore the grave placement event, legacy search order, height bounds, dirt base, destructive fallback, and optional consumption of a carried grave.
 - [x] Restore grave facing, epitaph and model variants, blast resistance, and ambient skeleton and bat spawning.
 - [x] Account for all 189 legacy recipe files. The 20 filenames absent from the port are represented by the rotating elevator upgrade, Sky Block inversion, and Flim-Flam book serializers.

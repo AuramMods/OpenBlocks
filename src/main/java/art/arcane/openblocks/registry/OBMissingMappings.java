@@ -81,6 +81,13 @@ public final class OBMissingMappings {
 
     private OBMissingMappings() {}
 
+    @Nullable
+    public static ResourceLocation legacyItemDestination(final String id) {
+        final int separator = id.indexOf(':');
+        if (separator < 0 || !"openblocks".equalsIgnoreCase(id.substring(0, separator))) return null;
+        return destination(id.substring(0, separator), id.substring(separator + 1), ITEM_ALIASES);
+    }
+
     @SubscribeEvent
     public static void onMissingMappings(final MissingMappingsEvent event) {
         remap(event, Registries.BLOCK, BLOCK_ALIASES);
