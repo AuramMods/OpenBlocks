@@ -30,6 +30,8 @@ import art.arcane.openblocks.item.OBSpongeOnAStickItem;
 import art.arcane.openblocks.item.OBSleepingBagItem;
 import art.arcane.openblocks.item.OBSlimalyzerItem;
 import art.arcane.openblocks.item.OBSonicGlassesItem;
+import art.arcane.openblocks.item.OBEpicEraserItem;
+import art.arcane.openblocks.item.OBWrenchItem;
 import art.arcane.openblocks.item.OBTankItem;
 import art.arcane.openblocks.item.OBTrophyItem;
 import java.util.ArrayList;
@@ -147,8 +149,8 @@ public final class OBItems {
     public static final RegistryObject<Item> DEV_NULL = registerItem("dev_null", () -> new OBDevNullItem(new Item.Properties()));
     public static final RegistryObject<Item> SPONGE_ON_A_STICK = registerItem("sponge_on_a_stick", OBSpongeOnAStickItem::new);
     public static final RegistryObject<Item> PEDOMETER = registerItem("pedometer", OBPedometerItem::new);
-    public static final RegistryObject<Item> EPIC_ERASER = registerItem("epic_eraser");
-    public static final RegistryObject<Item> WRENCH = registerItem("wrench");
+    public static final RegistryObject<Item> EPIC_ERASER = registerItem("epic_eraser", OBEpicEraserItem::new);
+    public static final RegistryObject<Item> WRENCH = registerItem("wrench", OBWrenchItem::new);
     public static final RegistryObject<Item> GLYPH = registerItem("glyph", OBGlyphItem::new);
 
     // Keep the scaffold IDs loadable in existing worlds.

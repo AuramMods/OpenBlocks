@@ -125,6 +125,10 @@ Current registry classes:
   - `src/main/java/art/arcane/openblocks/client/OBSonicGlassesRendering.java` renders the original worn model.
   - `src/main/java/art/arcane/openblocks/client/OBSonicGlassesOverlay.java` projects sound sources onto the first-person view and applies optional dimming.
   - `src/main/java/art/arcane/openblocks/client/OBSoundIcons.java` maps legacy and modern sound IDs to the original icons and mob colors.
+- Wrench and Epic Eraser:
+  - `src/main/java/art/arcane/openblocks/item/OBWrenchItem.java` rotates blocks in place and posts Forge's tool modification event.
+  - `src/main/java/art/arcane/openblocks/item/OBEpicEraserItem.java` supplies glint, durability, and the worn crafting remainder.
+  - `src/main/java/art/arcane/openblocks/recipe/OBEpicEraserRecipe.java` strips ordinary and legacy lore one item at a time.
 - Sound register: `src/main/java/art/arcane/openblocks/registry/OBSounds.java`
 - Custom statistic register for Bricks dropped: `src/main/java/art/arcane/openblocks/registry/OBStats.java`
 - Enchantment register: `src/main/java/art/arcane/openblocks/registry/OBEnchantments.java`
@@ -197,7 +201,7 @@ Current asset coverage:
 - Advancement JSON scaffolding:
   - `src/main/resources/data/open_blocks/advancements/oops.json`
   - `src/main/resources/data/open_blocks/advancements/tma2.json`
-- Custom recipe placeholder JSONs: `src/main/resources/data/open_blocks/recipes` (7 files)
+- Custom recipe definitions: `src/main/resources/data/open_blocks/recipes`, including all seven legacy special recipe IDs.
 - Generated block loot tables: `src/generated/resources/data/open_blocks/loot_tables/blocks` (41 files)
 - Generated block tags:
   - `src/generated/resources/data/minecraft/tags/blocks/mineable/pickaxe.json`
@@ -212,7 +216,7 @@ Current validation status:
 - `./gradlew compileJava runData` passes.
 - `./gradlew runData` now executes `Loot Tables` provider and writes 41 block loot tables.
 - `./gradlew runData` now also executes `Tags for minecraft:block mod id open_blocks` and writes 3 baseline block tag files.
-- Custom recipe placeholder JSONs for all 7 legacy custom recipe IDs load with current datagen/compile loop.
+- All seven legacy special recipe IDs have implementations and load with the current datagen and compile loop.
 - Legacy ore-dict compatibility tags now use broader `forge`/`minecraft` groups + fallback items across 34 updated files in `src/main/resources/data/open_blocks/tags/items/legacy_ore_dict`.
 - Latest `./gradlew compileJava runData` pass (2026-02-09) still succeeds after adding `OBInventoryEvent` store/load bridge wiring for `/ob_inventory`.
 - Latest `./gradlew compileJava runData` pass (2026-02-09) still succeeds after adding grave gamerule + drop-backup dump wiring (`OBGameRules` + `OBGraveHooks`).
@@ -339,8 +343,7 @@ Source: `old-1.12.2/src/main/resources/assets/openblocks/recipes`
   - `forge:ore_shaped`: 107
   - `forge:ore_shapeless`: 78
   - `openmods:enchanting`: 4
-- Existing 1.20 scaffold recipes currently present:
-  - `src/main/resources/data/open_blocks/recipes` (7 custom serializer placeholders from `CustomRecipesSetup` + 1 custom flim-flam replacement recipe)
+- Modern special recipes are defined in `src/main/resources/data/open_blocks/recipes` alongside the legacy Pointer conversion.
 - Mechanical conversion output now present:
   - `src/main/resources/data/open_blocks/recipes/legacy` (170 recipes, including the single upgrade that covers all elevator colors)
   - `src/main/resources/data/open_blocks/tags/items/legacy_ore_dict` (35 compatibility item-tag files for former ore-dict names)
@@ -439,8 +442,8 @@ Source: `old-1.12.2/src/main/java/openblocks/OpenBlocks.java`
 | dev_null | ItemDevNull | `Items.devNull` | `devnull`. The 1.20.1 port uses `OBDevNullItem`, with one stored stack in item NBT. |
 | sponge_on_a_stick | ItemSpongeOnAStick | `Items.spongeonastick` | `spongeonastick` |
 | pedometer | ItemPedometer | `Items.pedometer` | `OBPedometerItem` restores start, report, and sneak-reset in both hands. The `open_blocks:speed` predicate switches to the original moving model at 0.1 blocks per tick. |
-| epic_eraser | ItemEpicEraser | `Items.epicEraser` | `epicEraser` |
-| wrench | ItemWrench | `Items.wrench` | - |
+| epic_eraser | ItemEpicEraser | `Items.epicEraser` | `epicEraser`. Removes ordinary and legacy lore in a crafting grid. The eraser lasts for 15 items. |
+| wrench | ItemWrench | `Items.wrench` | Big Metal Bar. Turns supported blocks in place using the clicked face, including OpenBlocks machines and Guides. |
 | glyph | ItemGlyph | `Items.glyph` | Preserves the character on a printable half-block wall plate. |
 
 ## Meta Item Registries
@@ -655,7 +658,7 @@ Custom code-registered recipes:
   - `openblocks:map_clone`
   - `openblocks:map_resize`
   - `openblocks:golden_eye_recharge` → `open_blocks:golden_eye_recharge`
-  - `openblocks:epic_eraser_action`
+  - `openblocks:epic_eraser_action` → `open_blocks:epic_eraser_action`
 
 Data recipes:
 - Folder: `old-1.12.2/src/main/resources/assets/openblocks/recipes`

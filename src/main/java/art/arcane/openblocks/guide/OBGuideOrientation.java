@@ -46,6 +46,10 @@ public enum OBGuideOrientation implements StringRepresentable {
         return find(clockwise ? z : z.getOpposite(), y);
     }
 
+    public OBGuideOrientation wrenchRotation(final Direction face) {
+        return face.getAxis() == y.getAxis() ? quarterTurn(face == y) : forSurface(face);
+    }
+
     public OBGuideOrientation rotate(final Rotation rotation) {
         final Direction rotatedX = rotation.rotate(x);
         final Direction rotatedY = rotation.rotate(y);

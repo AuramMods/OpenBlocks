@@ -2,12 +2,12 @@ package art.arcane.openblocks.registry;
 
 import art.arcane.openblocks.OpenBlocks;
 import art.arcane.openblocks.recipe.OBElevatorUpgradeRecipe;
+import art.arcane.openblocks.recipe.OBEpicEraserRecipe;
 import art.arcane.openblocks.recipe.OBFlimFlamBookRecipe;
 import art.arcane.openblocks.recipe.OBGoldenEyeRechargeRecipe;
 import art.arcane.openblocks.recipe.OBImaginaryRecipe;
 import art.arcane.openblocks.recipe.OBMapCloneRecipe;
 import art.arcane.openblocks.recipe.OBMapResizeRecipe;
-import art.arcane.openblocks.recipe.OBNoopSpecialRecipe;
 import art.arcane.openblocks.recipe.OBSkyInversionRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.SimpleCraftingRecipeSerializer;
@@ -29,7 +29,8 @@ public final class OBRecipeSerializers {
             () -> new SimpleCraftingRecipeSerializer<>(OBMapResizeRecipe::new));
     public static final RegistryObject<RecipeSerializer<?>> GOLDEN_EYE_RECHARGE = RECIPE_SERIALIZERS.register("golden_eye_recharge",
             () -> new SimpleCraftingRecipeSerializer<>(OBGoldenEyeRechargeRecipe::new));
-    public static final RegistryObject<RecipeSerializer<?>> EPIC_ERASER_ACTION = register("epic_eraser_action");
+    public static final RegistryObject<RecipeSerializer<?>> EPIC_ERASER_ACTION = RECIPE_SERIALIZERS.register("epic_eraser_action",
+            () -> new SimpleCraftingRecipeSerializer<>(OBEpicEraserRecipe::new));
     public static final RegistryObject<RecipeSerializer<?>> FLIM_FLAM_BOOK = RECIPE_SERIALIZERS.register("flim_flam_book",
             () -> new SimpleCraftingRecipeSerializer<>(OBFlimFlamBookRecipe::new));
     public static final RegistryObject<RecipeSerializer<?>> ELEVATOR_UPGRADE = RECIPE_SERIALIZERS.register("elevator_upgrade",
@@ -47,7 +48,4 @@ public final class OBRecipeSerializers {
                 (name, category) -> new OBImaginaryRecipe(name, category, kind)));
     }
 
-    private static RegistryObject<RecipeSerializer<?>> register(final String id) {
-        return RECIPE_SERIALIZERS.register(id, () -> new SimpleCraftingRecipeSerializer<>(OBNoopSpecialRecipe::new));
-    }
 }

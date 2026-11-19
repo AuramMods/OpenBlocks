@@ -70,7 +70,7 @@ Checklist:
 - [x] Language entries for all objects.
 - [x] Sound definitions (`sounds.json`) aligned with code registrations.
 - [x] Basic loot tables where required.
-- [-] Basic recipes (or temporary placeholders) for each craftable feature.
+- [-] Reconcile shaped and shapeless recipes for all craftable features. All seven legacy custom recipes now have implementations.
 - [x] Tags needed for gameplay parity and compatibility.
 - [x] Cross-check that each registered block/item ID has matching model/lang assets.
 
@@ -161,7 +161,7 @@ Checklist:
 - [x] Restore Jaded Ladder trapdoor behavior, directional rope ladders, and temporary scaffolding. The standalone suite verifies climbing, redstone, placement rollback, rope drop accounting, decay and fuel.
 - [-] Restore state variants across recipes, creative entries, and models. Paint brushes, paint cans, canvas surfaces, prepared stencils, and glyphs are restored.
 - [ ] Run a muted client in an isolated or background graphical session to verify models, transparency, and face culling.
-- [ ] Extend recipe coverage beyond custom special recipe placeholders (core craft paths for major blocks/items).
+- [ ] Reconcile crafting and acquisition against the full legacy recipe inventory.
 - [ ] Deepen `/flimflam` parity beyond current breadth-stage action wiring:
   - reconnect legacy luck/cost/weight and safe/blacklist gating behavior
   - tune per-effect details from thin stubs toward legacy-accurate behavior
@@ -211,4 +211,5 @@ Checklist:
 - [x] Restore the Sleeping Bag's temporary sleep, armor swap, item recovery, and original fabric model.
 - [x] Restore the Slimalyzer's slime-chunk detection, model indicator, and entry ping for carried and dropped stacks.
 - [x] Restore the Sonic Glasses' wearable model, configurable dimming, and fading sound-source icons.
-- [ ] Restore the Wrench, Epic Eraser, and remaining utility items.
+- [x] Restore the Wrench's face-based rotation and the Epic Eraser's lore removal and 15 uses.
+- [ ] Restore the Information Book and remaining legacy systems.
