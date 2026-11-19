@@ -208,4 +208,5 @@ Checklist:
 - [x] Restore the Golden Eye's structure lock, rechargeable durability, and recoverable horizontal and downward flights.
 - [x] Restore all 44 mob trophies, Looting-aware drops, miniature models, sounds, special effects, and cooldown persistence.
 - [x] Restore the Village Highlighter's powered overlay, facing and active model, and redstone output for vacant beds.
-- [ ] Restore the Sleeping Bag's temporary sleep and the remaining utility items.
+- [x] Restore the Sleeping Bag's temporary sleep, armor swap, item recovery, and original fabric model.
+- [ ] Restore the Slimalyzer and the remaining utility items.

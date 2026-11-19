@@ -188,6 +188,8 @@
   "block.open_blocks.xpjuice": "Liquid XP",
   "tooltip.open_blocks.tank.contents": "%s: %s mB (%s%%)",
   "item.open_blocks.sleeping_bag": "Sleeping Bag",
+  "item.open_blocks.sleeping_bag.no_ground": "You want to sleep on THAT!?",
+  "item.open_blocks.sleeping_bag.no_room": "Make room in your inventory for your chest equipment.",
   "item.open_blocks.paintbrush": "Paintbrush",
   "item.open_blocks.stencil": "Stencil",
   "item.open_blocks.squeegee": "Squeegee",

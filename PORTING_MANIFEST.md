@@ -114,6 +114,9 @@ Current registry classes:
   - `src/main/java/art/arcane/openblocks/world/OBVillageSurvey.java` surveys contiguous vanilla village sections and nearby adult villagers.
   - `src/main/java/art/arcane/openblocks/block/entity/OBVillageHighlighterBlockEntity.java` sends updates when the live survey changes.
   - `src/main/java/art/arcane/openblocks/client/OBVillageHighlighterRendering.java` renders the dotted perimeter and the candidate golem search volumes.
+- Sleeping Bag:
+  - `src/main/java/art/arcane/openblocks/item/OBSleepingBagItem.java` starts portable sleep, preserves the player's spawn point, and returns the bag and displaced chest equipment.
+  - `src/main/java/art/arcane/openblocks/client/OBSleepingBagRendering.java` uses the original bag, pillow, and fabric texture for the worn item.
 - Sound register: `src/main/java/art/arcane/openblocks/registry/OBSounds.java`
 - Custom statistic register for Bricks dropped: `src/main/java/art/arcane/openblocks/registry/OBStats.java`
 - Enchantment register: `src/main/java/art/arcane/openblocks/registry/OBEnchantments.java`
@@ -413,7 +416,7 @@ Source: `old-1.12.2/src/main/java/openblocks/OpenBlocks.java`
 | crane_backpack | ItemCraneBackpack | `Items.craneBackpack` | Iron-tier chest equipment that deploys a player-bound magnet. |
 | slimalyzer | ItemSlimalyzer | `Items.slimalyzer` | - |
 | xp_bucket | ItemXpBucket | `Items.xpBucket` | `filledbucket` |
-| sleeping_bag | ItemSleepingBag | `Items.sleepingBag` | `sleepingBag` |
+| sleeping_bag | ItemSleepingBag | `Items.sleepingBag` | `sleepingBag`. Main-hand use or chest-slot equip sleeps on solid ground. The player's respawn point stays set and the bag returns on waking. |
 | paintbrush | ItemPaintBrush | `Items.paintBrush` | `paintBrush`. Sixteen dye recipes or arbitrary RGB from a can. Paints one face, or all faces while sneaking. |
 | stencil | ItemStencil | `Items.stencil` | 15 cutout patterns. Attaches to a face and can be rotated or recovered. |
 | squeegee | ItemSqueegee | `Items.squeegee` | Cleans the selected face or the whole block while sneaking. The original wrapped block returns once clean. |

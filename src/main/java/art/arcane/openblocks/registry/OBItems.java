@@ -27,6 +27,7 @@ import art.arcane.openblocks.item.OBStencilItem;
 import art.arcane.openblocks.item.OBScaffoldingItem;
 import art.arcane.openblocks.item.OBSkyItem;
 import art.arcane.openblocks.item.OBSpongeOnAStickItem;
+import art.arcane.openblocks.item.OBSleepingBagItem;
 import art.arcane.openblocks.item.OBTankItem;
 import art.arcane.openblocks.item.OBTrophyItem;
 import java.util.ArrayList;
@@ -129,7 +130,7 @@ public final class OBItems {
     public static final RegistryObject<Item> CRANE_BACKPACK = registerItem("crane_backpack", OBCraneBackpackItem::new);
     public static final RegistryObject<Item> SLIMALYZER = registerItem("slimalyzer");
     public static final RegistryObject<Item> XP_BUCKET = registerBucketItem("xp_bucket");
-    public static final RegistryObject<Item> SLEEPING_BAG = registerItem("sleeping_bag");
+    public static final RegistryObject<Item> SLEEPING_BAG = registerItem("sleeping_bag", OBSleepingBagItem::new);
     public static final RegistryObject<Item> PAINTBRUSH = registerItem("paintbrush", OBPaintBrushItem::new);
     public static final RegistryObject<Item> STENCIL = registerItem("stencil", OBStencilItem::new);
     public static final RegistryObject<Item> SQUEEGEE = registerItem("squeegee", OBSqueegeeItem::new);
