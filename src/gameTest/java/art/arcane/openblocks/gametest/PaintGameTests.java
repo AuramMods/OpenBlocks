@@ -21,8 +21,10 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
@@ -32,12 +34,17 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.EnchantmentTableBlock;
+import net.minecraft.world.level.block.FarmBlock;
+import net.minecraft.world.level.block.FireBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.Half;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.FakePlayer;
@@ -230,6 +237,78 @@ public final class PaintGameTests {
     }
 
     @GameTest(template = "empty")
+    public static void paintedSlimeCushionsAndBouncesFallingEntities(final GameTestHelper helper) {
+        final Player player = player(helper);
+        final BlockPos pos = helper.absolutePos(POS);
+        final BlockState slime = Blocks.SLIME_BLOCK.defaultBlockState();
+        final BlockState painted = paint(helper, player, pos, slime);
+        final var cow = helper.spawnWithNoFreeWill(EntityType.COW, new Vec3(2.5, 9.0, 2.5));
+        helper.assertTrue(painted.getFriction(helper.getLevel(), pos, cow) == slime.getFriction(helper.getLevel(), pos, cow),
+                "Painting slime changed its friction");
+        helper.succeedWhen(() -> {
+            helper.assertTrue(cow.getHealth() == cow.getMaxHealth(), "The cow took fall damage on painted slime");
+            helper.assertTrue(cow.getDeltaMovement().y > 0.12, "The cow did not bounce off painted slime");
+        });
+    }
+
+    @GameTest(template = "empty")
+    public static void paintedFireSourcesAndFuelsKeepTheirOriginalBehavior(final GameTestHelper helper) {
+        final Player player = player(helper);
+        final var level = helper.getLevel();
+        final BlockPos fuelPos = helper.absolutePos(POS);
+        final BlockPos sourcePos = fuelPos.east(3);
+        final BlockState wood = Blocks.OAK_PLANKS.defaultBlockState();
+        final BlockState fuel = paint(helper, player, fuelPos, wood);
+        final BlockState source = paint(helper, player, sourcePos, Blocks.NETHERRACK.defaultBlockState());
+        helper.assertTrue(fuel.isFlammable(level, fuelPos, Direction.UP)
+                && fuel.getFlammability(level, fuelPos, Direction.UP) == wood.getFlammability(level, fuelPos, Direction.UP),
+                "Painted wood no longer burns like oak planks");
+        final int spread = wood.getFireSpreadSpeed(level, fuelPos, Direction.UP);
+        helper.assertTrue(spread > 0 && fuel.getFireSpreadSpeed(level, fuelPos, Direction.UP) == spread
+                && fuel.getFireSpreadSpeed(level, fuelPos.above(), Direction.UP) == spread,
+                "Painted wood does not spread fire on the queried face");
+        final BlockPos firePos = sourcePos.above();
+        final BlockState fire = Blocks.FIRE.defaultBlockState().setValue(FireBlock.AGE, 15);
+        level.setBlockAndUpdate(firePos, fire);
+        helper.assertTrue(source.isFireSource(level, sourcePos, Direction.UP) && source.isFireSource(level, firePos, Direction.UP),
+                "Painted netherrack no longer sustains fire");
+        fire.tick(level, firePos, RandomSource.create(24L));
+        helper.assertTrue(level.getBlockState(firePos).is(Blocks.FIRE), "The fire tick extinguished a flame on painted netherrack");
+        helper.succeed();
+    }
+
+    @GameTest(template = "empty")
+    public static void paintedFarmlandAndBookshelvesStillSupportTheirVanillaUses(final GameTestHelper helper) {
+        final Player player = player(helper);
+        final var level = helper.getLevel();
+        final BlockPos field = helper.absolutePos(POS);
+        final BlockState farmland = Blocks.FARMLAND.defaultBlockState().setValue(FarmBlock.MOISTURE, FarmBlock.MAX_MOISTURE);
+        final BlockState soil = paint(helper, player, field, farmland);
+        helper.assertTrue(soil.isFertile(level, field), "Painted moist farmland lost its fertility");
+        helper.assertTrue(soil.canSustainPlant(level, field, Direction.UP, (IPlantable) Blocks.WHEAT),
+                "Painted farmland rejected Forge's wheat support check");
+        final BlockPos crop = field.above();
+        level.setBlockAndUpdate(crop.above(2), Blocks.GLOWSTONE.defaultBlockState());
+
+        final BlockPos table = field.south(3);
+        final BlockPos shelfOffset = new BlockPos(2, 0, 0);
+        final BlockPos shelf = table.offset(shelfOffset);
+        level.setBlockAndUpdate(table, Blocks.ENCHANTING_TABLE.defaultBlockState());
+        final BlockState books = paint(helper, player, shelf, Blocks.BOOKSHELF.defaultBlockState());
+        helper.assertTrue(EnchantmentTableBlock.isValidBookShelf(level, table, shelfOffset)
+                && books.getEnchantPowerBonus(level, shelf) == 1.0F, "The enchanting table rejected the painted bookshelf");
+
+        helper.runAtTickTime(5, () -> {
+            final BlockState wheat = Blocks.WHEAT.defaultBlockState();
+            helper.assertTrue(wheat.canSurvive(level, crop), "Wheat failed survival on lit, painted farmland");
+            player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.WHEAT_SEEDS));
+            helper.assertTrue(use(player, field, Direction.UP).consumesAction() && level.getBlockState(crop).is(Blocks.WHEAT),
+                    "Wheat seed placement did not plant a crop");
+            helper.succeed();
+        });
+    }
+
+    @GameTest(template = "empty")
     public static void brushesUseVanillaColorsAndRespectForgePlacementDenials(final GameTestHelper helper) {
         final Player player = player(helper);
         final var level = helper.getLevel();
@@ -283,6 +362,16 @@ public final class PaintGameTests {
     private static OBPaintMixerBlockEntity mixer(final GameTestHelper helper) {
         helper.setBlock(POS, OBBlocks.PAINT_MIXER.get());
         return (OBPaintMixerBlockEntity) helper.getBlockEntity(POS);
+    }
+
+    private static BlockState paint(final GameTestHelper helper, final Player player, final BlockPos pos, final BlockState original) {
+        final var level = helper.getLevel();
+        level.setBlockAndUpdate(pos, original);
+        player.setItemInHand(InteractionHand.MAIN_HAND, OBPaintBrushItem.create(CORAL));
+        helper.assertTrue(use(player, pos, Direction.NORTH).consumesAction()
+                && level.getBlockEntity(pos) instanceof OBCanvasBlockEntity canvas && canvas.original() == original,
+                "The brush did not wrap the test block in canvas");
+        return level.getBlockState(pos);
     }
 
     private static void tick(final GameTestHelper helper, final OBPaintMixerBlockEntity mixer) {

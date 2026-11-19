@@ -161,6 +161,8 @@ Checklist:
 - [x] Restore Jaded Ladder trapdoor behavior, directional rope ladders, and temporary scaffolding. The standalone suite verifies climbing, redstone, placement rollback, rope drop accounting, decay and fuel.
 - [x] Restore state variants across recipes, creative entries, and models. Paint brushes, paint cans, canvas surfaces, prepared stencils, and glyphs are restored.
 - [x] Verify models, transparency, and face culling in a muted client under Docker/Xvfb. Checked elevator and stencil variants, painted glass, joined scaffolding, connected tanks, and Sky Block polarities. Matching wrapped and plain glass now hides shared faces.
+- [x] Preserve painted blocks' landing, friction, burning, crop support, and enchantment power. Verified with the standalone suite and the packaged dedicated server and muted client.
+- [ ] Preserve leaf support beside painted logs. Forge 1.20.1 calculates leaf distance from the neighboring block state, so vanilla leaves currently lose their support when the log is wrapped.
 - [x] Reconcile crafting and acquisition against the full legacy recipe inventory. Verify the expected ingredients and outputs in Forge and record the items obtained outside ordinary recipes.
 - [x] Restore and verify the Flim-Flam snowball, teleport, mount, encase, dummy creeper, random potion, and skyblock actions.
 - [x] Restore grave-owned loot, optional recovery files, the two-point shovel cost, and the persistent empty memorial. Verify rejected drops, older dump-backed graves, and backup recovery beyond ordinary player slots.

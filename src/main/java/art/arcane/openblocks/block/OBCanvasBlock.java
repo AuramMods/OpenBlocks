@@ -15,6 +15,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
@@ -47,6 +48,7 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.common.ForgeHooks;
+import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.registries.ForgeRegistries;
 
 public final class OBCanvasBlock extends BaseEntityBlock implements SimpleWaterloggedBlock, OBPaintableBlock {
@@ -216,6 +218,72 @@ public final class OBCanvasBlock extends BaseEntityBlock implements SimpleWaterl
     }
 
     @Override
+    public boolean canSustainPlant(final BlockState state, final BlockGetter level, final BlockPos pos, final Direction side,
+            final IPlantable plant) {
+        final BlockState original = underlying(level, pos);
+        return original == null ? super.canSustainPlant(state, level, pos, side, plant) : original.canSustainPlant(level, pos, side, plant);
+    }
+
+    @Override
+    public boolean isFertile(final BlockState state, final BlockGetter level, final BlockPos pos) {
+        final BlockState original = underlying(level, pos);
+        return original == null ? super.isFertile(state, level, pos) : original.isFertile(level, pos);
+    }
+
+    @Override
+    public float getEnchantPowerBonus(final BlockState state, final LevelReader level, final BlockPos pos) {
+        final BlockState original = underlying(level, pos);
+        return original == null ? super.getEnchantPowerBonus(state, level, pos) : original.getEnchantPowerBonus(level, pos);
+    }
+
+    // Some Forge fire ticks pass the flame position to the neighboring block's hook.
+    private static BlockPos fireQueryPosition(final BlockState state, final BlockGetter level, final BlockPos pos, final Direction side) {
+        if (level.getBlockState(pos) == state) return pos;
+        final BlockPos neighbor = pos.relative(side.getOpposite());
+        return level.getBlockState(neighbor) == state ? neighbor : pos;
+    }
+
+    @Override
+    public int getFlammability(final BlockState state, final BlockGetter level, final BlockPos pos, final Direction side) {
+        final BlockState original = underlying(level, pos);
+        return original == null ? super.getFlammability(state, level, pos, side) : original.getFlammability(level, pos, side);
+    }
+
+    @Override
+    public boolean isFlammable(final BlockState state, final BlockGetter level, final BlockPos pos, final Direction side) {
+        final BlockState original = underlying(level, pos);
+        return original == null ? super.isFlammable(state, level, pos, side) : original.isFlammable(level, pos, side);
+    }
+
+    @Override
+    public boolean isBurning(final BlockState state, final BlockGetter level, final BlockPos pos) {
+        final BlockState original = underlying(level, pos);
+        return original == null ? super.isBurning(state, level, pos) : original.isBurning(level, pos);
+    }
+
+    @Override
+    public boolean isFireSource(final BlockState state, final LevelReader level, final BlockPos pos, final Direction side) {
+        final BlockPos fuel = fireQueryPosition(state, level, pos, side);
+        final BlockState original = underlying(level, fuel);
+        return original == null ? super.isFireSource(state, level, fuel, side) : original.isFireSource(level, fuel, side);
+    }
+
+    @Override
+    public int getFireSpreadSpeed(final BlockState state, final BlockGetter level, final BlockPos pos, final Direction side) {
+        final BlockPos fuel = fireQueryPosition(state, level, pos, side);
+        final BlockState original = underlying(level, fuel);
+        return original == null ? super.getFireSpreadSpeed(state, level, fuel, side) : original.getFireSpreadSpeed(level, fuel, side);
+    }
+
+    @Override
+    public void onCaughtFire(final BlockState state, final Level level, final BlockPos pos, final Direction side,
+            @Nullable final LivingEntity igniter) {
+        final BlockState original = underlying(level, pos);
+        if (original == null) super.onCaughtFire(state, level, pos, side, igniter);
+        else original.onCaughtFire(level, pos, side, igniter);
+    }
+
+    @Override
     public boolean canHarvestBlock(final BlockState state, final BlockGetter level, final BlockPos pos, final Player player) {
         final BlockState original = underlying(level, pos);
         return original == null ? ForgeHooks.isCorrectToolForDrops(state, player) : original.canHarvestBlock(level, pos, player);
@@ -276,6 +344,26 @@ public final class OBCanvasBlock extends BaseEntityBlock implements SimpleWaterl
     public int getAnalogOutputSignal(final BlockState state, final Level level, final BlockPos pos) {
         final BlockState original = underlying(level, pos);
         return original == null || !original.hasAnalogOutputSignal() ? 0 : original.getAnalogOutputSignal(level, pos);
+    }
+
+    @Override
+    public float getFriction(final BlockState state, final LevelReader level, final BlockPos pos, @Nullable final Entity entity) {
+        final BlockState original = underlying(level, pos);
+        return original == null ? super.getFriction(state, level, pos, entity) : original.getFriction(level, pos, entity);
+    }
+
+    @Override
+    public void fallOn(final Level level, final BlockState state, final BlockPos pos, final Entity entity, final float distance) {
+        final BlockState original = underlying(level, pos);
+        if (original == null) super.fallOn(level, state, pos, entity, distance);
+        else original.getBlock().fallOn(level, original, pos, entity, distance);
+    }
+
+    @Override
+    public void updateEntityAfterFallOn(final BlockGetter level, final Entity entity) {
+        final BlockState original = underlying(level, entity.getOnPosLegacy());
+        if (original == null) super.updateEntityAfterFallOn(level, entity);
+        else original.getBlock().updateEntityAfterFallOn(level, entity);
     }
 
     @Override
