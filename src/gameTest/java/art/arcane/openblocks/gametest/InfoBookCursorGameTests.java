@@ -1,17 +1,24 @@
 package art.arcane.openblocks.gametest;
 
 import art.arcane.openblocks.OpenBlocks;
+import art.arcane.openblocks.config.OBServerConfig;
 import art.arcane.openblocks.player.OBExperience;
+import art.arcane.openblocks.player.OBFirstLogin;
 import art.arcane.openblocks.registry.OBItems;
 import com.mojang.authlib.GameProfile;
+import java.util.List;
 import java.util.UUID;
+import java.util.function.Consumer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.GameType;
@@ -19,10 +26,13 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LeverBlock;
 import net.minecraft.world.level.block.state.properties.AttachFace;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.FakePlayer;
+import net.minecraftforge.event.entity.EntityJoinLevelEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -53,6 +63,80 @@ public final class InfoBookCursorGameTests {
                 "Opening the client-only book must consume an interaction without modifying the book or player's server menu");
         helper.assertTrue(book.getItem().use(helper.getLevel(), player, InteractionHand.OFF_HAND).getResult() == InteractionResult.PASS,
                 "The Information Book must open from the main hand only");
+        helper.succeed();
+    }
+
+    @GameTest(template = "empty")
+    public static void firstLoginManualOnlyCountsAfterItIsDelivered(final GameTestHelper helper) {
+        final var level = helper.getLevel();
+        final var player = new ServerPlayer(level.getServer(), level, new GameProfile(UUID.randomUUID(), "ManualQA"));
+        final var full = new ServerPlayer(level.getServer(), level, new GameProfile(UUID.randomUUID(), "ManualFullQA"));
+        final var position = helper.absolutePos(TARGET);
+        full.setPos(position.getX() + 0.5, position.getY(), position.getZ() + 0.5);
+        for (int slot = 0; slot < full.getInventory().items.size(); slot++) full.getInventory().setItem(slot, new ItemStack(Items.STONE, 64));
+        final var setting = OBServerConfig.GIVE_INFO_BOOK;
+        final boolean previous = setting.get();
+        final var book = OBItems.INFO_BOOK.get();
+        final Consumer<EntityJoinLevelEvent> deny = event -> {
+            if (event.getEntity() instanceof ItemEntity drop && drop.getItem().is(book) && drop.distanceToSqr(full) < 1) event.setCanceled(true);
+        };
+        final var area = new AABB(position).inflate(1);
+        try {
+            setting.set(false);
+            OBFirstLogin.onLogin(new PlayerEvent.PlayerLoggedInEvent(player));
+            helper.assertTrue(player.getInventory().countItem(book) == 0, "The disabled setting still gave a book");
+
+            setting.set(true);
+            OBFirstLogin.onLogin(new PlayerEvent.PlayerLoggedInEvent(player));
+            helper.assertTrue(player.getInventory().countItem(book) == 1, "The player did not receive a book on login");
+            player.getInventory().clearContent();
+            OBFirstLogin.onLogin(new PlayerEvent.PlayerLoggedInEvent(player));
+            helper.assertTrue(player.getInventory().countItem(book) == 0, "A later login granted a second book");
+
+            MinecraftForge.EVENT_BUS.addListener(deny);
+            try {
+                OBFirstLogin.onLogin(new PlayerEvent.PlayerLoggedInEvent(full));
+                helper.assertTrue(level.getEntitiesOfClass(ItemEntity.class, area, drop -> drop.getItem().is(book)).isEmpty(),
+                        "An item-spawn veto did not stop the handbook drop");
+            } finally {
+                MinecraftForge.EVENT_BUS.unregister(deny);
+            }
+            OBFirstLogin.onLogin(new PlayerEvent.PlayerLoggedInEvent(full));
+            OBFirstLogin.onLogin(new PlayerEvent.PlayerLoggedInEvent(full));
+            helper.assertTrue(level.getEntitiesOfClass(ItemEntity.class, area, drop -> drop.getItem().is(book)).size() == 1,
+                    "A denied drop did not retry or a single login granted extra books");
+        } finally {
+            setting.set(previous);
+        }
+        helper.succeed();
+    }
+
+    @GameTest(template = "empty")
+    public static void disabledMobsAreRejectedWhenJoiningTheLevel(final GameTestHelper helper) {
+        final var level = helper.getLevel();
+        final var setting = OBServerConfig.DISABLED_MOBS;
+        final var previous = setting.get();
+        final var position = helper.absolutePos(TARGET);
+        final var bat = EntityType.BAT.create(level);
+        final var cow = EntityType.COW.create(level);
+        bat.setPos(position.getX(), position.getY(), position.getZ());
+        cow.setPos(position.getX(), position.getY(), position.getZ());
+        try {
+            setting.set(List.of("minecraft:bat", "minecraft:player"));
+            helper.assertTrue(!level.addFreshEntity(bat) && level.addFreshEntity(cow), "The blacklist did not distinguish bat and cow IDs");
+            final var join = new EntityJoinLevelEvent(player(helper), level, true);
+            helper.assertTrue(!MinecraftForge.EVENT_BUS.post(join), "The entity filter must allow player logins");
+            setting.set(List.of("cow"));
+            final var fromDisk = new EntityJoinLevelEvent(cow, level, true);
+            helper.assertTrue(MinecraftForge.EVENT_BUS.post(fromDisk), "A reloaded list must also filter entities read from disk");
+            setting.set(List.of());
+            helper.assertTrue(!MinecraftForge.EVENT_BUS.post(new EntityJoinLevelEvent(cow, level, true)),
+                    "An empty blacklist continued rejecting the old entity");
+        } finally {
+            setting.set(previous);
+            bat.discard();
+            cow.discard();
+        }
         helper.succeed();
     }
 

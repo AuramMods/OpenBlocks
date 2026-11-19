@@ -150,7 +150,7 @@ Checklist:
 - [-] Validate old-world migration behavior where practical. Earlier 1.20.1 saves and flattened registry aliases are verified. The inventory recovery commands read OpenModsLib backups with supported OpenBlocks items. Native 1.12.2 worlds require separate conversion before opening in 1.20.1.
 - [x] Verify Forge registry remaps and deferred block-entity ID repair on a disposable 1.20.1 save.
 - [x] Add regression tests for critical gameplay flows.
-- [ ] Multiplayer sanity pass.
+- [x] Multiplayer sanity pass with the packaged jar and all 12 Auram development jars. Two muted clients verified a shared painted glass canvas. JEI transferred the XP Bottler recipe, and Mekanism stored and supplied Liquid XP through its fluid tank.
 - [ ] Performance pass for heavy systems (render/network/tick).
 - [ ] Cleanup dead stubs and document final architecture.
 
@@ -199,12 +199,13 @@ Checklist:
 - [x] Restore imaginary blocks, Magic Pencil and Crayon placement, color recipes, and the four imagination glasses, including Technicolor chest loot.
 - [x] Restore the Golden Egg's hatching sequence, optional block lift, and explosion, and Mini-Me's skin, foraging, and player pickup behavior.
 - [x] Restore the Golden Eye's structure lock, rechargeable durability, and recoverable horizontal and downward flights.
-- [x] Restore all 44 mob trophies, Looting-aware drops, miniature models, sounds, special effects, and cooldown persistence.
+- [x] Restore all 44 mob trophies, Looting-aware drops and their configurable formula, miniature models, sounds, special effects, and cooldown persistence.
 - [x] Restore the Village Highlighter's powered overlay, facing and active model, and redstone output for vacant beds.
 - [x] Restore the Sleeping Bag's temporary sleep, armor swap, item recovery, and original fabric model.
 - [x] Restore the Slimalyzer's slime-chunk detection, model indicator, and entry ping for carried and dropped stacks.
 - [x] Restore the Sonic Glasses' wearable model, configurable dimming, and fading sound-source icons.
 - [x] Restore the Wrench's face-based rotation and the Epic Eraser's lore removal and 15 uses.
-- [x] Restore the Information Book with its catalogues and live recipe previews, and the Cursor with linked block interactions and XP costs.
+- [x] Restore the Information Book with its first-login grant, catalogues, and live recipe previews, and the Cursor with linked block interactions and XP costs.
+- [x] Restore the server entity blacklist with registry IDs and live configuration updates.
 - [x] Restore Unstable's armor blasts and landing bounce, Last Stand's configurable XP protection, and both enchantments' acquisition and book entries.
 - [x] Restore Flim-Flam sword and armor acquisition, combat luck and cooldown, weighted selection, safety and list filters, item history, and the operator commands.

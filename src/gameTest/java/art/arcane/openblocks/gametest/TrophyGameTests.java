@@ -86,11 +86,14 @@ public final class TrophyGameTests {
         final var source = level.damageSources().playerAttack(killer);
         final var drops = new ArrayList<ItemEntity>();
         final var chance = OBServerConfig.TROPHY_DROP_CHANCE;
+        final var formula = OBServerConfig.TROPHY_DROP_FORMULA;
         final double previousChance = chance.get();
+        final String previousFormula = formula.get();
         final var mobLoot = level.getGameRules().getRule(GameRules.RULE_DOMOBLOOT);
         final boolean previousRule = mobLoot.get();
         try {
             mobLoot.set(true, level.getServer());
+            formula.set(formula.getDefault());
             chance.set(0.0);
             MinecraftForge.EVENT_BUS.post(new LivingDropsEvent(cow, source, drops, 3, true));
             helper.assertTrue(drops.isEmpty(), "A zero drop chance added a trophy");
@@ -105,8 +108,23 @@ public final class TrophyGameTests {
             MinecraftForge.EVENT_BUS.post(new LivingDropsEvent(cow, source, drops, 3, true));
             helper.assertTrue(drops.size() == 1 && drops.get(0).getItem().getCount() == 1 && drops.get(0).hasPickUpDelay()
                     && OBTrophyType.read(drops.get(0).getItem().getTag()) == OBTrophyType.COW, "The guaranteed looting roll added the wrong trophy");
+
+            drops.clear();
+            chance.set(0.25);
+            formula.set("looting * chance - 0.5");
+            MinecraftForge.EVENT_BUS.post(new LivingDropsEvent(cow, source, drops, 2, true));
+            helper.assertTrue(drops.isEmpty(), "A trophy formula result of zero awarded a drop");
+            MinecraftForge.EVENT_BUS.post(new LivingDropsEvent(cow, source, drops, 3, true));
+            helper.assertTrue(drops.size() == 1, "The live formula did not receive looting and chance");
+
+            drops.clear();
+            chance.set(1.0);
+            formula.set("let(");
+            MinecraftForge.EVENT_BUS.post(new LivingDropsEvent(cow, source, drops, 3, true));
+            helper.assertTrue(drops.size() == 1, "An invalid formula did not fall back to the default roll");
         } finally {
             chance.set(previousChance);
+            formula.set(previousFormula);
             mobLoot.set(previousRule, level.getServer());
         }
         helper.succeed();

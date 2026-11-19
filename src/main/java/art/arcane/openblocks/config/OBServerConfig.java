@@ -86,6 +86,9 @@ public final class OBServerConfig {
     public static final ForgeConfigSpec.BooleanValue GOLDEN_EYE_DEBUG;
 
     public static final ForgeConfigSpec.DoubleValue TROPHY_DROP_CHANCE;
+    public static final ForgeConfigSpec.ConfigValue<String> TROPHY_DROP_FORMULA;
+    public static final ForgeConfigSpec.BooleanValue GIVE_INFO_BOOK;
+    public static final ForgeConfigSpec.ConfigValue<List<? extends String>> DISABLED_MOBS;
     public static final ForgeConfigSpec.IntValue CURSOR_DISTANCE_SQUARED;
     public static final ForgeConfigSpec.BooleanValue UNSTABLE_ENABLED;
     public static final ForgeConfigSpec.BooleanValue UNSTABLE_GRIEF;
@@ -108,6 +111,8 @@ public final class OBServerConfig {
         UNSTABLE_GRIEF = builder.comment("Allow Unstable III blasts to break blocks.").define("explosiveEnchantGrief", true);
         LAST_STAND_ENABLED = builder.define("lastStandEnchantment", true);
         FLIM_FLAM_ENABLED = builder.define("flimFlamEnchantment", true);
+        GIVE_INFO_BOOK = builder.comment("Give each player an Information Book on their first login.")
+                .define("infoBook", true);
         LAST_STAND_FORMULA = builder.comment("XP cost when a hit would leave less than half a heart. Variables are hp, dmg, ench and xp.")
                 .define("lastStandFormula", "max(1, 50*(1-(hp-dmg))/ench)");
         builder.pop();
@@ -153,6 +158,8 @@ public final class OBServerConfig {
         builder.push("additional");
         DUMP_DEATH_INVENTORY = builder.comment("Save a separate inventory snapshot for administrator recovery when a player dies.")
                 .define("dumpDeadPlayersInventories", true);
+        DISABLED_MOBS = builder.comment("Entity IDs, such as minecraft:bat, prevented from joining a server level.")
+                .defineListAllowEmpty("disableMobNames", List.of(), value -> value instanceof String);
         builder.pop();
         builder.push("sponge");
         SPONGE_RANGE = builder.comment("Liquid removal radius of the sponge block.")
@@ -267,6 +274,8 @@ public final class OBServerConfig {
         builder.push("trophy");
         TROPHY_DROP_CHANCE = builder.comment("Base trophy chance. Multiplied by the sum of Looting level and a random bias below 0.25.")
                 .defineInRange("trophyDropChance", 0.001, 0.0, 1.0);
+        TROPHY_DROP_FORMULA = builder.comment("A trophy drops when this formula returns a positive number. Variables are looting and chance.")
+                .define("trophyDropChanceFormula", "let([bias=rand()/4, selection=rand()], (looting + bias) * chance - selection)");
         builder.pop();
         builder.push("egg");
         GOLDEN_EGG_PICK_BLOCKS = builder.comment("The hatching Golden Egg can lift nearby blocks.").define("pickBlocks", true);

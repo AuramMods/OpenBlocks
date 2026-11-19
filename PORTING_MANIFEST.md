@@ -105,7 +105,7 @@ Current registry classes:
   - `src/main/resources/data/open_blocks/tags/worldgen/structure/golden_eye_targets.json`
 - Mob trophies:
   - `src/main/java/art/arcane/openblocks/trophy/OBTrophyType.java` maps all 44 legacy variants, including names and ordinal IDs.
-  - `src/main/java/art/arcane/openblocks/trophy/OBTrophyDrops.java` applies Looting and the world mob-loot rule.
+  - `src/main/java/art/arcane/openblocks/trophy/OBTrophyDrops.java` applies Looting and the world mob-loot rule. `trophy.trophyDropChanceFormula` uses the original OpenCalc expression with `looting` and `chance`. A positive result awards a trophy. Invalid expressions use the original roll.
   - `src/main/java/art/arcane/openblocks/trophy/OBTrophyEffects.java` handles the variants' rewards and special interactions.
   - `src/main/java/art/arcane/openblocks/block/entity/OBTrophyBlockEntity.java` saves and synchronizes the mob identity and persists the cooldown.
   - `src/main/java/art/arcane/openblocks/client/OBTrophyRendering.java` renders the pedestal and miniature for items and placed blocks.
@@ -132,6 +132,7 @@ Current registry classes:
 - Cursor and Information Book:
   - `src/main/java/art/arcane/openblocks/item/OBCursorItem.java` binds a block face and activates it remotely at the original XP cost.
   - `src/main/java/art/arcane/openblocks/item/OBInfoBookItem.java` opens the guide on the client.
+  - `src/main/java/art/arcane/openblocks/player/OBFirstLogin.java` delivers one guide per player when `features.infoBook` is enabled. Forge's persisted player tag keeps the grant across death and logout. Players from earlier port builds receive the guide at their next login if the grant has yet to be recorded.
   - `src/main/java/art/arcane/openblocks/client/OBInfoBookScreen.java` and `OBInfoBookContents.java` present catalogues, current crafting recipes, tutorials, help, and the original changelogs.
 - Sound register: `src/main/java/art/arcane/openblocks/registry/OBSounds.java`
 - Custom statistic register for Bricks dropped: `src/main/java/art/arcane/openblocks/registry/OBStats.java`
@@ -752,6 +753,9 @@ Injection behavior:
   - `minecraft:chests/simple_dungeon`
 
 ## Other Registries and Global Hooks
+- Entity blacklist:
+  - Legacy source: `old-1.12.2/src/main/java/openblocks/common/EntityEventHandler.java`.
+  - `OBMobBlacklist` uses `additional.disableMobNames` to reject configured entity IDs on the server, including entities loaded from disk. Players can always join.
 - Villager profession registry:
   - Source: `old-1.12.2/src/main/java/openblocks/common/RadioVillagerTrades.java`
   - The legacy `openblocks:radio` profession and Audiophile career are now `open_blocks:radio`. Minecraft 1.20.1 villagers claim a jukebox and wear the original costume.
