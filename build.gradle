@@ -13,10 +13,10 @@ base {
     archivesName = mod_id
 }
 
-//mixin {
-//    add sourceSets.main, "open_blocks.open_blocks.json"
-//    config "mixins.open_blocks.json"
-//}
+mixin {
+    add sourceSets.main, "open_blocks.refmap.json"
+    config "mixins.open_blocks.json"
+}
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
@@ -117,6 +117,7 @@ dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
     openCalc 'info.openmods:calc:0.3'
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+    compileOnly fg.deobf("curse.maven:flans-mod-reloaded-943564:6263691")
     compileOnly(fg.deobf("mezz.jei:jei-${minecraft_version}-common-api:${jei_version}"))
     compileOnly(fg.deobf("mezz.jei:jei-${minecraft_version}-forge-api:${jei_version}"))
     compileOnly("cc.tweaked:cc-tweaked-1.20.1-core-api:1.120.2")

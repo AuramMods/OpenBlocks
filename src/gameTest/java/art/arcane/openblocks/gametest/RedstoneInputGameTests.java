@@ -5,6 +5,7 @@ import art.arcane.openblocks.block.OBBigButtonBlock;
 import art.arcane.openblocks.block.OBFoldingTargetBlock;
 import art.arcane.openblocks.block.entity.OBBigButtonBlockEntity;
 import art.arcane.openblocks.block.entity.OBFoldingTargetBlockEntity;
+import art.arcane.openblocks.integration.OBFlanTargetHits;
 import art.arcane.openblocks.registry.OBBlocks;
 import art.arcane.openblocks.registry.OBItems;
 import java.util.function.Consumer;
@@ -215,6 +216,37 @@ public final class RedstoneInputGameTests {
                 helper.succeed();
             });
         });
+    }
+
+    @GameTest(template = "empty")
+    public static void externalTargetHitsRespectTheLiveCollisionShape(final GameTestHelper helper) {
+        final var target = placeTarget(helper);
+        final var level = helper.getLevel();
+        final var pos = target.getBlockPos();
+        final var center = Vec3.atLowerCornerOf(pos).add(0.5, 0.55, 0);
+        final var origin = center.add(0, 0, -2);
+        final var hit = new BlockHitResult(center, Direction.NORTH, pos, false);
+        final var player = helper.makeMockSurvivalPlayer();
+
+        OBFoldingTargetBlock.recordOtherProjectile(level, hit);
+        helper.assertTrue(target.outputPower() == 0, "An external shot scored on a folded target");
+        helper.setBlock(DEVICE.east(), Blocks.REDSTONE_BLOCK);
+        OBFoldingTargetBlock.recordOtherProjectile(level, BlockHitResult.miss(center, Direction.NORTH, pos));
+        helper.assertTrue(target.outputPower() == 0, "A miss scored on an open target");
+
+        helper.setBlock(DEVICE.north(), Blocks.STONE);
+        OBFlanTargetHits.recordHitscan(level, hit, origin, player);
+        helper.assertTrue(target.outputPower() == 0, "An obstructed hitscan produced a pulse");
+        helper.setBlock(DEVICE.north(), Blocks.AIR);
+        OBFlanTargetHits.recordHitscan(level, hit, origin, player);
+        helper.assertTrue(target.outputPower() == 15, "A clear hitscan missed the actual bullseye");
+
+        final var edge = new BlockHitResult(center.add(0.25, 0, 0), Direction.NORTH, pos, false);
+        OBFoldingTargetBlock.recordOtherProjectile(level, edge);
+        helper.assertTrue(target.outputPower() == 7, "A non-arrow impact did not use the normal accuracy score");
+        helper.setBlock(DEVICE.east(), Blocks.AIR);
+        helper.assertTrue(countItems(helper, DEVICE, Items.ARROW) == 0, "A non-arrow impact produced arrow loot");
+        helper.succeed();
     }
 
     private static OBFoldingTargetBlockEntity placeTarget(final GameTestHelper helper) {

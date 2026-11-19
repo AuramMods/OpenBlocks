@@ -3,6 +3,7 @@ package art.arcane.openblocks.block.entity;
 import art.arcane.openblocks.registry.OBBlockEntities;
 import com.mojang.authlib.GameProfile;
 import java.util.UUID;
+import javax.annotation.Nullable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
@@ -42,9 +43,9 @@ public final class OBFoldingTargetBlockEntity extends BlockEntity {
         }
     }
 
-    public void recordHit(final AbstractArrow arrow, final int strength) {
+    public void recordHit(@Nullable final AbstractArrow arrow, final int strength) {
         if (!(level instanceof ServerLevel server)) return;
-        arrow.getPersistentData().putLong(TARGET_POS, worldPosition.asLong());
+        if (arrow != null) arrow.getPersistentData().putLong(TARGET_POS, worldPosition.asLong());
         setScore(server, strength, server.getGameTime() + PULSE_LENGTH);
     }
 

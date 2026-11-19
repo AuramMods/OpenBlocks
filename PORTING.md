@@ -180,7 +180,7 @@ Checklist:
 - [x] Restore the XP Bucket's world-source pickup and creative visibility settings. The Forge bucket still supports fluid capabilities and tank exchange.
 - [x] Restore the stone and wooden Big Buttons, including six-face placement, configurable redstone pulses, and wooden arrow activation.
 - [x] Restore the folding Target's redstone deployment, accuracy-based output, and arrow recovery.
-- [ ] Test and port the optional Flan's Mod projectile integration against its 1.20.1 implementation.
+- [x] Restore and verify the optional Flan's Mod: Reloaded Target integration for flying projectiles and hitscan shots.
 - [x] Restore the Fan's adjustable heading, analog airflow, config, and spinning blades, and the Bear Trap's jaws, mob capture, release and comparator output.
 - [x] Restore Flag mounts, turning, all carpet colors, and color-preserving drops. Restore both Sky Block polarities, the torch conversion, and live sky rendering.
 - [x] Restore the /dev/null inventory, world pickup filtering, overflow, forwarding block placement, and the true nesting advancement.

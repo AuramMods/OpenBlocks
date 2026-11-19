@@ -33,6 +33,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -130,9 +131,23 @@ public final class OBFoldingTargetBlock extends BaseEntityBlock {
 
     @Override
     public void onProjectileHit(final Level level, final BlockState state, final BlockHitResult hit, final Projectile projectile) {
-        if (level.isClientSide || !state.getValue(POWERED) || !(projectile instanceof AbstractArrow arrow) || arrow instanceof ThrownTrident) return;
+        if (level instanceof ServerLevel server && projectile instanceof AbstractArrow arrow && !(arrow instanceof ThrownTrident)) {
+            recordImpact(server, state, hit, arrow);
+        }
+    }
+
+    public static void recordOtherProjectile(final ServerLevel level, final HitResult impact) {
+        if (impact instanceof BlockHitResult hit && hit.getType() == HitResult.Type.BLOCK && level.hasChunkAt(hit.getBlockPos())) {
+            final BlockState state = level.getBlockState(hit.getBlockPos());
+            if (state.getBlock() instanceof OBFoldingTargetBlock) recordImpact(level, state, hit, null);
+        }
+    }
+
+    private static void recordImpact(final ServerLevel level, final BlockState state, final BlockHitResult hit,
+            @Nullable final AbstractArrow arrow) {
         final BlockPos pos = hit.getBlockPos();
-        if (hit.getLocation().y <= pos.getY() + 1.0 / 16.0 || !(level.getBlockEntity(pos) instanceof OBFoldingTargetBlockEntity target)) return;
+        if (!state.getValue(POWERED) || hit.getLocation().y <= pos.getY() + 1.0 / 16.0
+                || !(level.getBlockEntity(pos) instanceof OBFoldingTargetBlockEntity target)) return;
         final Vec3 front = Vec3.atLowerCornerOf(state.getValue(FACING).getNormal()).scale(0.5);
         final Vec3 bullseye = Vec3.atCenterOf(pos).add(front).add(0, 0.05, 0);
         final int score = 15 - Mth.clamp(Mth.floor(hit.getLocation().distanceTo(bullseye) * 32), 0, 15);
