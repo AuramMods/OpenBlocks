@@ -15,6 +15,9 @@
     }
   },
   "result": {
-    "item": "open_blocks:golden_eye"
+    "item": "open_blocks:golden_eye",
+    "nbt": {
+      "Damage": 100
+    }
   }
 }

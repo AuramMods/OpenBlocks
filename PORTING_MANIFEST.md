@@ -97,6 +97,12 @@ Current registry classes:
   - `src/main/java/art/arcane/openblocks/entity/OBMiniMe.java`
   - `src/main/java/art/arcane/openblocks/entity/OBMountedBlock.java` for lifted cargo
   - `src/main/java/art/arcane/openblocks/client/OBGoldenEggRendering.java`
+- Golden Eye:
+  - `src/main/java/art/arcane/openblocks/item/OBGoldenEyeItem.java`
+  - `src/main/java/art/arcane/openblocks/entity/OBGoldenEye.java`
+  - `src/main/java/art/arcane/openblocks/recipe/OBGoldenEyeRechargeRecipe.java`
+  - `src/main/java/art/arcane/openblocks/client/OBGoldenEyeRendering.java`
+  - `src/main/resources/data/open_blocks/tags/worldgen/structure/golden_eye_targets.json`
 - Sound register: `src/main/java/art/arcane/openblocks/registry/OBSounds.java`
 - Custom statistic register for Bricks dropped: `src/main/java/art/arcane/openblocks/registry/OBStats.java`
 - Enchantment register: `src/main/java/art/arcane/openblocks/registry/OBEnchantments.java`
@@ -404,7 +410,7 @@ Source: `old-1.12.2/src/main/java/openblocks/OpenBlocks.java`
 | empty_map | ItemEmptyMap | `Items.emptyMap` | Blank map with five scales from 1:1 through 1:16. Resize in a crafting grid or clone a surveyed map at the same scale. |
 | cartographer | ItemCartographer | `Items.cartographer` | Deploy from the main hand. Sneak-use inserts and removes maps. Attack packs the assistant and its survey. |
 | tasty_clay | ItemTastyClay | `Items.tastyClay` | `tastyClay`. In 1.20.1, `OBBrickActions` adds a stored brick after the always-edible food is consumed with digestion enabled. |
-| golden_eye | ItemGoldenEye | `Items.goldenEye` | `goldenEye` |
+| golden_eye | ItemGoldenEye | `Items.goldenEye` | `goldenEye`. Learns a nearby structure, spends one of 100 charges per throw, and keeps its lock through pearl recharge. |
 | generic_unstackable | ItemOBGenericUnstackable | `Items.genericUnstackable` | no default model; `genericUnstackable` |
 | cursor | ItemCursor | `Items.cursor` | - |
 | info_book | ItemInfoBook | `Items.infoBook` | `infoBook` |
@@ -538,7 +544,7 @@ Registered mod entities:
 - `openblocks:player_magnet` -> `EntityMagnet.PlayerBound` (`708`). Worn equipment deploys `OBMagnet`, which follows the player and prioritizes eligible entities over blocks.
 - `openblocks:cartographer` -> `EntityCartographer` (`705`). `OBCartographer` follows its owner and surveys nearby loaded chunks. The client shows survey progress when looking at it.
 - `openblocks:item_projectile` -> `EntityItemProjectile` (`706`)
-- `openblocks:golden_eye` -> `EntityGoldenEye` (`707`)
+- `openblocks:golden_eye` -> `EntityGoldenEye` (`707`). The port saves the flight and item payload, and returns the eye when the flight ends.
 - `openblocks:mini_me` -> `EntityMiniMe` (`710`). Forge 1.20.1 uses `OBMiniMe` with its synchronized skin profile, autonomous flower and torch harvesting, and the saved cooldown after carrying its owner.
 - `openblocks:glyph` -> `EntityGlyph` (`711`). `OBGlyph` saves and synchronizes its character, wall anchor, facing, and 1/16-block offsets.
 
@@ -626,7 +632,7 @@ Custom code-registered recipes:
   - `openblocks:crayon_glasses` → `open_blocks:crayon_glasses`. The former metadata-sensitive Pencil Glasses recipe now uses `open_blocks:pencil_glasses` as its serializer.
   - `openblocks:map_clone`
   - `openblocks:map_resize`
-  - `openblocks:golden_eye_recharge`
+  - `openblocks:golden_eye_recharge` → `open_blocks:golden_eye_recharge`
   - `openblocks:epic_eraser_action`
 
 Data recipes:

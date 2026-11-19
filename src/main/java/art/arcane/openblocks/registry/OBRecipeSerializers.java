@@ -3,6 +3,7 @@ package art.arcane.openblocks.registry;
 import art.arcane.openblocks.OpenBlocks;
 import art.arcane.openblocks.recipe.OBElevatorUpgradeRecipe;
 import art.arcane.openblocks.recipe.OBFlimFlamBookRecipe;
+import art.arcane.openblocks.recipe.OBGoldenEyeRechargeRecipe;
 import art.arcane.openblocks.recipe.OBImaginaryRecipe;
 import art.arcane.openblocks.recipe.OBMapCloneRecipe;
 import art.arcane.openblocks.recipe.OBMapResizeRecipe;
@@ -26,7 +27,8 @@ public final class OBRecipeSerializers {
             () -> new SimpleCraftingRecipeSerializer<>(OBMapCloneRecipe::new));
     public static final RegistryObject<RecipeSerializer<?>> MAP_RESIZE = RECIPE_SERIALIZERS.register("map_resize",
             () -> new SimpleCraftingRecipeSerializer<>(OBMapResizeRecipe::new));
-    public static final RegistryObject<RecipeSerializer<?>> GOLDEN_EYE_RECHARGE = register("golden_eye_recharge");
+    public static final RegistryObject<RecipeSerializer<?>> GOLDEN_EYE_RECHARGE = RECIPE_SERIALIZERS.register("golden_eye_recharge",
+            () -> new SimpleCraftingRecipeSerializer<>(OBGoldenEyeRechargeRecipe::new));
     public static final RegistryObject<RecipeSerializer<?>> EPIC_ERASER_ACTION = register("epic_eraser_action");
     public static final RegistryObject<RecipeSerializer<?>> FLIM_FLAM_BOOK = RECIPE_SERIALIZERS.register("flim_flam_book",
             () -> new SimpleCraftingRecipeSerializer<>(OBFlimFlamBookRecipe::new));

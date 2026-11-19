@@ -1,0 +1,21 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:stronghold",
+    "minecraft:mansion",
+    "minecraft:monument",
+    "minecraft:village_plains",
+    "minecraft:village_desert",
+    "minecraft:village_savanna",
+    "minecraft:village_snowy",
+    "minecraft:village_taiga",
+    "minecraft:mineshaft",
+    "minecraft:mineshaft_mesa",
+    "minecraft:desert_pyramid",
+    "minecraft:jungle_pyramid",
+    "minecraft:swamp_hut",
+    "minecraft:igloo",
+    "minecraft:fortress",
+    "minecraft:end_city"
+  ]
+}

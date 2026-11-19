@@ -205,4 +205,5 @@ Checklist:
 - [x] Restore Guide and Builder Guide shapes, controls, previews, survival building, creative filling, and the optional CC: Tweaked peripheral.
 - [x] Restore imaginary blocks, Magic Pencil and Crayon placement, color recipes, and the four imagination glasses, including Technicolor chest loot.
 - [x] Restore the Golden Egg's hatching sequence, optional block lift, and explosion, and Mini-Me's skin, foraging, and player pickup behavior.
-- [ ] Restore the Golden Eye projectile, structure search, and recharge recipe.
+- [x] Restore the Golden Eye's structure lock, rechargeable durability, and recoverable horizontal and downward flights.
+- [ ] Restore trophies, their acquisition from mobs, and their display and interaction behavior.

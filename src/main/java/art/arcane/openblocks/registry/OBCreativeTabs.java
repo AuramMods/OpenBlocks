@@ -7,6 +7,7 @@ import art.arcane.openblocks.config.OBServerConfig;
 import art.arcane.openblocks.item.OBElevatorItem;
 import art.arcane.openblocks.item.OBEmptyMapItem;
 import art.arcane.openblocks.item.OBGlyphItem;
+import art.arcane.openblocks.item.OBGoldenEyeItem;
 import art.arcane.openblocks.item.OBImaginaryItem;
 import art.arcane.openblocks.item.OBImaginationGlasses;
 import art.arcane.openblocks.item.OBPaintBrushItem;
@@ -54,6 +55,11 @@ public final class OBCreativeTabs {
                             for (final DyeColor dye : DyeColor.values()) output.accept(OBPaintBrushItem.create(OBPaintColors.palette(dye)));
                         } else if (item instanceof OBStencilItem) {
                             for (final var pattern : OBStencilPattern.values()) output.accept(OBStencilItem.create(pattern, 1));
+                        } else if (item instanceof OBGoldenEyeItem) {
+                            output.accept(item);
+                            final var depleted = new ItemStack(item);
+                            depleted.setDamageValue(OBGoldenEyeItem.MAX_CHARGES);
+                            output.accept(depleted);
                         } else if (item instanceof OBImaginaryItem) {
                             final float uses = OBImaginaryItem.defaultUses();
                             output.accept(OBImaginaryItem.create(null, OBImaginaryItem.Mode.BLOCK, uses));

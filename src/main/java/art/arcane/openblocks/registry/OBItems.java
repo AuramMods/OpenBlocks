@@ -11,6 +11,7 @@ import art.arcane.openblocks.item.OBElevatorItem;
 import art.arcane.openblocks.item.OBEmptyMapItem;
 import art.arcane.openblocks.item.OBFlagItem;
 import art.arcane.openblocks.item.OBGlyphItem;
+import art.arcane.openblocks.item.OBGoldenEyeItem;
 import art.arcane.openblocks.item.OBGuideItem;
 import art.arcane.openblocks.item.OBHangGliderItem;
 import art.arcane.openblocks.item.OBHeightMapItem;
@@ -136,7 +137,7 @@ public final class OBItems {
     public static final RegistryObject<Item> CARTOGRAPHER = registerItem("cartographer", OBCartographerItem::new);
     public static final RegistryObject<Item> TASTY_CLAY = registerItem("tasty_clay", new Item.Properties().food(
             new FoodProperties.Builder().nutrition(1).saturationMod(0.1f).alwaysEat().build()));
-    public static final RegistryObject<Item> GOLDEN_EYE = registerItem("golden_eye");
+    public static final RegistryObject<Item> GOLDEN_EYE = registerItem("golden_eye", OBGoldenEyeItem::new);
     public static final RegistryObject<Item> CURSOR = registerItem("cursor");
     public static final RegistryObject<Item> INFO_BOOK = registerItem("info_book");
     public static final RegistryObject<Item> DEV_NULL = registerItem("dev_null", () -> new OBDevNullItem(new Item.Properties()));

@@ -4,13 +4,13 @@ import art.arcane.openblocks.OpenBlocks;
 import art.arcane.openblocks.entity.OBCartographer;
 import art.arcane.openblocks.entity.OBFallingExperienceOrb;
 import art.arcane.openblocks.entity.OBGlyph;
+import art.arcane.openblocks.entity.OBGoldenEye;
 import art.arcane.openblocks.entity.OBHangGlider;
 import art.arcane.openblocks.entity.OBItemProjectile;
 import art.arcane.openblocks.entity.OBLuggage;
 import art.arcane.openblocks.entity.OBMagnet;
 import art.arcane.openblocks.entity.OBMiniMe;
 import art.arcane.openblocks.entity.OBMountedBlock;
-import art.arcane.openblocks.entity.OBPlaceholderEntity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraftforge.registries.DeferredRegister;
@@ -44,7 +44,9 @@ public final class OBEntities {
             () -> EntityType.Builder.<OBItemProjectile>of(OBItemProjectile::new, MobCategory.MISC)
                     .sized(0.25F, 0.25F).clientTrackingRange(4).updateInterval(1).setShouldReceiveVelocityUpdates(true)
                     .build(OpenBlocks.id("item_projectile").toString()));
-    public static final RegistryObject<EntityType<OBPlaceholderEntity>> GOLDEN_EYE = register("golden_eye", 64, 8);
+    public static final RegistryObject<EntityType<OBGoldenEye>> GOLDEN_EYE = ENTITY_TYPES.register("golden_eye",
+            () -> EntityType.Builder.of(OBGoldenEye::new, MobCategory.MISC).sized(0.02F, 0.02F)
+                    .clientTrackingRange(4).updateInterval(1).build(OpenBlocks.id("golden_eye").toString()));
     public static final RegistryObject<EntityType<OBMiniMe>> MINI_ME = ENTITY_TYPES.register("mini_me",
             () -> EntityType.Builder.of(OBMiniMe::new, MobCategory.MISC).sized(0.6F, 0.95F)
                     .clientTrackingRange(4).updateInterval(1).setShouldReceiveVelocityUpdates(true).build(OpenBlocks.id("mini_me").toString()));
@@ -58,13 +60,5 @@ public final class OBEntities {
     private static RegistryObject<EntityType<OBMagnet>> registerMagnet(final String id) {
         return ENTITY_TYPES.register(id, () -> EntityType.Builder.of(OBMagnet::new, MobCategory.MISC).noSummon().fireImmune()
                 .sized(OBMagnet.SIZE, OBMagnet.SIZE).clientTrackingRange(4).updateInterval(1).build(OpenBlocks.id(id).toString()));
-    }
-
-    private static RegistryObject<EntityType<OBPlaceholderEntity>> register(final String id, final int trackingRange, final int updateInterval) {
-        return ENTITY_TYPES.register(id, () -> EntityType.Builder.<OBPlaceholderEntity>of(OBPlaceholderEntity::new, MobCategory.MISC)
-                .sized(0.98F, 0.98F)
-                .clientTrackingRange(trackingRange)
-                .updateInterval(updateInterval)
-                .build(OpenBlocks.MODID + ":" + id));
     }
 }
