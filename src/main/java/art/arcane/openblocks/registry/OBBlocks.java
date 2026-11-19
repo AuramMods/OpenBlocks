@@ -14,6 +14,9 @@ import art.arcane.openblocks.block.OBGraveBlock;
 import art.arcane.openblocks.block.OBHealBlock;
 import art.arcane.openblocks.block.OBLadderBlock;
 import art.arcane.openblocks.block.OBPathBlock;
+import art.arcane.openblocks.block.OBCanvasBlock;
+import art.arcane.openblocks.block.OBPaintCanBlock;
+import art.arcane.openblocks.block.OBPaintMixerBlock;
 import art.arcane.openblocks.block.OBProjectorBlock;
 import art.arcane.openblocks.block.OBRedstoneMachineBlock;
 import art.arcane.openblocks.block.OBRedstoneMachineBlock.Kind;
@@ -50,8 +53,6 @@ public final class OBBlocks {
     private static final VoxelShape SHAPE_PATH = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 1.6D, 16.0D);
     private static final VoxelShape SHAPE_TROPHY = Block.box(3.2D, 0.0D, 3.2D, 12.8D, 3.2D, 12.8D);
     private static final VoxelShape SHAPE_GOLDEN_EGG = Block.box(2.0D, 0.0D, 2.0D, 14.0D, 16.0D, 14.0D);
-    private static final VoxelShape SHAPE_PAINT_CAN = Block.box(4.0D, 0.0D, 4.0D, 12.0D, 11.0D, 12.0D);
-    private static final VoxelShape SHAPE_PAINT_MIXER = Block.box(2.0D, 0.0D, 2.0D, 14.0D, 16.0D, 14.0D);
     private static final VoxelShape SHAPE_VILLAGE_HIGHLIGHTER = Block.box(2.0D, 0.0D, 1.0D, 14.0D, 16.0D, 15.0D);
     private static final VoxelShape SHAPE_GRAVE = Shapes.or(
             Block.box(0.0D, 0.0D, 0.0D, 16.0D, 1.0D, 16.0D),
@@ -147,6 +148,10 @@ public final class OBBlocks {
         if ("beartrap".equals(id)) return new OBBearTrapBlock(properties);
         if ("fan".equals(id)) return new OBFanBlock(properties);
         if ("flag".equals(id)) return new OBFlagBlock(BlockBehaviour.Properties.of().noCollission().instabreak().sound(SoundType.WOOD));
+        if ("paint_mixer".equals(id)) return new OBPaintMixerBlock(properties);
+        if ("paint_can".equals(id)) return new OBPaintCanBlock(BlockBehaviour.Properties.of().instabreak().noOcclusion().sound(SoundType.METAL));
+        if ("canvas".equals(id)) return new OBCanvasBlock(BlockBehaviour.Properties.copy(Blocks.SPONGE), false);
+        if ("canvas_glass".equals(id)) return new OBCanvasBlock(BlockBehaviour.Properties.copy(Blocks.GLASS), true);
         if ("projector".equals(id)) return new OBProjectorBlock(properties);
         if ("sky".equals(id)) return new OBSkyBlock(properties.sound(SoundType.METAL));
         if (shape != null) return new OBShapeBlock(properties, shape, collisionShape);
@@ -159,7 +164,7 @@ public final class OBBlocks {
                     "tank", "trophy", "beartrap", "sprinkler", "cannon", "vacuum_hopper",
                     "big_button", "big_button_wood", "imaginary", "fan", "village_highlighter",
                     "path", "auto_anvil", "auto_enchantment_table", "xp_drain",
-                    "donation_station", "paint_mixer", "canvas", "paint_can", "canvas_glass",
+                    "donation_station", "paint_mixer",
                     "projector", "xp_shower", "golden_egg" -> true;
             default -> false;
         };
@@ -171,8 +176,6 @@ public final class OBBlocks {
             case "grave" -> SHAPE_GRAVE;
             case "trophy" -> SHAPE_TROPHY;
             case "golden_egg" -> SHAPE_GOLDEN_EGG;
-            case "paint_mixer" -> SHAPE_PAINT_MIXER;
-            case "paint_can" -> SHAPE_PAINT_CAN;
             case "village_highlighter" -> SHAPE_VILLAGE_HIGHLIGHTER;
             default -> null;
         };

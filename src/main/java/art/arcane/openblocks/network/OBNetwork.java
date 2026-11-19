@@ -4,6 +4,7 @@ import art.arcane.openblocks.OpenBlocks;
 import art.arcane.openblocks.block.OBElevatorTravel;
 import art.arcane.openblocks.block.entity.OBProjectorBlockEntity;
 import art.arcane.openblocks.client.OBProjectorRendering;
+import art.arcane.openblocks.menu.OBPaintMixerMenu;
 import art.arcane.openblocks.menu.OBRedstoneMachineMenu;
 import art.arcane.openblocks.player.OBBrickActions;
 import net.minecraft.core.BlockPos;
@@ -19,7 +20,7 @@ import net.minecraftforge.network.simple.SimpleChannel;
 
 public final class OBNetwork {
 
-    private static final String VERSION = "4";
+    private static final String VERSION = "5";
     private static final SimpleChannel CHANNEL = NetworkRegistry.ChannelBuilder.named(OpenBlocks.id("main"))
             .networkProtocolVersion(() -> VERSION)
             .clientAcceptedVersions(VERSION::equals)
@@ -72,6 +73,19 @@ public final class OBNetwork {
                 .consumerMainThread((message, context) -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT,
                         () -> () -> OBProjectorRendering.receive(message.dimension(), message.pos(), message.map(), message.data())))
                 .add();
+        CHANNEL.messageBuilder(MixPaint.class, 5, NetworkDirection.PLAY_TO_SERVER)
+                .encoder((message, buf) -> buf.writeVarInt(message.containerId()).writeInt(message.rgb()))
+                .decoder(buf -> new MixPaint(buf.readVarInt(), buf.readInt()))
+                .consumerMainThread((message, context) -> {
+                    final var sender = context.get().getSender();
+                    if (sender != null && sender.containerMenu instanceof OBPaintMixerMenu menu
+                            && menu.containerId == message.containerId()) menu.requestColor(sender, message.rgb());
+                })
+                .add();
+    }
+
+    public static void requestPaintMix(final int containerId, final int rgb) {
+        CHANNEL.sendToServer(new MixPaint(containerId, rgb));
     }
 
     public static void requestElevator(final boolean descend) {
@@ -93,6 +107,8 @@ public final class OBNetwork {
     public static void sendProjection(final ServerPlayer player, final BlockPos pos, final int map, final CompoundTag data) {
         CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), new Projection(player.level().dimension().location(), pos, map, data));
     }
+
+    private record MixPaint(int containerId, int rgb) {}
 
     private record ElevatorAction(boolean descend) {}
 

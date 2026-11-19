@@ -12,6 +12,9 @@ import art.arcane.openblocks.block.entity.OBFoldingTargetBlockEntity;
 import art.arcane.openblocks.block.entity.OBGraveBlockEntity;
 import art.arcane.openblocks.block.entity.OBHealBlockEntity;
 import art.arcane.openblocks.block.entity.OBPlaceholderBlockEntity;
+import art.arcane.openblocks.block.entity.OBCanvasBlockEntity;
+import art.arcane.openblocks.block.entity.OBPaintCanBlockEntity;
+import art.arcane.openblocks.block.entity.OBPaintMixerBlockEntity;
 import art.arcane.openblocks.block.entity.OBProjectorBlockEntity;
 import art.arcane.openblocks.block.entity.OBRedstoneMachineBlockEntity;
 import art.arcane.openblocks.block.entity.OBSkyBlockEntity;
@@ -71,10 +74,10 @@ public final class OBBlockEntities {
     public static final RegistryObject<BlockEntityType<OBRedstoneMachineBlockEntity>> ITEM_DROPPER = register("item_dropper",
             (pos, state) -> new OBRedstoneMachineBlockEntity(Kind.DROPPER, pos, state), OBBlocks.ITEM_DROPPER);
     public static final RegistryObject<BlockEntityType<OBDonationStationBlockEntity>> DONATION_STATION = register("donation_station", OBDonationStationBlockEntity::new, OBBlocks.DONATION_STATION);
-    public static final RegistryObject<BlockEntityType<OBPlaceholderBlockEntity>> PAINT_MIXER = register("paint_mixer", OBBlocks.PAINT_MIXER);
-    public static final RegistryObject<BlockEntityType<OBPlaceholderBlockEntity>> CANVAS = register("canvas", OBBlocks.CANVAS);
-    public static final RegistryObject<BlockEntityType<OBPlaceholderBlockEntity>> PAINT_CAN = register("paint_can", OBBlocks.PAINT_CAN);
-    public static final RegistryObject<BlockEntityType<OBPlaceholderBlockEntity>> CANVAS_GLASS = register("canvas_glass", OBBlocks.CANVAS_GLASS);
+    public static final RegistryObject<BlockEntityType<OBPaintMixerBlockEntity>> PAINT_MIXER = register("paint_mixer", OBPaintMixerBlockEntity::new, OBBlocks.PAINT_MIXER);
+    public static final RegistryObject<BlockEntityType<OBCanvasBlockEntity>> CANVAS = register("canvas", (pos, state) -> canvas(false, pos, state), OBBlocks.CANVAS);
+    public static final RegistryObject<BlockEntityType<OBPaintCanBlockEntity>> PAINT_CAN = register("paint_can", OBPaintCanBlockEntity::new, OBBlocks.PAINT_CAN);
+    public static final RegistryObject<BlockEntityType<OBCanvasBlockEntity>> CANVAS_GLASS = register("canvas_glass", (pos, state) -> canvas(true, pos, state), OBBlocks.CANVAS_GLASS);
     public static final RegistryObject<BlockEntityType<OBProjectorBlockEntity>> PROJECTOR = register("projector", OBProjectorBlockEntity::new, OBBlocks.PROJECTOR);
     public static final RegistryObject<BlockEntityType<OBPlaceholderBlockEntity>> DRAWING_TABLE = register("drawing_table", OBBlocks.DRAWING_TABLE);
     public static final RegistryObject<BlockEntityType<OBSkyBlockEntity>> SKY = register("sky", OBSkyBlockEntity::new, OBBlocks.SKY);
@@ -82,6 +85,11 @@ public final class OBBlockEntities {
     public static final RegistryObject<BlockEntityType<OBPlaceholderBlockEntity>> GOLDEN_EGG = register("golden_egg", OBBlocks.GOLDEN_EGG);
 
     private OBBlockEntities() {}
+
+    private static OBCanvasBlockEntity canvas(final boolean glass, final net.minecraft.core.BlockPos pos,
+            final net.minecraft.world.level.block.state.BlockState state) {
+        return new OBCanvasBlockEntity((glass ? CANVAS_GLASS : CANVAS).get(), pos, state);
+    }
 
     public static List<RegistryObject<BlockEntityType<?>>> all() {
         return Collections.unmodifiableList(ALL);

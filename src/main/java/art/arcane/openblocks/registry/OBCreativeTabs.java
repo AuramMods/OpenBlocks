@@ -5,6 +5,9 @@ import art.arcane.openblocks.block.entity.OBTankBlockEntity;
 import art.arcane.openblocks.config.OBServerConfig;
 import art.arcane.openblocks.item.OBElevatorItem;
 import art.arcane.openblocks.item.OBEmptyMapItem;
+import art.arcane.openblocks.item.OBPaintBrushItem;
+import art.arcane.openblocks.item.OBPaintCanItem;
+import art.arcane.openblocks.item.OBPaintColors;
 import art.arcane.openblocks.item.OBSkyItem;
 import art.arcane.openblocks.item.OBTankItem;
 import art.arcane.openblocks.world.OBHeightMapData;
@@ -31,13 +34,18 @@ public final class OBCreativeTabs {
                     .displayItems((params, output) -> OBItems.all().forEach(entry -> {
                         final var item = entry.get();
                         if (entry == OBItems.XP_BUCKET && OBServerConfig.SPEC.isLoaded() && !OBServerConfig.XP_BUCKET_IN_CREATIVE.get()) return;
-                        if (entry == OBItems.HEIGHT_MAP) return;
+                        if (entry == OBItems.HEIGHT_MAP || entry == OBItems.CANVAS_GLASS) return;
                         if (item instanceof OBElevatorItem) {
                             for (final DyeColor color : DyeColor.values()) {
                                 output.accept(OBElevatorItem.create(item, color));
                             }
                         } else if (item instanceof OBEmptyMapItem) {
                             for (int scale = 0; scale <= OBHeightMapData.MAX_SCALE; scale++) output.accept(OBEmptyMapItem.create(scale));
+                        } else if (item instanceof OBPaintCanItem) {
+                            for (final DyeColor dye : DyeColor.values()) output.accept(OBPaintCanItem.create(OBPaintColors.palette(dye), OBPaintCanItem.FULL));
+                        } else if (item instanceof OBPaintBrushItem) {
+                            output.accept(item);
+                            for (final DyeColor dye : DyeColor.values()) output.accept(OBPaintBrushItem.create(OBPaintColors.palette(dye)));
                         } else {
                             output.accept(item);
                             if (item instanceof OBSkyItem) output.accept(OBSkyItem.create(true));

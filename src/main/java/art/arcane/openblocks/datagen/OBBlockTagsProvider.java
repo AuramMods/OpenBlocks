@@ -1,6 +1,7 @@
 package art.arcane.openblocks.datagen;
 
 import art.arcane.openblocks.OpenBlocks;
+import art.arcane.openblocks.block.OBCanvasBlock;
 import art.arcane.openblocks.block.OBRedstoneMachineBlock;
 import art.arcane.openblocks.block.OBXpWorkbenchBlock;
 import art.arcane.openblocks.registry.OBBlocks;
@@ -32,7 +33,7 @@ public class OBBlockTagsProvider extends BlockTagsProvider {
             final var block = entry.get();
             if (block == ladder || block == ropeLadder || block == woodButton) {
                 tag(BlockTags.MINEABLE_WITH_AXE).add(block);
-            } else if (block != scaffolding) {
+            } else if (block != scaffolding && !(block instanceof OBCanvasBlock) && block != OBBlocks.PAINT_CAN.get()) {
                 tag(BlockTags.MINEABLE_WITH_PICKAXE).add(block);
                 if (!(block instanceof OBRedstoneMachineBlock) && !(block instanceof OBXpWorkbenchBlock)
                         && block != sprinkler && block != donationStation && block != stoneButton) tag(BlockTags.NEEDS_STONE_TOOL).add(block);

@@ -4,6 +4,7 @@ import art.arcane.openblocks.OpenBlocks;
 import art.arcane.openblocks.entity.OBLuggage;
 import art.arcane.openblocks.menu.OBBigButtonMenu;
 import art.arcane.openblocks.menu.OBDevNullMenu;
+import art.arcane.openblocks.menu.OBPaintMixerMenu;
 import art.arcane.openblocks.menu.OBProjectorMenu;
 import art.arcane.openblocks.menu.OBRedstoneMachineMenu;
 import art.arcane.openblocks.menu.OBUtilityInventoryMenu;
@@ -39,7 +40,8 @@ public final class OBMenuTypes {
             () -> new MenuType<>(OBRedstoneMachineMenu::itemDropper, FeatureFlags.DEFAULT_FLAGS));
     public static final RegistryObject<MenuType<ChestMenu>> LUGGAGE = MENU_TYPES.register("luggage",
             () -> IForgeMenuType.create(OBLuggage::createClientMenu));
-    public static final RegistryObject<MenuType<ChestMenu>> PAINT_MIXER = register("paint_mixer");
+    public static final RegistryObject<MenuType<OBPaintMixerMenu>> PAINT_MIXER = MENU_TYPES.register("paint_mixer",
+            () -> IForgeMenuType.create(OBPaintMixerMenu::new));
     public static final RegistryObject<MenuType<OBProjectorMenu>> PROJECTOR = MENU_TYPES.register("projector",
             () -> IForgeMenuType.create(OBProjectorMenu::new));
     public static final RegistryObject<MenuType<OBUtilityInventoryMenu>> SPRINKLER = MENU_TYPES.register("sprinkler",

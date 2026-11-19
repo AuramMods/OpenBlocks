@@ -61,6 +61,8 @@ public final class OBServerConfig {
     public static final ForgeConfigSpec.ConfigValue<List<? extends String>> CARTOGRAPHER_BLACKLIST;
     public static final ForgeConfigSpec.BooleanValue PROJECTOR_LIGHT_ENABLED;
     public static final ForgeConfigSpec.IntValue PROJECTOR_LIGHT_LEVEL;
+    public static final ForgeConfigSpec.BooleanValue CANVAS_REPLACE;
+    public static final ForgeConfigSpec.ConfigValue<List<? extends String>> CANVAS_BLACKLIST;
     public static final ForgeConfigSpec.BooleanValue SERIOUS_MODE;
 
     static {
@@ -186,6 +188,13 @@ public final class OBServerConfig {
         builder.push("projector");
         PROJECTOR_LIGHT_ENABLED = builder.define("lightUpWhenWorking", true);
         PROJECTOR_LIGHT_LEVEL = builder.defineInRange("lightLevel", 10, 0, 15);
+        builder.pop();
+
+        builder.push("canvas");
+        CANVAS_REPLACE = builder.comment("Allow brushes to paint suitable blocks by wrapping their original block state.")
+                .define("paintbrushReplacesBlocks", true);
+        CANVAS_BLACKLIST = builder.comment("Block IDs that brush and stencil tools cannot wrap in a canvas.")
+                .defineListAllowEmpty("replaceBlacklist", List.of(), value -> value instanceof String);
         builder.pop();
         builder.push("tomfoolery");
         SERIOUS_MODE = builder.comment("Disable Tasty Clay digestion and the Be Silly action.")

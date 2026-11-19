@@ -23,12 +23,9 @@ public final class OBClientRenderLayers {
             setCutout(OBBlocks.XP_DRAIN);
             setCutout(OBBlocks.SPRINKLER);
             setCutout(OBBlocks.FLAG);
-            setCutout(OBBlocks.PAINT_CAN);
             setCutout(OBBlocks.GUIDE);
             setCutout(OBBlocks.BUILDER_GUIDE);
-            setCutout(OBBlocks.CANVAS);
 
-            ItemBlockRenderTypes.setRenderLayer(OBBlocks.CANVAS_GLASS.get(), renderType -> renderType == RenderType.translucent());
             ItemBlockRenderTypes.setRenderLayer(OBFluids.XP_JUICE.get(), RenderType.translucent());
             ItemBlockRenderTypes.setRenderLayer(OBFluids.FLOWING_XP_JUICE.get(), RenderType.translucent());
         });

@@ -1,5 +1,19 @@
 {
   "variants": {
-    "": { "model": "open_blocks:block/paint_can" }
+    "facing=north": {
+      "model": "open_blocks:block/paint_can",
+      "y": 180
+    },
+    "facing=east": {
+      "model": "open_blocks:block/paint_can",
+      "y": 270
+    },
+    "facing=south": {
+      "model": "open_blocks:block/paint_can"
+    },
+    "facing=west": {
+      "model": "open_blocks:block/paint_can",
+      "y": 90
+    }
   }
 }

@@ -1,4 +1,5 @@
 {
+    "render_type": "minecraft:cutout",
     "textures": {
         "bottom": "open_blocks:block/paint_can_bottom",
         "front": "open_blocks:block/paint_can_front",

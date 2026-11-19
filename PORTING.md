@@ -159,7 +159,7 @@ Checklist:
 - [x] Restore distinct legacy crafting components across recipes, creative entries, and models.
 - [x] Restore elevator colors and movement activation. Headless tests cover server behavior and item color through crafting, placement, and drops. A packaged client verified Space, Shift, color matching, and rotation in single-player using a silent virtual display.
 - [x] Restore Jaded Ladder trapdoor behavior, directional rope ladders, and temporary scaffolding. The standalone suite verifies climbing, redstone, placement rollback, rope drop accounting, decay and fuel.
-- [ ] Restore painting and other remaining state variants across recipes, creative entries, and models.
+- [-] Restore painting and other remaining state variants across recipes, creative entries, and models. The mixer, paint cans, brushes, and canvas surfaces are restored. Prepared stencils and their Drawing Table are next.
 - [ ] Run a muted client in an isolated or background graphical session to verify models, transparency, and face culling.
 - [ ] Extend recipe coverage beyond custom special recipe placeholders (core craft paths for major blocks/items).
 - [ ] Deepen `/flimflam` parity beyond current breadth-stage action wiring:
@@ -174,8 +174,7 @@ Checklist:
   - harden grave placement edge-cases (destructive fallback policy, cross-dimension guarantees, failure-path UX/messages)
 - [ ] Replace capability placeholders with gameplay hooks:
   - `luck`: reconnect full flim-flam cooldown and forced-trigger logic (currently just raw value storage)
-- [ ] Finish legacy recipe migration for skipped recipe files:
-  - revisit remaining metadata-collapsed conversions to restore accurate color and subtype behavior, including paintbrush variants
+- [ ] Finish legacy recipe migration for skipped recipe files and remaining metadata-collapsed color or subtype conversions.
 - [x] Restore configurable sponge cleanup, Sponge on a Stick, scattered-stone path rendering, and the healing block's one-tick pulses.
 - [x] Restore tank block and item storage, connected transfer and rendering, XP and bucket exchange, and the Liquid XP block assets.
 - [x] Restore the XP Drain and redstone-powered XP Shower. The drain transfers whole XP into a fluid receiver, and the shower releases falling XP orbs that a drain can collect.
@@ -200,3 +199,5 @@ Checklist:
 - [x] Restore the optional Miracle Magnet for CC: Tweaked turtles, including native crafting and equipping, Lua control, fuel, and left and right upgrade models.
 - [x] Restore the Cartographer, world-saved terrain and liquid surveys, map resizing and cloning, and the assistant's progress display.
 - [x] Restore the Projector's single-map inventory, rotating hologram, interactive preview, live survey updates, and optional CC: Tweaked map editing.
+- [x] Restore the Paint Mixer, paint cans, dyed brushes and their recipes, face-by-face canvas painting, and the squeegee.
+- [ ] Restore the Drawing Table and prepared stencils, including multiple painted layers and their rendering.

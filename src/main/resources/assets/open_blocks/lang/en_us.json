@@ -83,6 +83,8 @@
   "screen.open_blocks.donation_station.insert": "Insert an item",
   "screen.open_blocks.donation_station.unknown": "Vanilla / Unknown",
   "block.open_blocks.paint_mixer": "Paint Mixer",
+  "gui.open_blocks.paint_mixer.hex": "Hex color",
+  "gui.open_blocks.paint_mixer.mix": "Mix",
   "block.open_blocks.canvas": "Canvas",
   "block.open_blocks.paint_can": "Paint Can",
   "block.open_blocks.canvas_glass": "Canvas Glass",

@@ -1,6 +1,7 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "open_blocks:item/paintbrush"
+    "layer0": "open_blocks:item/paintbrush_handle",
+    "layer1": "open_blocks:item/paintbrush_paint"
   }
 }

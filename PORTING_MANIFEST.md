@@ -58,6 +58,14 @@ Current registry classes:
   - `src/main/java/art/arcane/openblocks/client/OBProjectorScreen.java`
   - `src/main/java/art/arcane/openblocks/client/OBProjectorRendering.java`
   - `src/main/java/art/arcane/openblocks/integration/OBComputerCraftProjector.java`
+- Paint mixing and canvas surfaces:
+  - `src/main/java/art/arcane/openblocks/block/entity/OBPaintMixerBlockEntity.java`
+  - `src/main/java/art/arcane/openblocks/menu/OBPaintMixerMenu.java`
+  - `src/main/java/art/arcane/openblocks/client/OBPaintMixerScreen.java`
+  - `src/main/java/art/arcane/openblocks/item/OBPaintCanItem.java`
+  - `src/main/java/art/arcane/openblocks/item/OBPaintBrushItem.java`
+  - `src/main/java/art/arcane/openblocks/block/entity/OBCanvasBlockEntity.java`
+  - `src/main/java/art/arcane/openblocks/client/OBCanvasRendering.java`
 - Sound register: `src/main/java/art/arcane/openblocks/registry/OBSounds.java`
 - Custom statistic register for Bricks dropped: `src/main/java/art/arcane/openblocks/registry/OBStats.java`
 - Enchantment register: `src/main/java/art/arcane/openblocks/registry/OBEnchantments.java`
@@ -329,10 +337,10 @@ Source: `old-1.12.2/src/main/java/openblocks/OpenBlocks.java`
 | item_dropper | BlockItemDropper | `Blocks.itemDropper` | TileEntityItemDropper | default | `itemDropper` |
 | rope_ladder | BlockRopeLadder | `Blocks.ropeLadder` | - | default | `ropeladder` |
 | donation_station | BlockDonationStation | `Blocks.donationStation` | TileEntityDonationStation | default | `donationStation` |
-| paint_mixer | BlockPaintMixer | `Blocks.paintMixer` | TileEntityPaintMixer | default | `paintmixer` |
-| canvas | BlockCanvas | `Blocks.canvas` | TileEntityCanvas | default | - |
-| paint_can | BlockPaintCan | `Blocks.paintCan` | TileEntityPaintCan | ItemPaintCan | `paintcan` |
-| canvas_glass | BlockCanvasGlass | `Blocks.canvasGlass` | TileEntityCanvasGlass | default | `canvasglass` |
+| paint_mixer | BlockPaintMixer | `Blocks.paintMixer` | TileEntityPaintMixer | default | `paintmixer`. Stores four pigments and makes arbitrary RGB paint from a milk bucket or can. |
+| canvas | BlockCanvas | `Blocks.canvas` | TileEntityCanvas | default | Craftable white surface. Also wraps solid painted blocks and preserves their state. |
+| paint_can | BlockPaintCan | `Blocks.paintCan` | TileEntityPaintCan | ItemPaintCan | `paintcan`. Color and up to 30 brush charges survive breaking and placement. |
+| canvas_glass | BlockCanvasGlass | `Blocks.canvasGlass` | TileEntityCanvasGlass | default | `canvasglass`. Wraps painted blocks with a non-solid render shape, while retaining their model and render layer. |
 | projector | BlockProjector | `Blocks.projector` | TileEntityProjector | One automation-accessible map slot, rotatable terrain and liquid hologram, and interactive preview | Optional `openblocks_projector` peripheral |
 | drawing_table | BlockDrawingTable | `Blocks.drawingTable` | TileEntityDrawingTable | default | `drawingtable` |
 | sky | BlockSky | `Blocks.sky` | TileEntitySky | ItemSkyBlock | 1.20.1 uses `OBSkyBlock`, `OBSkyBlockEntity`, and `OBSkyItem`. The original ID carries both polarities. `OBSkyRendering` uses Forge render stages to display the current dimension's sky. |
@@ -358,9 +366,9 @@ Source: `old-1.12.2/src/main/java/openblocks/OpenBlocks.java`
 | slimalyzer | ItemSlimalyzer | `Items.slimalyzer` | - |
 | xp_bucket | ItemXpBucket | `Items.xpBucket` | `filledbucket` |
 | sleeping_bag | ItemSleepingBag | `Items.sleepingBag` | `sleepingBag` |
-| paintbrush | ItemPaintBrush | `Items.paintBrush` | `paintBrush` |
+| paintbrush | ItemPaintBrush | `Items.paintBrush` | `paintBrush`. Sixteen dye recipes or arbitrary RGB from a can. Paints one face, or all faces while sneaking. |
 | stencil | ItemStencil | `Items.stencil` | no default model |
-| squeegee | ItemSqueegee | `Items.squeegee` | - |
+| squeegee | ItemSqueegee | `Items.squeegee` | Cleans the selected face or the whole block while sneaking. The original wrapped block returns once clean. |
 | height_map | ItemHeightMap | `Items.heightMap` | The Cartographer produces a surveyed map. Copies with the same ID share terrain and liquid data across dimensions. |
 | empty_map | ItemEmptyMap | `Items.emptyMap` | Blank map with five scales from 1:1 through 1:16. Resize in a crafting grid or clone a surveyed map at the same scale. |
 | cartographer | ItemCartographer | `Items.cartographer` | Deploy from the main hand. Sneak-use inserts and removes maps. Attack packs the assistant and its survey. |
