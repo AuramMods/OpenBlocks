@@ -21,6 +21,8 @@ import art.arcane.openblocks.item.OBLuggageItem;
 import art.arcane.openblocks.item.OBPedometerItem;
 import art.arcane.openblocks.item.OBPaintBrushItem;
 import art.arcane.openblocks.item.OBPaintCanItem;
+import art.arcane.openblocks.item.OBCursorItem;
+import art.arcane.openblocks.item.OBInfoBookItem;
 import art.arcane.openblocks.item.OBPointerItem;
 import art.arcane.openblocks.item.OBSqueegeeItem;
 import art.arcane.openblocks.item.OBStencilItem;
@@ -144,8 +146,8 @@ public final class OBItems {
     public static final RegistryObject<Item> TASTY_CLAY = registerItem("tasty_clay", new Item.Properties().food(
             new FoodProperties.Builder().nutrition(1).saturationMod(0.1f).alwaysEat().build()));
     public static final RegistryObject<Item> GOLDEN_EYE = registerItem("golden_eye", OBGoldenEyeItem::new);
-    public static final RegistryObject<Item> CURSOR = registerItem("cursor");
-    public static final RegistryObject<Item> INFO_BOOK = registerItem("info_book");
+    public static final RegistryObject<Item> CURSOR = registerItem("cursor", OBCursorItem::new);
+    public static final RegistryObject<Item> INFO_BOOK = registerItem("info_book", OBInfoBookItem::new);
     public static final RegistryObject<Item> DEV_NULL = registerItem("dev_null", () -> new OBDevNullItem(new Item.Properties()));
     public static final RegistryObject<Item> SPONGE_ON_A_STICK = registerItem("sponge_on_a_stick", OBSpongeOnAStickItem::new);
     public static final RegistryObject<Item> PEDOMETER = registerItem("pedometer", OBPedometerItem::new);

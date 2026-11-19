@@ -129,6 +129,10 @@ Current registry classes:
   - `src/main/java/art/arcane/openblocks/item/OBWrenchItem.java` rotates blocks in place and posts Forge's tool modification event.
   - `src/main/java/art/arcane/openblocks/item/OBEpicEraserItem.java` supplies glint, durability, and the worn crafting remainder.
   - `src/main/java/art/arcane/openblocks/recipe/OBEpicEraserRecipe.java` strips ordinary and legacy lore one item at a time.
+- Cursor and Information Book:
+  - `src/main/java/art/arcane/openblocks/item/OBCursorItem.java` binds a block face and activates it remotely at the original XP cost.
+  - `src/main/java/art/arcane/openblocks/item/OBInfoBookItem.java` opens the guide on the client.
+  - `src/main/java/art/arcane/openblocks/client/OBInfoBookScreen.java` and `OBInfoBookContents.java` present catalogues, current crafting recipes, tutorials, help, and the original changelogs.
 - Sound register: `src/main/java/art/arcane/openblocks/registry/OBSounds.java`
 - Custom statistic register for Bricks dropped: `src/main/java/art/arcane/openblocks/registry/OBStats.java`
 - Enchantment register: `src/main/java/art/arcane/openblocks/registry/OBEnchantments.java`
@@ -437,8 +441,8 @@ Source: `old-1.12.2/src/main/java/openblocks/OpenBlocks.java`
 | tasty_clay | ItemTastyClay | `Items.tastyClay` | `tastyClay`. In 1.20.1, `OBBrickActions` adds a stored brick after the always-edible food is consumed with digestion enabled. |
 | golden_eye | ItemGoldenEye | `Items.goldenEye` | `goldenEye`. Learns a nearby structure, spends one of 100 charges per throw, and keeps its lock through pearl recharge. |
 | generic_unstackable | ItemOBGenericUnstackable | `Items.genericUnstackable` | no default model; `genericUnstackable` |
-| cursor | ItemCursor | `Items.cursor` | - |
-| info_book | ItemInfoBook | `Items.infoBook` | `infoBook` |
+| cursor | ItemCursor | `Items.cursor` | Links to a block face. Main-hand air use activates the link within `cursor.cursorMaxDistance`, with the legacy XP cost. |
+| info_book | ItemInfoBook | `Items.infoBook` | `infoBook`. World Domination with OpenBlocks. Main-hand use opens the illustrated guide and current recipe previews. |
 | dev_null | ItemDevNull | `Items.devNull` | `devnull`. The 1.20.1 port uses `OBDevNullItem`, with one stored stack in item NBT. |
 | sponge_on_a_stick | ItemSpongeOnAStick | `Items.spongeonastick` | `spongeonastick` |
 | pedometer | ItemPedometer | `Items.pedometer` | `OBPedometerItem` restores start, report, and sneak-reset in both hands. The `open_blocks:speed` predicate switches to the original moving model at 0.1 blocks per tick. |

@@ -75,9 +75,14 @@ public final class OBServerConfig {
     public static final ForgeConfigSpec.BooleanValue GOLDEN_EYE_DEBUG;
 
     public static final ForgeConfigSpec.DoubleValue TROPHY_DROP_CHANCE;
+    public static final ForgeConfigSpec.IntValue CURSOR_DISTANCE_SQUARED;
 
     static {
         final var builder = new ForgeConfigSpec.Builder();
+        builder.push("cursor");
+        CURSOR_DISTANCE_SQUARED = builder.comment("Maximum squared distance of a Cursor activation. Default 64 means less than eight blocks.")
+                .defineInRange("cursorMaxDistance", 64, 0, Integer.MAX_VALUE);
+        builder.pop();
         builder.push("elevator");
         ELEVATOR_DISTANCE = builder.defineInRange("searchDistance", 20, 1, Integer.MAX_VALUE);
         ELEVATOR_MAX_BLOCKERS = builder.defineInRange("maxPassThrough", 4, 0, Integer.MAX_VALUE);

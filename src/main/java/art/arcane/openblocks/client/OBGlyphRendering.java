@@ -33,21 +33,21 @@ import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
+@Mod.EventBusSubscriber(modid = OpenBlocks.MODID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public final class OBGlyphRendering {
 
     private static final ResourceLocation PLATE = OpenBlocks.id("item/glyph_plate");
 
     private OBGlyphRendering() {}
 
-    @Mod.EventBusSubscriber(modid = OpenBlocks.MODID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
-    public static final class Register {
-        @SubscribeEvent
-        public static void models(final ModelEvent.RegisterAdditional event) { event.register(PLATE); }
+    @SubscribeEvent
+    public static void registerModels(final ModelEvent.RegisterAdditional event) {
+        event.register(PLATE);
+    }
 
-        @SubscribeEvent
-        public static void entities(final EntityRenderersEvent.RegisterRenderers event) {
-            event.registerEntityRenderer(OBEntities.GLYPH.get(), GlyphRenderer::new);
-        }
+    @SubscribeEvent
+    public static void registerEntityRenderer(final EntityRenderersEvent.RegisterRenderers event) {
+        event.registerEntityRenderer(OBEntities.GLYPH.get(), GlyphRenderer::new);
     }
 
     private static void drawGlyph(final int index, final float size, final PoseStack poses, final MultiBufferSource buffers,

@@ -212,4 +212,5 @@ Checklist:
 - [x] Restore the Slimalyzer's slime-chunk detection, model indicator, and entry ping for carried and dropped stacks.
 - [x] Restore the Sonic Glasses' wearable model, configurable dimming, and fading sound-source icons.
 - [x] Restore the Wrench's face-based rotation and the Epic Eraser's lore removal and 15 uses.
-- [ ] Restore the Information Book and remaining legacy systems.
+- [x] Restore the Information Book with its catalogues and live recipe previews, and the Cursor with linked block interactions and XP costs.
+- [ ] Restore Unstable, Last Stand, and Flim-Flam enchantment gameplay.
