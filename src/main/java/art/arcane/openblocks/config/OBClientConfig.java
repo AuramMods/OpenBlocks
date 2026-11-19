@@ -13,6 +13,8 @@ public final class OBClientConfig {
     public static final ForgeConfigSpec.IntValue PROJECTOR_BRIGHTNESS;
     public static final ForgeConfigSpec.BooleanValue GLYPHS_IN_SEARCH;
     public static final ForgeConfigSpec.DoubleValue GUIDE_RENDER_DISTANCE_SQ;
+    public static final ForgeConfigSpec.DoubleValue SONIC_GLASSES_OPACITY;
+    public static final ForgeConfigSpec.BooleanValue SONIC_GLASSES_USE_TEXTURE;
 
     public static final ForgeConfigSpec.DoubleValue IMAGINARY_FADE;
 
@@ -39,6 +41,12 @@ public final class OBClientConfig {
         builder.push("guide");
         GUIDE_RENDER_DISTANCE_SQ = builder.comment("Squared distance at which Guide markers can render.")
                 .defineInRange("renderDistanceSq", 65536.0, 1.0, 262144.0);
+        builder.pop();
+        builder.push("glasses");
+        SONIC_GLASSES_OPACITY = builder.comment("World dimming while wearing Sonic Glasses. Set to 0 for a clear view.")
+                .defineInRange("opacity", 0.7, 0.0, 1.0);
+        SONIC_GLASSES_USE_TEXTURE = builder.comment("Use the original obsidian texture when dimming the world.")
+                .define("useTexture", true);
         builder.pop();
         builder.push("imaginary");
         IMAGINARY_FADE = builder.comment("Visibility change per 1/60 second when imaginary blocks appear or fade.")

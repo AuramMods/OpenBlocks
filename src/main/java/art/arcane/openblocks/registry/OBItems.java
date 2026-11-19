@@ -29,6 +29,7 @@ import art.arcane.openblocks.item.OBSkyItem;
 import art.arcane.openblocks.item.OBSpongeOnAStickItem;
 import art.arcane.openblocks.item.OBSleepingBagItem;
 import art.arcane.openblocks.item.OBSlimalyzerItem;
+import art.arcane.openblocks.item.OBSonicGlassesItem;
 import art.arcane.openblocks.item.OBTankItem;
 import art.arcane.openblocks.item.OBTrophyItem;
 import java.util.ArrayList;
@@ -118,7 +119,7 @@ public final class OBItems {
     public static final RegistryObject<Item> SKETCHING_PENCIL = registerItem("sketching_pencil");
     public static final RegistryObject<Item> POINTER = registerItem("pointer", () -> new OBPointerItem(new Item.Properties().stacksTo(1)));
     public static final RegistryObject<Item> LUGGAGE = registerItem("luggage", OBLuggageItem::new);
-    public static final RegistryObject<Item> SONIC_GLASSES = registerItem("sonic_glasses");
+    public static final RegistryObject<Item> SONIC_GLASSES = registerItem("sonic_glasses", OBSonicGlassesItem::new);
     public static final RegistryObject<Item> PENCIL_GLASSES = registerItem("pencil_glasses",
             () -> new OBImaginationGlasses(OBImaginationGlasses.Kind.PENCIL));
     public static final RegistryObject<Item> CRAYON_GLASSES = registerItem("crayon_glasses",

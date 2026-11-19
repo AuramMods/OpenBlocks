@@ -120,6 +120,11 @@ Current registry classes:
 - Slimalyzer:
   - `src/main/java/art/arcane/openblocks/item/OBSlimalyzerItem.java` checks vanilla slime chunks and synchronizes the `Active` flag when carried or dropped.
   - `src/main/java/art/arcane/openblocks/client/OBSlimalyzerRendering.java` switches between the original inactive and lit models.
+- Sonic Glasses:
+  - `src/main/java/art/arcane/openblocks/item/OBSonicGlassesItem.java` equips the glasses as iron-tier headgear.
+  - `src/main/java/art/arcane/openblocks/client/OBSonicGlassesRendering.java` renders the original worn model.
+  - `src/main/java/art/arcane/openblocks/client/OBSonicGlassesOverlay.java` projects sound sources onto the first-person view and applies optional dimming.
+  - `src/main/java/art/arcane/openblocks/client/OBSoundIcons.java` maps legacy and modern sound IDs to the original icons and mob colors.
 - Sound register: `src/main/java/art/arcane/openblocks/registry/OBSounds.java`
 - Custom statistic register for Bricks dropped: `src/main/java/art/arcane/openblocks/registry/OBStats.java`
 - Enchantment register: `src/main/java/art/arcane/openblocks/registry/OBEnchantments.java`
@@ -410,7 +415,7 @@ Source: `old-1.12.2/src/main/java/openblocks/OpenBlocks.java`
 | hang_glider | ItemHangGlider | `Items.hangGlider` | `hangglider`. The held item equips or stows the transient glider. The armed model hides the deploying hand's sprite and keeps the inventory icon. |
 | generic | ItemOBGeneric | `Items.generic` | no default model; meta item holder |
 | luggage | ItemLuggage | `Items.luggage` | `OBLuggageItem` deploys from the main hand and restores the stored slots, custom name, and lightning upgrade. Packed drops resist damage and despawn. |
-| sonic_glasses | ItemSonicGlasses | `Items.sonicGlasses` | `sonicglasses` |
+| sonic_glasses | ItemSonicGlasses | `Items.sonicGlasses` | `sonicglasses`. Worn glasses dim first-person view and show fading icons at sound sources, with sound-specific symbols and colors. |
 | pencil_glasses | ItemImaginationGlasses | `Items.pencilGlasses` | `pencilGlasses`. Shows and selects pencil shapes. |
 | crayon_glasses | ItemCrayonGlasses | `Items.crayonGlasses` | `crayonGlasses`. Helmets keep the exact crafted lens color and respond to crayons with that RGB. |
 | technicolor_glasses | ItemImaginationGlasses | `Items.technicolorGlasses` | `technicolorGlasses`. Shows all drawings. Added to the original mineshaft and dungeon loot tables by a Forge global loot modifier. |

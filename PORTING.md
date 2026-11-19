@@ -210,4 +210,5 @@ Checklist:
 - [x] Restore the Village Highlighter's powered overlay, facing and active model, and redstone output for vacant beds.
 - [x] Restore the Sleeping Bag's temporary sleep, armor swap, item recovery, and original fabric model.
 - [x] Restore the Slimalyzer's slime-chunk detection, model indicator, and entry ping for carried and dropped stacks.
-- [ ] Restore the Sonic Glasses and the remaining utility items.
+- [x] Restore the Sonic Glasses' wearable model, configurable dimming, and fading sound-source icons.
+- [ ] Restore the Wrench, Epic Eraser, and remaining utility items.
