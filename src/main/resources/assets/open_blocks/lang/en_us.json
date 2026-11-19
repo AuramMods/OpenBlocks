@@ -183,6 +183,7 @@
   "item.open_blocks.crane_backpack": "Crane Backpack",
   "upgrade.open_blocks.magnet_turtle.adjective": "Magnet",
   "item.open_blocks.slimalyzer": "Slimalyzer",
+  "subtitles.open_blocks.slimalyzer.signal": "Slimalyzer beeps",
   "item.open_blocks.xp_bucket": "XP Bucket",
   "fluid_type.open_blocks.xpjuice": "Liquid XP",
   "block.open_blocks.xpjuice": "Liquid XP",

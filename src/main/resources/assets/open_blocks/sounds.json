@@ -70,6 +70,7 @@
         ]
     },
     "slimalyzer.signal": {
+        "subtitle": "subtitles.open_blocks.slimalyzer.signal",
         "sounds": [
             "open_blocks:beep"
         ]

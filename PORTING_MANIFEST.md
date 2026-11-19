@@ -117,6 +117,9 @@ Current registry classes:
 - Sleeping Bag:
   - `src/main/java/art/arcane/openblocks/item/OBSleepingBagItem.java` starts portable sleep, preserves the player's spawn point, and returns the bag and displaced chest equipment.
   - `src/main/java/art/arcane/openblocks/client/OBSleepingBagRendering.java` uses the original bag, pillow, and fabric texture for the worn item.
+- Slimalyzer:
+  - `src/main/java/art/arcane/openblocks/item/OBSlimalyzerItem.java` checks vanilla slime chunks and synchronizes the `Active` flag when carried or dropped.
+  - `src/main/java/art/arcane/openblocks/client/OBSlimalyzerRendering.java` switches between the original inactive and lit models.
 - Sound register: `src/main/java/art/arcane/openblocks/registry/OBSounds.java`
 - Custom statistic register for Bricks dropped: `src/main/java/art/arcane/openblocks/registry/OBStats.java`
 - Enchantment register: `src/main/java/art/arcane/openblocks/registry/OBEnchantments.java`
@@ -414,7 +417,7 @@ Source: `old-1.12.2/src/main/java/openblocks/OpenBlocks.java`
 | serious_glasses | ItemImaginationGlasses | `Items.seriousGlasses` | `seriousGlasses`. Shows and selects all pencil and crayon shapes and grants collision. |
 | crane_control | ItemCraneControl | `Items.craneControl` | Hold use to raise or sneak-use to lower. Attack toggles attachment and the item layers show direction and lock state. |
 | crane_backpack | ItemCraneBackpack | `Items.craneBackpack` | Iron-tier chest equipment that deploys a player-bound magnet. |
-| slimalyzer | ItemSlimalyzer | `Items.slimalyzer` | - |
+| slimalyzer | ItemSlimalyzer | `Items.slimalyzer` | Lights up and pings on entry to a slime chunk, including in the offhand and as a dropped item. |
 | xp_bucket | ItemXpBucket | `Items.xpBucket` | `filledbucket` |
 | sleeping_bag | ItemSleepingBag | `Items.sleepingBag` | `sleepingBag`. Main-hand use or chest-slot equip sleeps on solid ground. The player's respawn point stays set and the bag returns on waking. |
 | paintbrush | ItemPaintBrush | `Items.paintBrush` | `paintBrush`. Sixteen dye recipes or arbitrary RGB from a can. Paints one face, or all faces while sneaking. |

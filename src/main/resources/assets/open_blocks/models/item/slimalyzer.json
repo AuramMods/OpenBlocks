@@ -2,5 +2,11 @@
   "parent": "minecraft:item/generated",
   "textures": {
     "layer0": "open_blocks:item/slimeoff"
-  }
+  },
+  "overrides": [
+    {
+      "predicate": { "open_blocks:active": 1 },
+      "model": "open_blocks:item/slimalyzer_active"
+    }
+  ]
 }
