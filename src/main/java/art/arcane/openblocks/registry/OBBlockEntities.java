@@ -10,6 +10,7 @@ import art.arcane.openblocks.block.entity.OBFanBlockEntity;
 import art.arcane.openblocks.block.entity.OBFlagBlockEntity;
 import art.arcane.openblocks.block.entity.OBFoldingTargetBlockEntity;
 import art.arcane.openblocks.block.entity.OBGraveBlockEntity;
+import art.arcane.openblocks.block.entity.OBGoldenEggBlockEntity;
 import art.arcane.openblocks.block.entity.OBHealBlockEntity;
 import art.arcane.openblocks.block.entity.OBImaginaryBlockEntity;
 import art.arcane.openblocks.block.entity.OBPlaceholderBlockEntity;
@@ -86,7 +87,8 @@ public final class OBBlockEntities {
     public static final RegistryObject<BlockEntityType<OBDrawingTableBlockEntity>> DRAWING_TABLE = register("drawing_table", OBDrawingTableBlockEntity::new, OBBlocks.DRAWING_TABLE);
     public static final RegistryObject<BlockEntityType<OBSkyBlockEntity>> SKY = register("sky", OBSkyBlockEntity::new, OBBlocks.SKY);
     public static final RegistryObject<BlockEntityType<OBXPShowerBlockEntity>> XP_SHOWER = register("xp_shower", OBXPShowerBlockEntity::new, OBBlocks.XP_SHOWER);
-    public static final RegistryObject<BlockEntityType<OBPlaceholderBlockEntity>> GOLDEN_EGG = register("golden_egg", OBBlocks.GOLDEN_EGG);
+    public static final RegistryObject<BlockEntityType<OBGoldenEggBlockEntity>> GOLDEN_EGG = BLOCK_ENTITY_TYPES.register("golden_egg",
+            () -> BlockEntityType.Builder.of(OBGoldenEggBlockEntity::new, OBBlocks.GOLDEN_EGG.get()).build(null));
 
     private OBBlockEntities() {}
 

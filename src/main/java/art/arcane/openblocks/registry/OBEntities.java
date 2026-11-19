@@ -8,6 +8,7 @@ import art.arcane.openblocks.entity.OBHangGlider;
 import art.arcane.openblocks.entity.OBItemProjectile;
 import art.arcane.openblocks.entity.OBLuggage;
 import art.arcane.openblocks.entity.OBMagnet;
+import art.arcane.openblocks.entity.OBMiniMe;
 import art.arcane.openblocks.entity.OBMountedBlock;
 import art.arcane.openblocks.entity.OBPlaceholderEntity;
 import net.minecraft.world.entity.EntityType;
@@ -44,7 +45,9 @@ public final class OBEntities {
                     .sized(0.25F, 0.25F).clientTrackingRange(4).updateInterval(1).setShouldReceiveVelocityUpdates(true)
                     .build(OpenBlocks.id("item_projectile").toString()));
     public static final RegistryObject<EntityType<OBPlaceholderEntity>> GOLDEN_EYE = register("golden_eye", 64, 8);
-    public static final RegistryObject<EntityType<OBPlaceholderEntity>> MINI_ME = register("mini_me", 64, 1);
+    public static final RegistryObject<EntityType<OBMiniMe>> MINI_ME = ENTITY_TYPES.register("mini_me",
+            () -> EntityType.Builder.of(OBMiniMe::new, MobCategory.MISC).sized(0.6F, 0.95F)
+                    .clientTrackingRange(4).updateInterval(1).setShouldReceiveVelocityUpdates(true).build(OpenBlocks.id("mini_me").toString()));
     public static final RegistryObject<EntityType<OBGlyph>> GLYPH = ENTITY_TYPES.register("glyph",
             () -> EntityType.Builder.of(OBGlyph::new, MobCategory.MISC)
                     .sized(0.5F, 0.5F).clientTrackingRange(10).updateInterval(Integer.MAX_VALUE).setShouldReceiveVelocityUpdates(false)

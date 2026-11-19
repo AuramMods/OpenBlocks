@@ -91,6 +91,12 @@ Current registry classes:
   - `src/main/java/art/arcane/openblocks/recipe/OBImaginaryRecipe.java`
   - `src/main/java/art/arcane/openblocks/client/OBImaginationRendering.java`
   - `src/main/java/art/arcane/openblocks/world/OBTechnicolorLoot.java`
+- Golden Egg and Mini-Me:
+  - `src/main/java/art/arcane/openblocks/block/OBGoldenEggBlock.java`
+  - `src/main/java/art/arcane/openblocks/block/entity/OBGoldenEggBlockEntity.java`
+  - `src/main/java/art/arcane/openblocks/entity/OBMiniMe.java`
+  - `src/main/java/art/arcane/openblocks/entity/OBMountedBlock.java` for lifted cargo
+  - `src/main/java/art/arcane/openblocks/client/OBGoldenEggRendering.java`
 - Sound register: `src/main/java/art/arcane/openblocks/registry/OBSounds.java`
 - Custom statistic register for Bricks dropped: `src/main/java/art/arcane/openblocks/registry/OBStats.java`
 - Enchantment register: `src/main/java/art/arcane/openblocks/registry/OBEnchantments.java`
@@ -370,7 +376,7 @@ Source: `old-1.12.2/src/main/java/openblocks/OpenBlocks.java`
 | drawing_table | BlockDrawingTable | `Blocks.drawingTable` | TileEntityDrawingTable | default | `drawingtable`. Uses blank sheets for stencil and glyph output, and prints text as separate glyph items. |
 | sky | BlockSky | `Blocks.sky` | TileEntitySky | ItemSkyBlock | 1.20.1 uses `OBSkyBlock`, `OBSkyBlockEntity`, and `OBSkyItem`. The original ID carries both polarities. `OBSkyRendering` uses Forge render stages to display the current dimension's sky. |
 | xp_shower | BlockXPShower | `Blocks.xpShower` | TileEntityXPShower | default | `xpshower` |
-| golden_egg | BlockGoldenEgg | `Blocks.goldenEgg` | TileEntityGoldenEgg | default | `goldenegg` |
+| golden_egg | BlockGoldenEgg | `Blocks.goldenEgg` | TileEntityGoldenEgg | default | `goldenegg`. Spins up, rises, lifts permitted blocks, drops, and hatches the placing player's Mini-Me. |
 | scaffolding | BlockScaffolding | `Blocks.scaffolding` | - | BlockScaffolding.Item | - |
 
 ## Items (`OpenBlocks.Items`)
@@ -533,7 +539,7 @@ Registered mod entities:
 - `openblocks:cartographer` -> `EntityCartographer` (`705`). `OBCartographer` follows its owner and surveys nearby loaded chunks. The client shows survey progress when looking at it.
 - `openblocks:item_projectile` -> `EntityItemProjectile` (`706`)
 - `openblocks:golden_eye` -> `EntityGoldenEye` (`707`)
-- `openblocks:mini_me` -> `EntityMiniMe` (`710`)
+- `openblocks:mini_me` -> `EntityMiniMe` (`710`). Forge 1.20.1 uses `OBMiniMe` with its synchronized skin profile, autonomous flower and torch harvesting, and the saved cooldown after carrying its owner.
 - `openblocks:glyph` -> `EntityGlyph` (`711`). `OBGlyph` saves and synchronizes its character, wall anchor, facing, and 1/16-block offsets.
 
 Entity package inventory:

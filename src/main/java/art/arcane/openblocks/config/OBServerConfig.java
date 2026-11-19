@@ -70,6 +70,8 @@ public final class OBServerConfig {
     public static final ForgeConfigSpec.DoubleValue IMAGINARY_USES;
     public static final ForgeConfigSpec.BooleanValue TECHNICOLOR_LOOT;
 
+    public static final ForgeConfigSpec.BooleanValue GOLDEN_EGG_PICK_BLOCKS;
+
     static {
         final var builder = new ForgeConfigSpec.Builder();
         builder.push("elevator");
@@ -202,6 +204,9 @@ public final class OBServerConfig {
         PROJECTOR_LIGHT_LEVEL = builder.defineInRange("lightLevel", 10, 0, 15);
         builder.pop();
 
+        builder.push("egg");
+        GOLDEN_EGG_PICK_BLOCKS = builder.comment("The hatching Golden Egg can lift nearby blocks.").define("pickBlocks", true);
+        builder.pop();
         builder.push("imaginary");
         IMAGINARY_USES = builder.comment("Placement charges in new creative inventory and pick-block pencils and crayons.")
                 .defineInRange("numberOfUses", 10.0, 0.5, 1000000.0);
