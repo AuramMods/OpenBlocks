@@ -14,6 +14,8 @@
 - `[-]` in progress / partial
 - `[x]` complete
 
+Phases 0 through 2 record the earlier breadth work. The completion audit and completed feature checks describe the verified port.
+
 ## Phase 0: Legacy Discovery and Inventory (Breadth Baseline)
 Goal: build a reliable map of everything that must exist in 1.20.1.
 
@@ -147,14 +149,35 @@ Per-feature checklist template:
 Goal: stabilize and protect the port.
 
 Checklist:
-- [-] Validate old-world migration behavior where practical. Earlier 1.20.1 saves and flattened registry aliases are verified. The inventory recovery commands read OpenModsLib backups with supported OpenBlocks items. Native 1.12.2 worlds require separate conversion before opening in 1.20.1.
+- [x] Validate the supported migration paths. Earlier 1.20.1 saves and flattened registry aliases are verified. The inventory recovery commands read OpenModsLib backups with supported OpenBlocks items. Native 1.12.2 worlds require separate conversion before opening in 1.20.1.
 - [x] Verify Forge registry remaps and deferred block-entity ID repair on a disposable 1.20.1 save.
 - [x] Add regression tests for critical gameplay flows.
 - [x] Multiplayer sanity pass with the packaged jar and all 12 Auram development jars. Two muted clients verified a shared painted glass canvas. JEI transferred the XP Bottler recipe, and Mekanism stored and supplied Liquid XP through its fluid tank.
-- [-] Performance pass for heavy systems (render/network/tick). Shared projector maps use one client snapshot per revision. Guide markers use packed vertex submission. The mixed populated-map and hopper yard sustained 20 TPS.
+- [x] Profile heavy render, network, and tick workloads. Shared projector maps use one client snapshot per revision. Guide markers use packed vertex submission. The final jar held 20 TPS in the replay with a muted client, populated projectors, and 32 active hoppers.
 - [x] Remove dead scaffolding and document the current architecture. All 41 legacy blocks have explicit implementations. The rotating elevator uses its block state, and the previous placeholder type never attached to it.
 
-## Immediate Next Task
+## Port completion audit
+
+The clean Java 17 build on Forge 47.4.10 compiled, ran datagen, and reobfuscated the standalone jar. All 235 GameTests passed. The packaged tests below used dedicated or integrated game servers and actual clients in Docker/Xvfb with master volume zero and the OpenAL null backend. The per-feature runtime results and restart checks are in [PORTING_MEMORY.md](PORTING_MEMORY.md#full-port-continuation-2026-11-18).
+
+| Legacy feature group | Verification |
+| --- | --- |
+| Registries, recipes, and assets | Matched the 41 legacy block and 30 standalone item IDs. Exercised all 189 legacy recipe inputs against Forge outputs and reran packaged recipe loading and crafting tests. The jar contains 178 recipe files, including the serializers that combine legacy variants. Checked references in 255 models, 42 blockstates, 23 sound events, and all 16 locales. |
+| Elevators, ladders, temporary scaffolding, sponge, healing, and paths | The suite covers mixed colors and facing, supports, placement and drops, waterlogging, liquid cleanup, and healing and decay ticks. Packaged clients verified the controls, models, and collisions. The final dedicated fixture reopened the saved elevators and used Space and Shift across a mixed-color column. |
+| Graves, player state, inventory commands, and advancements | Packaged deaths and shovel recovery exercised saved loot, epitaphs, and recovery commands. GameTests exercised Forge protection and placement vetoes. Packaged sessions verified Pedometer routes, the Be Silly controls and statistic, and the nesting advancement. A disposable conversion fixture checked actual OpenModsLib 1.12.2 stacks, and a 1.20.1 save checked registry and block-entity aliases. |
+| Fluid storage, XP, automation, and redstone | Packaged sessions verified Liquid XP from player drain through storage to the shower and Bottler, Vacuum Hopper side control, machines and Forge inventory capabilities, auto repair and enchanting, crop growth, Donation Station, and Cannon, Fan, trap, button, and Target behavior. Server restarts retained samples, output inventories, fluid, progress, and settings. |
+| Entities, equipment, and utility items | The packaged tests covered Luggage charge and inventory, Hang Glider flight and observer sync, magnet cargo, cartography, Golden Eye and Mini-Me, Sleeping Bag, Slimalyzer, Sonic Glasses, Wrench, Epic Eraser, and Cursor. They exercised actual controls and checked saved data or the expected cleanup of transient equipment. |
+| Color, rendering, and construction | Checked canvas painting and cleanup, stencil stamps, glyph printing, imagination glasses, both Sky Block polarities, flag mounts, Guide and Projector menus, client rendering, and saved visual state. Two clients verified shared canvas appearance. The final packaged tests cover shared glass faces and painted blocks retaining their original gameplay properties. |
+| Loot, enchantments, handbook, and integrations | Verified mob trophies, loot injection, Audiophile trades, Flim-Flam effects and combat history, Unstable, Last Stand, and the Information Book. Packaged checks exercised CC: Tweaked, Flan's Mod: Reloaded, JEI, Mekanism, ProjectE, and startup with all 12 Auram development jars. CoFH Core reports its own server-side warning for a client mixin, and the dedicated server continues to load. |
+
+### Player-visible differences from 1.12.2
+
+- The current namespace is `open_blocks`. Components use separate item IDs. Color and facing are stored as block state or item tags where applicable. The port reads its earlier 1.20.1 saves and supported OpenModsLib inventory backups. Native 1.12.2 world chunks require separate conversion.
+- The Cartographer uses modern world heights and dimensions, the Village Highlighter reads bed points of interest, and active Sky Blocks render through the Forge sky stage. The Sky Block client setting provides the animated gray fallback texture.
+- The optional computer and projectile integrations target CC: Tweaked and Flan's Mod: Reloaded. Liquid XP uses Forge fluid capabilities. The manifest records the modern equivalents for the old renderer, universal bucket, and other configuration settings.
+- The handbook describes the current controls and recipe availability. The bundled language packs use English for new instructions and gaps in their original translations.
+
+## Completed feature checks
 - [x] Reproduce and repair the baseline defects in mixed elevator rotation, sponge handling of logged water, and grave placement fallback. Verified with the standalone GameTest server on 2026-11-18.
 - [x] Restore distinct legacy crafting components across recipes, creative entries, and models.
 - [x] Restore elevator colors and movement activation. Headless tests cover server behavior and item color through crafting, placement, and drops. A packaged client verified Space, Shift, color matching, and rotation in single-player using a silent virtual display.

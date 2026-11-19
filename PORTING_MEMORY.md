@@ -273,8 +273,11 @@
 - Datagen, jar reobfuscation, and all 234 GameTests passed. The new test places leaves beside a painted oak log, carries support to distance six, checks a painted stone control, and removes the trunk to confirm the loss of support. The packaged dedicated server reopened the previous test world and recalculated the saved painted trunk's canopy to distances one through three. Removing the trunk returned the test canopy to distance seven while a separate plain oak canopy kept its support. The same packaged jar then loaded in a fresh dedicated world with all 12 Auram development jars and preserved the adjacent leaf support.
 - The 41 block annotations in the legacy bootstrap each match a current block ID with an explicit implementation. The early 1.20.1 rotating elevator block entity was never attached to the block. It is retired while the block and item IDs are retained. The existing chunk-load service removes empty retired records in complete chunks and leaves records with unknown payloads to the regular loader. The path keeps its original shape, skylight, walk-through collision, and support rules in its own block class.
 - A clean compile, datagen, and jar reobfuscation succeeded. All 235 GameTests passed, including the new empty-record migration check. The previous packaged jar saved rotating elevators without block entities. After injecting one immediate and one deferred empty record into a disposable copy, the rebuilt server preserved the purple west and lime east elevators and the neighboring 17-charge Paint Can. A muted standalone client used Space to skip the intermediate blue elevator, arrived at Y 81 with yaw −90°, and returned to Y 72 with Shift. Removing the path's support produced one path item. The saved chunk had zero retired records and the original Paint Can data.
+- The packaged jar's asset audit accounted for all 41 legacy block IDs and 30 standalone item IDs. It read 255 model files, 42 blockstates, 23 sound events, 16 locales, and 178 recipe files. OpenBlocks references to assets resolved, and the GameTest classes and fixtures were absent from the distributable jar. The previously verified 189 legacy recipe cases remain covered by the current files and serializers.
+- In a fresh single-player world the muted client received one Information Book. Eight paper and an oak fence gave nine Canvas in the real crafting grid. A slime killed the player at Y −60, and the grave used the configured dimension-floor margin to place at Y −58. It contained one book and nine Canvas. Digging emptied the grave, released both stacks, and spent two shovel durability points. The integrated world saved both recovered stacks in the player's inventory.
+- The final packaged jar also started a fresh dedicated world with all 12 Auram development jars and verified leaf support around painted oak. CoFH Core emitted its existing diagnostic for a client mixin on the server. In the loaded performance fixture with CC: Tweaked, a muted client joined the scene with populated projectors, Guides, and 32 hoppers fed once per second. Forge reported 20 TPS and a 5.959 ms mean tick time. The separate 26.6-second JFR report recorded a 6.728 ms median for its tick-time samples.
 
-## Current Snapshot
+## Initial port baseline (February 2026)
 - Legacy codebase analyzed: `old-1.12.2`.
 - Analysis goal completed: breadth-first registry and system inventory.
 - Core inventory files created at repo root:
@@ -282,7 +285,7 @@
   - `PORTING_MEMORY.md`
   - `PORTING_MANIFEST.md`
 
-## 1.20.1 Progress Snapshot
+## February 2026 implementation history
 - Registry skeleton implemented in current project:
   - `/Users/cyberpwn/development/workspace/AuramMods/OpenBlocks/src/main/java/art/arcane/openblocks/OpenBlocks.java`
   - `/Users/cyberpwn/development/workspace/AuramMods/OpenBlocks/src/main/java/art/arcane/openblocks/registry/OBBlocks.java`
@@ -718,7 +721,7 @@
 4. `old-1.12.2/src/main/java/openblocks/OpenBlocks.java`
 5. `old-1.12.2/src/main/java/openblocks/Config.java`
 
-## Next Breadth Step (Planned)
+## February 2026 next steps (historical)
 - Continue Phase 2 breadth: expand recipe coverage beyond current custom-recipe placeholders.
 - Move Phase 3 command/trigger work from placeholders to hooked gameplay paths:
   - deepen `flimflam` from current breadth-stage effects to legacy cost/weight/luck/blacklist behavior
