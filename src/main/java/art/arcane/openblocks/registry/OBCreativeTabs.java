@@ -20,18 +20,25 @@ import art.arcane.openblocks.item.OBTankItem;
 import art.arcane.openblocks.item.OBTrophyItem;
 import art.arcane.openblocks.trophy.OBTrophyType;
 import art.arcane.openblocks.world.OBHeightMapData;
+import java.util.List;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.EnchantedBookItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.EnchantmentInstance;
 import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
+@Mod.EventBusSubscriber(modid = OpenBlocks.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public final class OBCreativeTabs {
 
     public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, OpenBlocks.MODID);
@@ -99,6 +106,18 @@ public final class OBCreativeTabs {
                         }
                     }))
                     .build());
+
+    @SubscribeEvent
+    public static void includeEnchantedBooks(final BuildCreativeModeTabContentsEvent event) {
+        if (event.getTab() != OPEN_BLOCKS_TAB.get()) return;
+        for (final var entry : List.of(OBEnchantments.EXPLOSIVE, OBEnchantments.LAST_STAND)) {
+            final var enchantment = entry.get();
+            if (!enchantment.isDiscoverable()) continue;
+            for (int level = enchantment.getMinLevel(); level <= enchantment.getMaxLevel(); level++) {
+                event.accept(EnchantedBookItem.createForEnchantment(new EnchantmentInstance(enchantment, level)));
+            }
+        }
+    }
 
     private OBCreativeTabs() {}
 }

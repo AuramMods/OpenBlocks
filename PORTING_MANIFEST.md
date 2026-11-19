@@ -523,8 +523,8 @@ Source: `old-1.12.2/src/main/java/openblocks/OpenBlocks.java`
 Source: `old-1.12.2/src/main/java/openblocks/Config.java`
 
 - Registered enchantments:
-  - `openblocks:explosive` (`EnchantmentExplosive`)
-  - `openblocks:last_stand` (`EnchantmentLastStand`)
+  - `openblocks:explosive` (`EnchantmentExplosive`) → `open_blocks:explosive`. Unstable uses `OBArmorEnchantment` and `OBUnstableArmor` for books, armor reactions, and the boots' landing bounce.
+  - `openblocks:last_stand` (`EnchantmentLastStand`) → `open_blocks:last_stand`. `OBLastStand` uses the original OpenCalc engine and spends experience against the incoming damage.
   - `openblocks:flim_flam` (`EnchantmentFlimFlam`)
 - Object holders:
   - `OpenBlocks.Enchantments` in `OpenBlocks.java`

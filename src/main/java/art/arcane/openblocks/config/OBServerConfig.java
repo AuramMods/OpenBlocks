@@ -76,12 +76,23 @@ public final class OBServerConfig {
 
     public static final ForgeConfigSpec.DoubleValue TROPHY_DROP_CHANCE;
     public static final ForgeConfigSpec.IntValue CURSOR_DISTANCE_SQUARED;
+    public static final ForgeConfigSpec.BooleanValue UNSTABLE_ENABLED;
+    public static final ForgeConfigSpec.BooleanValue UNSTABLE_GRIEF;
+    public static final ForgeConfigSpec.BooleanValue LAST_STAND_ENABLED;
+    public static final ForgeConfigSpec.ConfigValue<String> LAST_STAND_FORMULA;
 
     static {
         final var builder = new ForgeConfigSpec.Builder();
         builder.push("cursor");
         CURSOR_DISTANCE_SQUARED = builder.comment("Maximum squared distance of a Cursor activation. Default 64 means less than eight blocks.")
                 .defineInRange("cursorMaxDistance", 64, 0, Integer.MAX_VALUE);
+        builder.pop();
+        builder.push("features");
+        UNSTABLE_ENABLED = builder.define("explosiveEnchantment", true);
+        UNSTABLE_GRIEF = builder.comment("Allow Unstable III blasts to break blocks.").define("explosiveEnchantGrief", true);
+        LAST_STAND_ENABLED = builder.define("lastStandEnchantment", true);
+        LAST_STAND_FORMULA = builder.comment("XP cost when a hit would leave less than half a heart. Variables are hp, dmg, ench and xp.")
+                .define("lastStandFormula", "max(1, 50*(1-(hp-dmg))/ench)");
         builder.pop();
         builder.push("elevator");
         ELEVATOR_DISTANCE = builder.defineInRange("searchDistance", 20, 1, Integer.MAX_VALUE);

@@ -1,6 +1,8 @@
 package art.arcane.openblocks.registry;
 
 import art.arcane.openblocks.OpenBlocks;
+import art.arcane.openblocks.config.OBServerConfig;
+import art.arcane.openblocks.enchantment.OBArmorEnchantment;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentCategory;
@@ -12,9 +14,10 @@ public final class OBEnchantments {
 
     public static final DeferredRegister<Enchantment> ENCHANTMENTS = DeferredRegister.create(ForgeRegistries.ENCHANTMENTS, OpenBlocks.MODID);
 
-    public static final RegistryObject<Enchantment> EXPLOSIVE = register("explosive", 3, EnchantmentCategory.DIGGER, EquipmentSlot.MAINHAND);
-    public static final RegistryObject<Enchantment> LAST_STAND = register("last_stand", 2, EnchantmentCategory.ARMOR,
-            EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET);
+    public static final RegistryObject<Enchantment> EXPLOSIVE = ENCHANTMENTS.register("explosive",
+            () -> new OBArmorEnchantment(Enchantment.Rarity.RARE, 3, OBServerConfig.UNSTABLE_ENABLED));
+    public static final RegistryObject<Enchantment> LAST_STAND = ENCHANTMENTS.register("last_stand",
+            () -> new OBArmorEnchantment(Enchantment.Rarity.UNCOMMON, 2, OBServerConfig.LAST_STAND_ENABLED));
     public static final RegistryObject<Enchantment> FLIM_FLAM = register("flim_flam", 4, EnchantmentCategory.WEAPON, EquipmentSlot.MAINHAND);
 
     private OBEnchantments() {}

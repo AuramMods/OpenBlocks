@@ -213,4 +213,5 @@ Checklist:
 - [x] Restore the Sonic Glasses' wearable model, configurable dimming, and fading sound-source icons.
 - [x] Restore the Wrench's face-based rotation and the Epic Eraser's lore removal and 15 uses.
 - [x] Restore the Information Book with its catalogues and live recipe previews, and the Cursor with linked block interactions and XP costs.
-- [ ] Restore Unstable, Last Stand, and Flim-Flam enchantment gameplay.
+- [x] Restore Unstable's armor blasts and landing bounce, Last Stand's configurable XP protection, and both enchantments' acquisition and book entries.
+- [ ] Restore Flim-Flam enchantment gameplay and its command and luck rules.

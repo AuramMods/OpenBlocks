@@ -79,6 +79,15 @@ sourceSets.main.resources { srcDir 'src/generated/resources' }
 repositories {
     exclusiveContent {
         forRepository {
+            maven {
+                url = 'https://repo.openmods.info/artifactory/openmods'
+                metadataSources { artifact() }
+            }
+        }
+        filter { includeModule('info.openmods', 'calc') }
+    }
+    exclusiveContent {
+        forRepository {
             maven { url "https://maven.squiddev.cc" }
         }
         filter { includeGroup("cc.tweaked") }
@@ -99,8 +108,14 @@ repositories {
     }
 }
 
+configurations {
+    openCalc
+    minecraftLibrary.extendsFrom(openCalc)
+}
+
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+    openCalc 'info.openmods:calc:0.3'
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
     compileOnly(fg.deobf("mezz.jei:jei-${minecraft_version}-common-api:${jei_version}"))
     compileOnly(fg.deobf("mezz.jei:jei-${minecraft_version}-forge-api:${jei_version}"))
@@ -129,6 +144,9 @@ tasks.named('processResources', ProcessResources).configure {
 }
 
 tasks.named('jar', Jar).configure {
+    from({ configurations.openCalc.collect { zipTree(it) } }) {
+        include 'info/openmods/calc/**'
+    }
     manifest {
         attributes([
                 'Specification-Title'     : mod_id,
