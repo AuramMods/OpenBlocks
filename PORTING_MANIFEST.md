@@ -372,7 +372,25 @@ Source: `old-1.12.2/src/main/resources/assets/openblocks/recipes`
     - `open_blocks:flim_flam_book` custom crafting recipe implemented in:
       - `src/main/java/art/arcane/openblocks/recipe/OBFlimFlamBookRecipe.java`
       - `src/main/resources/data/open_blocks/recipes/flim_flam_book.json`
-- The release pass still needs to check loaded ingredients, result variants, and survival acquisition against the legacy corpus.
+- The Forge recipe audit crafted all 189 legacy JSON cases through the server's recipe manager. It used the Minecraft item data fixer for direct vanilla IDs and metadata, representative ingredients for ore-dictionary entries, and the port's item forms for OpenBlocks variants. Tasty Clay uses cocoa beans, clay, and milk, yields two pieces, and returns the empty bucket.
+- The packaged data has 178 recipes. The standalone suite checks that every shipped recipe loads and that ordinary recipes produce their advertised item, tags, and count through the normal crafting lookup.
+
+### Acquisition outside ordinary crafting
+
+| Item or feature | In-game source |
+|---|---|
+| Paint Can | Mix milk and pigments in the Paint Mixer. |
+| Prepared Stencil and Glyph | Use unprepared stencils in the Drawing Table. Previously used sheets and mounted glyphs are recoverable. |
+| Height Map | Survey a blank in the Cartographer or initialize it in the Projector. |
+| Canvas Glass | Paint eligible non-solid blocks to wrap them in a canvas. The wrapped block keeps its original drops. |
+| Pencil and Crayon Glasses | Combine the corresponding drawing tool with paper. Crayon Glasses preserve its color. |
+| Technicolor Glasses | Search mineshaft or dungeon chest loot when the world loot option is enabled. |
+| Trophies | Earn drops from their matching mobs. Looting affects the rolls. |
+| XP Bucket | Fill an empty bucket from a Liquid XP source or a tank filled by the XP chain. |
+| Unstable, Last Stand, and Flim-Flam | Obtain applicable books or enchants through vanilla enchanting and librarian trades. Flim-Flam also has four book recipes. Unstable III has an enchanting cost above vanilla table rolls and is available from librarians. |
+| Audiophile | An unemployed adult claims a jukebox. Trade note blocks to unlock jukeboxes and music discs. |
+| Healing Block, Serious Glasses, and carried Grave | Creative or operator items in the legacy corpus. Player death also generates an in-world grave under the grave rules. |
+| Deprecated generic IDs | Retained for existing saves. The old unstackable Pointer item can be crafted into the current Pointer. |
 
 ## Blocks (`OpenBlocks.Blocks`)
 Source: `old-1.12.2/src/main/java/openblocks/OpenBlocks.java`
@@ -508,8 +526,8 @@ Important item variant behavior in legacy tab:
 - `ItemHeightMap`: intentionally hidden from creative tab (`getSubItems` is empty).
 
 Port implication:
-- The 1.20.1 tab lists distinct components and omits the two deprecated generic IDs. Most stateful items still show only their default stack.
-- Metadata/NBT creative-variant parity is a later depth pass item.
+- The 1.20.1 tab lists distinct components and keeps the two deprecated generic IDs out of creative inventory.
+- The creative tab exposes the original color and state presets. It also exposes the 1:16 blank map, which 1.12.2 provided through resizing. Filled Height Maps and Canvas Glass remain hidden.
 
 ## Fluids
 Source: `old-1.12.2/src/main/java/openblocks/OpenBlocks.java`

@@ -43,12 +43,14 @@ public final class BrickActionGameTests {
 
     @GameTest(template = "empty")
     public static void tastyClayCraftsAndDigestsAtFullHungerWhenEnabled(final GameTestHelper helper) {
-        final var grid = ComponentRecipeGameTests.input(helper, Items.CLAY_BALL, Items.MILK_BUCKET, Items.BROWN_DYE);
+        final var grid = ComponentRecipeGameTests.input(helper, Items.CLAY_BALL, Items.MILK_BUCKET, Items.COCOA_BEANS);
         final var level = helper.getLevel();
         final var recipe = level.getRecipeManager().getRecipeFor(RecipeType.CRAFTING, grid, level).orElseThrow();
         final var clay = recipe.assemble(grid, level.registryAccess());
         helper.assertTrue(clay.is(OBItems.TASTY_CLAY.get()) && clay.getCount() == 2 && recipe.getRemainingItems(grid).get(1).is(Items.BUCKET),
                 "The legacy recipe did not yield two Tasty Clay and return its milk bucket");
+        grid.setItem(2, new ItemStack(Items.BROWN_DYE));
+        helper.assertTrue(!recipe.matches(grid, level), "Brown dye substituted for cocoa beans");
 
         final var player = new FoodTestPlayer(level);
         position(helper, player);

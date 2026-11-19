@@ -70,7 +70,7 @@ Checklist:
 - [x] Language entries for all objects.
 - [x] Sound definitions (`sounds.json`) aligned with code registrations.
 - [x] Basic loot tables where required.
-- [-] Reconcile shaped and shapeless recipes for all craftable features. All seven legacy custom recipes now have implementations.
+- [x] Reconcile shaped and shapeless recipes for all craftable features. The Forge server verified all 189 legacy recipe cases, and all seven legacy custom recipes have runtime tests.
 - [x] Tags needed for gameplay parity and compatibility.
 - [x] Cross-check that each registered block/item ID has matching model/lang assets.
 
@@ -161,7 +161,7 @@ Checklist:
 - [x] Restore Jaded Ladder trapdoor behavior, directional rope ladders, and temporary scaffolding. The standalone suite verifies climbing, redstone, placement rollback, rope drop accounting, decay and fuel.
 - [-] Restore state variants across recipes, creative entries, and models. Paint brushes, paint cans, canvas surfaces, prepared stencils, and glyphs are restored.
 - [ ] Run a muted client in an isolated or background graphical session to verify models, transparency, and face culling.
-- [ ] Reconcile crafting and acquisition against the full legacy recipe inventory.
+- [x] Reconcile crafting and acquisition against the full legacy recipe inventory. Verify the expected ingredients and outputs in Forge and record the items obtained outside ordinary recipes.
 - [x] Restore and verify the Flim-Flam snowball, teleport, mount, encase, dummy creeper, random potion, and skyblock actions.
 - [x] Restore grave-owned loot, optional recovery files, the two-point shovel cost, and the persistent empty memorial. Verify rejected drops, older dump-backed graves, and backup recovery beyond ordinary player slots.
 - [x] Verify `/ob_inventory` store, restore, and spawn for the full player inventory, ender chest, and Forge extension payloads. Restore the death backup switch and support vanilla-item 1.12.2 inventory dumps.
