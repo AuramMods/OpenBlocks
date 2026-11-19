@@ -1,3 +1,10 @@
 {
-  "parent": "open_blocks:block/projector"
+  "parent": "minecraft:block/block",
+  "loader": "forge:composite",
+  "textures": {"particle": "minecraft:block/smooth_stone"},
+  "children": {
+    "base": {"parent": "open_blocks:block/projector"},
+    "outer": {"parent": "open_blocks:block/projector_spinner_outer"},
+    "inner": {"parent": "open_blocks:block/projector_spinner_inner"}
+  }
 }

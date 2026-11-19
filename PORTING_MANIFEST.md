@@ -51,6 +51,13 @@ Current registry classes:
   - `src/main/java/art/arcane/openblocks/world/OBHeightMapSurvey.java`
   - `src/main/java/art/arcane/openblocks/recipe/OBMapResizeRecipe.java`
   - `src/main/java/art/arcane/openblocks/recipe/OBMapCloneRecipe.java`
+- Projector inventory, map display, and scripting:
+  - `src/main/java/art/arcane/openblocks/block/OBProjectorBlock.java`
+  - `src/main/java/art/arcane/openblocks/block/entity/OBProjectorBlockEntity.java`
+  - `src/main/java/art/arcane/openblocks/menu/OBProjectorMenu.java`
+  - `src/main/java/art/arcane/openblocks/client/OBProjectorScreen.java`
+  - `src/main/java/art/arcane/openblocks/client/OBProjectorRendering.java`
+  - `src/main/java/art/arcane/openblocks/integration/OBComputerCraftProjector.java`
 - Sound register: `src/main/java/art/arcane/openblocks/registry/OBSounds.java`
 - Custom statistic register for Bricks dropped: `src/main/java/art/arcane/openblocks/registry/OBStats.java`
 - Enchantment register: `src/main/java/art/arcane/openblocks/registry/OBEnchantments.java`
@@ -326,7 +333,7 @@ Source: `old-1.12.2/src/main/java/openblocks/OpenBlocks.java`
 | canvas | BlockCanvas | `Blocks.canvas` | TileEntityCanvas | default | - |
 | paint_can | BlockPaintCan | `Blocks.paintCan` | TileEntityPaintCan | ItemPaintCan | `paintcan` |
 | canvas_glass | BlockCanvasGlass | `Blocks.canvasGlass` | TileEntityCanvasGlass | default | `canvasglass` |
-| projector | BlockProjector | `Blocks.projector` | TileEntityProjector | default | - |
+| projector | BlockProjector | `Blocks.projector` | TileEntityProjector | One automation-accessible map slot, rotatable terrain and liquid hologram, and interactive preview | Optional `openblocks_projector` peripheral |
 | drawing_table | BlockDrawingTable | `Blocks.drawingTable` | TileEntityDrawingTable | default | `drawingtable` |
 | sky | BlockSky | `Blocks.sky` | TileEntitySky | ItemSkyBlock | 1.20.1 uses `OBSkyBlock`, `OBSkyBlockEntity`, and `OBSkyItem`. The original ID carries both polarities. `OBSkyRendering` uses Forge render stages to display the current dimension's sky. |
 | xp_shower | BlockXPShower | `Blocks.xpShower` | TileEntityXPShower | default | `xpshower` |

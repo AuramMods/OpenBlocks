@@ -14,6 +14,7 @@ import art.arcane.openblocks.block.OBGraveBlock;
 import art.arcane.openblocks.block.OBHealBlock;
 import art.arcane.openblocks.block.OBLadderBlock;
 import art.arcane.openblocks.block.OBPathBlock;
+import art.arcane.openblocks.block.OBProjectorBlock;
 import art.arcane.openblocks.block.OBRedstoneMachineBlock;
 import art.arcane.openblocks.block.OBRedstoneMachineBlock.Kind;
 import art.arcane.openblocks.block.OBRopeLadderBlock;
@@ -51,7 +52,6 @@ public final class OBBlocks {
     private static final VoxelShape SHAPE_GOLDEN_EGG = Block.box(2.0D, 0.0D, 2.0D, 14.0D, 16.0D, 14.0D);
     private static final VoxelShape SHAPE_PAINT_CAN = Block.box(4.0D, 0.0D, 4.0D, 12.0D, 11.0D, 12.0D);
     private static final VoxelShape SHAPE_PAINT_MIXER = Block.box(2.0D, 0.0D, 2.0D, 14.0D, 16.0D, 14.0D);
-    private static final VoxelShape SHAPE_PROJECTOR = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 8.0D, 16.0D);
     private static final VoxelShape SHAPE_VILLAGE_HIGHLIGHTER = Block.box(2.0D, 0.0D, 1.0D, 14.0D, 16.0D, 15.0D);
     private static final VoxelShape SHAPE_GRAVE = Shapes.or(
             Block.box(0.0D, 0.0D, 0.0D, 16.0D, 1.0D, 16.0D),
@@ -147,6 +147,7 @@ public final class OBBlocks {
         if ("beartrap".equals(id)) return new OBBearTrapBlock(properties);
         if ("fan".equals(id)) return new OBFanBlock(properties);
         if ("flag".equals(id)) return new OBFlagBlock(BlockBehaviour.Properties.of().noCollission().instabreak().sound(SoundType.WOOD));
+        if ("projector".equals(id)) return new OBProjectorBlock(properties);
         if ("sky".equals(id)) return new OBSkyBlock(properties.sound(SoundType.METAL));
         if (shape != null) return new OBShapeBlock(properties, shape, collisionShape);
         return new Block(properties);
@@ -172,7 +173,6 @@ public final class OBBlocks {
             case "golden_egg" -> SHAPE_GOLDEN_EGG;
             case "paint_mixer" -> SHAPE_PAINT_MIXER;
             case "paint_can" -> SHAPE_PAINT_CAN;
-            case "projector" -> SHAPE_PROJECTOR;
             case "village_highlighter" -> SHAPE_VILLAGE_HIGHLIGHTER;
             default -> null;
         };

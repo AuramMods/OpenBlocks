@@ -8,6 +8,7 @@ import art.arcane.openblocks.config.OBServerConfig;
 import art.arcane.openblocks.integration.OBComputerCraftCannon;
 import art.arcane.openblocks.integration.OBComputerCraftDonations;
 import art.arcane.openblocks.integration.OBComputerCraftMagnet;
+import art.arcane.openblocks.integration.OBComputerCraftProjector;
 import art.arcane.openblocks.network.OBNetwork;
 import art.arcane.openblocks.registry.OBBlocks;
 import art.arcane.openblocks.registry.OBBlockEntities;
@@ -77,6 +78,7 @@ public class OpenBlocks {
         event.enqueueWork(() -> {
             OBComputerCraftDonations.register();
             OBComputerCraftCannon.register();
+            OBComputerCraftProjector.register();
         });
     }
 }

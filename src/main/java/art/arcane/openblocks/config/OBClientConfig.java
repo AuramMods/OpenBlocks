@@ -9,6 +9,8 @@ public final class OBClientConfig {
     public static final ForgeConfigSpec.IntValue DEV_NULL_COUNT_COLOR;
     public static final ForgeConfigSpec.BooleanValue SERIOUS_MODE;
     public static final ForgeConfigSpec.BooleanValue BOO_WHILE_TYPING;
+    public static final ForgeConfigSpec.BooleanValue PROJECTOR_CONE;
+    public static final ForgeConfigSpec.IntValue PROJECTOR_BRIGHTNESS;
 
     static {
         final var builder = new ForgeConfigSpec.Builder();
@@ -24,6 +26,11 @@ public final class OBClientConfig {
         SERIOUS_MODE = builder.comment("Disable the Be Silly key on this client.").define("weAreSeriousPeople", true);
         BOO_WHILE_TYPING = builder.comment("Allow the Be Silly key to activate while a screen is open.")
                 .define("doItWhileTyping", false);
+        builder.pop();
+        builder.push("projector");
+        PROJECTOR_CONE = builder.define("renderHolographicCone", true);
+        PROJECTOR_BRIGHTNESS = builder.comment("Brightness of the holographic cone. Use -1 for world lighting.")
+                .defineInRange("brightness", -1, -1, 255);
         builder.pop();
         SPEC = builder.build();
     }

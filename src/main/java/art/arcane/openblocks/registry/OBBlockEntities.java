@@ -12,6 +12,7 @@ import art.arcane.openblocks.block.entity.OBFoldingTargetBlockEntity;
 import art.arcane.openblocks.block.entity.OBGraveBlockEntity;
 import art.arcane.openblocks.block.entity.OBHealBlockEntity;
 import art.arcane.openblocks.block.entity.OBPlaceholderBlockEntity;
+import art.arcane.openblocks.block.entity.OBProjectorBlockEntity;
 import art.arcane.openblocks.block.entity.OBRedstoneMachineBlockEntity;
 import art.arcane.openblocks.block.entity.OBSkyBlockEntity;
 import art.arcane.openblocks.block.entity.OBSprinklerBlockEntity;
@@ -74,7 +75,7 @@ public final class OBBlockEntities {
     public static final RegistryObject<BlockEntityType<OBPlaceholderBlockEntity>> CANVAS = register("canvas", OBBlocks.CANVAS);
     public static final RegistryObject<BlockEntityType<OBPlaceholderBlockEntity>> PAINT_CAN = register("paint_can", OBBlocks.PAINT_CAN);
     public static final RegistryObject<BlockEntityType<OBPlaceholderBlockEntity>> CANVAS_GLASS = register("canvas_glass", OBBlocks.CANVAS_GLASS);
-    public static final RegistryObject<BlockEntityType<OBPlaceholderBlockEntity>> PROJECTOR = register("projector", OBBlocks.PROJECTOR);
+    public static final RegistryObject<BlockEntityType<OBProjectorBlockEntity>> PROJECTOR = register("projector", OBProjectorBlockEntity::new, OBBlocks.PROJECTOR);
     public static final RegistryObject<BlockEntityType<OBPlaceholderBlockEntity>> DRAWING_TABLE = register("drawing_table", OBBlocks.DRAWING_TABLE);
     public static final RegistryObject<BlockEntityType<OBSkyBlockEntity>> SKY = register("sky", OBSkyBlockEntity::new, OBBlocks.SKY);
     public static final RegistryObject<BlockEntityType<OBXPShowerBlockEntity>> XP_SHOWER = register("xp_shower", OBXPShowerBlockEntity::new, OBBlocks.XP_SHOWER);

@@ -59,6 +59,8 @@ public final class OBServerConfig {
     public static final ForgeConfigSpec.ConfigValue<List<? extends String>> MAGNET_ENTITY_ALLOWLIST;
     public static final ForgeConfigSpec.ConfigValue<List<? extends String>> MAGNET_BLOCK_ENTITY_ALLOWLIST;
     public static final ForgeConfigSpec.ConfigValue<List<? extends String>> CARTOGRAPHER_BLACKLIST;
+    public static final ForgeConfigSpec.BooleanValue PROJECTOR_LIGHT_ENABLED;
+    public static final ForgeConfigSpec.IntValue PROJECTOR_LIGHT_LEVEL;
     public static final ForgeConfigSpec.BooleanValue SERIOUS_MODE;
 
     static {
@@ -180,6 +182,10 @@ public final class OBServerConfig {
         builder.push("cartographer");
         CARTOGRAPHER_BLACKLIST = builder.comment("Block registry IDs the Cartographer should see through.")
                 .defineListAllowEmpty("blockBlacklist", List.of(), value -> value instanceof String);
+        builder.pop();
+        builder.push("projector");
+        PROJECTOR_LIGHT_ENABLED = builder.define("lightUpWhenWorking", true);
+        PROJECTOR_LIGHT_LEVEL = builder.defineInRange("lightLevel", 10, 0, 15);
         builder.pop();
         builder.push("tomfoolery");
         SERIOUS_MODE = builder.comment("Disable Tasty Clay digestion and the Be Silly action.")

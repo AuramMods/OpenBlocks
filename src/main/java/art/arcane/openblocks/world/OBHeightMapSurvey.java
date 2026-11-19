@@ -21,7 +21,7 @@ public final class OBHeightMapSurvey {
     private OBHeightMapSurvey() {}
 
     public static boolean scanNext(final OBHeightMapData map, final ServerLevel level, final double x, final double z) {
-        if (!level.dimension().location().equals(map.dimension()) || map.complete()) return false;
+        if (map.layerCount() < 2 || !level.dimension().location().equals(map.dimension()) || map.complete()) return false;
         LevelChunk nearest = null;
         double bestDistance = Double.POSITIVE_INFINITY;
         final int size = map.chunksPerSide();

@@ -2,15 +2,24 @@ package art.arcane.openblocks.network;
 
 import art.arcane.openblocks.OpenBlocks;
 import art.arcane.openblocks.block.OBElevatorTravel;
+import art.arcane.openblocks.block.entity.OBProjectorBlockEntity;
+import art.arcane.openblocks.client.OBProjectorRendering;
 import art.arcane.openblocks.menu.OBRedstoneMachineMenu;
 import art.arcane.openblocks.player.OBBrickActions;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.NetworkRegistry;
+import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.simple.SimpleChannel;
 
 public final class OBNetwork {
 
-    private static final String VERSION = "3";
+    private static final String VERSION = "4";
     private static final SimpleChannel CHANNEL = NetworkRegistry.ChannelBuilder.named(OpenBlocks.id("main"))
             .networkProtocolVersion(() -> VERSION)
             .clientAcceptedVersions(VERSION::equals)
@@ -45,6 +54,24 @@ public final class OBNetwork {
                     if (sender != null) OBBrickActions.boo(sender);
                 })
                 .add();
+        CHANNEL.messageBuilder(ProjectionRequest.class, 3, NetworkDirection.PLAY_TO_SERVER)
+                .encoder((message, buf) -> buf.writeBlockPos(message.pos()).writeVarInt(message.map()))
+                .decoder(buf -> new ProjectionRequest(buf.readBlockPos(), buf.readVarInt()))
+                .consumerMainThread((message, context) -> {
+                    final var sender = context.get().getSender();
+                    if (sender != null && sender.level().hasChunkAt(message.pos())
+                            && sender.level().getBlockEntity(message.pos()) instanceof OBProjectorBlockEntity projector) {
+                        projector.sendProjection(sender, message.map());
+                    }
+                })
+                .add();
+        CHANNEL.messageBuilder(Projection.class, 4, NetworkDirection.PLAY_TO_CLIENT)
+                .encoder((message, buf) -> buf.writeResourceLocation(message.dimension()).writeBlockPos(message.pos())
+                        .writeVarInt(message.map()).writeNbt(message.data()))
+                .decoder(buf -> new Projection(buf.readResourceLocation(), buf.readBlockPos(), buf.readVarInt(), buf.readNbt()))
+                .consumerMainThread((message, context) -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT,
+                        () -> () -> OBProjectorRendering.receive(message.dimension(), message.pos(), message.map(), message.data())))
+                .add();
     }
 
     public static void requestElevator(final boolean descend) {
@@ -59,9 +86,21 @@ public final class OBNetwork {
         CHANNEL.sendToServer(new BooAction());
     }
 
+    public static void requestProjection(final BlockPos pos, final int map) {
+        CHANNEL.sendToServer(new ProjectionRequest(pos, map));
+    }
+
+    public static void sendProjection(final ServerPlayer player, final BlockPos pos, final int map, final CompoundTag data) {
+        CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), new Projection(player.level().dimension().location(), pos, map, data));
+    }
+
     private record ElevatorAction(boolean descend) {}
 
     private record DropperSpeed(int containerId, int speedTenths) {}
 
     private record BooAction() {}
+
+    private record ProjectionRequest(BlockPos pos, int map) {}
+
+    private record Projection(ResourceLocation dimension, BlockPos pos, int map, CompoundTag data) {}
 }
