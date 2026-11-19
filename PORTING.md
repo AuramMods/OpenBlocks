@@ -132,7 +132,7 @@ Suggested order:
 - [x] Storage/domain: tanks, XP systems, vacuum hopper, and donation station
 - [x] Utility/domain: block breaker, placer, and dropper, plus the auto anvil and enchantment table
 - [x] Visual/domain: canvas, paint, stencils, and glyphs
-- [-] Entity/domain: mini-me, golden eye, and the remaining entities in the manifest
+- [x] Entity/domain: Mini-Me, Golden Eye, and the remaining active entities in the manifest. Packaged runtime and persistence checks are recorded in `PORTING_MEMORY.md`.
 - [x] Fun/domain: mob trophies, Flim-Flam combat and luck, and the 17 prank actions.
 
 Per-feature checklist template:
@@ -159,8 +159,8 @@ Checklist:
 - [x] Restore distinct legacy crafting components across recipes, creative entries, and models.
 - [x] Restore elevator colors and movement activation. Headless tests cover server behavior and item color through crafting, placement, and drops. A packaged client verified Space, Shift, color matching, and rotation in single-player using a silent virtual display.
 - [x] Restore Jaded Ladder trapdoor behavior, directional rope ladders, and temporary scaffolding. The standalone suite verifies climbing, redstone, placement rollback, rope drop accounting, decay and fuel.
-- [-] Restore state variants across recipes, creative entries, and models. Paint brushes, paint cans, canvas surfaces, prepared stencils, and glyphs are restored.
-- [ ] Run a muted client in an isolated or background graphical session to verify models, transparency, and face culling.
+- [x] Restore state variants across recipes, creative entries, and models. Paint brushes, paint cans, canvas surfaces, prepared stencils, and glyphs are restored.
+- [x] Verify models, transparency, and face culling in a muted client under Docker/Xvfb. Checked elevator and stencil variants, painted glass, joined scaffolding, connected tanks, and Sky Block polarities. Matching wrapped and plain glass now hides shared faces.
 - [x] Reconcile crafting and acquisition against the full legacy recipe inventory. Verify the expected ingredients and outputs in Forge and record the items obtained outside ordinary recipes.
 - [x] Restore and verify the Flim-Flam snowball, teleport, mount, encase, dummy creeper, random potion, and skyblock actions.
 - [x] Restore grave-owned loot, optional recovery files, the two-point shovel cost, and the persistent empty memorial. Verify rejected drops, older dump-backed graves, and backup recovery beyond ordinary player slots.

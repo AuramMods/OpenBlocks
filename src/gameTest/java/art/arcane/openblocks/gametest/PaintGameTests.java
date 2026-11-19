@@ -1,6 +1,7 @@
 package art.arcane.openblocks.gametest;
 
 import art.arcane.openblocks.OpenBlocks;
+import art.arcane.openblocks.block.OBCanvasBlock;
 import art.arcane.openblocks.block.OBElevatorBlock;
 import art.arcane.openblocks.block.OBElevatorRotatingBlock;
 import art.arcane.openblocks.block.entity.OBCanvasBlockEntity;
@@ -196,6 +197,35 @@ public final class PaintGameTests {
         player.setShiftKeyDown(true);
         use(player, pos, Direction.UP);
         helper.assertTrue(level.getBlockState(pos) == original, "Cleaning the last paint failed to restore the exact original stairs");
+        helper.succeed();
+    }
+
+    @GameTest(template = "empty")
+    public static void wrappedGlassHidesOnlyMatchingSharedFaces(final GameTestHelper helper) {
+        final var level = helper.getLevel();
+        final BlockPos pos = helper.absolutePos(POS);
+        final BlockPos east = pos.east();
+        final var blue = Blocks.BLUE_STAINED_GLASS.defaultBlockState();
+        final var red = Blocks.RED_STAINED_GLASS.defaultBlockState();
+        level.setBlockAndUpdate(pos, blue);
+        level.setBlockAndUpdate(east, blue);
+        final OBCanvasBlockEntity canvas = OBCanvasBlock.wrap(level, pos, blue);
+        helper.assertTrue(canvas != null && canvas.paint(CORAL, Direction.SOUTH), "Could not paint the glass fixture");
+        helper.assertTrue(!Block.shouldRenderFace(blue, level, east, Direction.WEST, pos), "Plain matching glass drew an internal face");
+        helper.assertTrue(Block.shouldRenderFace(canvas.getBlockState(), level, pos, Direction.SOUTH, pos.south()),
+                "The exposed painted face was hidden");
+        level.setBlockAndUpdate(east, red);
+        helper.assertTrue(Block.shouldRenderFace(red, level, east, Direction.WEST, pos), "Different glass colors lost their shared face");
+        level.setBlockAndUpdate(east, blue);
+        final OBCanvasBlockEntity neighbor = OBCanvasBlock.wrap(level, east, blue);
+        helper.assertTrue(neighbor != null
+                && !Block.shouldRenderFace(neighbor.getBlockState(), level, east, Direction.WEST, pos)
+                && !Block.shouldRenderFace(canvas.getBlockState(), level, pos, Direction.EAST, east),
+                "Two matching wrapped blocks drew an internal face");
+        neighbor.remember(red);
+        helper.assertTrue(Block.shouldRenderFace(neighbor.getBlockState(), level, east, Direction.WEST, pos)
+                && Block.shouldRenderFace(canvas.getBlockState(), level, pos, Direction.EAST, east),
+                "Two wrappers with differing original colors lost shared faces");
         helper.succeed();
     }
 

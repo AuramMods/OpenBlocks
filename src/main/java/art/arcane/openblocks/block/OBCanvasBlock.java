@@ -128,6 +128,21 @@ public final class OBCanvasBlock extends BaseEntityBlock implements SimpleWaterl
     }
 
     @Override
+    public boolean supportsExternalFaceHiding(final BlockState state) {
+        return true;
+    }
+
+    @Override
+    public boolean hidesNeighborFace(final BlockGetter level, final BlockPos pos, final BlockState state,
+            final BlockState adjacent, final Direction side) {
+        final BlockState original = underlying(level, pos);
+        if (original == null) return false;
+        final BlockState neighbor = adjacent.getBlock() instanceof OBCanvasBlock ? underlying(level, pos.relative(side)) : adjacent;
+        return neighbor != null && (neighbor.skipRendering(original, side.getOpposite())
+                || neighbor.supportsExternalFaceHiding() && original.hidesNeighborFace(level, pos, neighbor, side));
+    }
+
+    @Override
     public FluidState getFluidState(final BlockState state) {
         return state.getValue(BlockStateProperties.WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
     }

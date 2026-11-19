@@ -435,7 +435,7 @@ Source: `old-1.12.2/src/main/java/openblocks/OpenBlocks.java`
 | paint_mixer | BlockPaintMixer | `Blocks.paintMixer` | TileEntityPaintMixer | default | `paintmixer`. Stores four pigments and makes arbitrary RGB paint from a milk bucket or can. |
 | canvas | BlockCanvas | `Blocks.canvas` | TileEntityCanvas | default | Craftable white surface. Also wraps solid painted blocks and preserves their state. |
 | paint_can | BlockPaintCan | `Blocks.paintCan` | TileEntityPaintCan | ItemPaintCan | `paintcan`. Color and up to 30 brush charges survive breaking and placement. |
-| canvas_glass | BlockCanvasGlass | `Blocks.canvasGlass` | TileEntityCanvasGlass | default | `canvasglass`. Wraps painted blocks with a non-solid render shape, while retaining their model and render layer. |
+| canvas_glass | BlockCanvasGlass | `Blocks.canvasGlass` | TileEntityCanvasGlass | default | `canvasglass`. Wraps painted blocks with a non-solid rendering shape and retains their original models, layers, and shared-face culling with unpainted and wrapped neighbors. |
 | projector | BlockProjector | `Blocks.projector` | TileEntityProjector | One automation-accessible map slot, rotatable terrain and liquid hologram, and interactive preview | Optional `openblocks_projector` peripheral |
 | drawing_table | BlockDrawingTable | `Blocks.drawingTable` | TileEntityDrawingTable | default | `drawingtable`. Uses blank sheets for stencil and glyph output, and prints text as separate glyph items. |
 | sky | BlockSky | `Blocks.sky` | TileEntitySky | ItemSkyBlock | 1.20.1 uses `OBSkyBlock`, `OBSkyBlockEntity`, and `OBSkyItem`. The original ID carries both polarities. `OBSkyRendering` uses Forge render stages to display the current dimension's sky. |

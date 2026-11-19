@@ -44,7 +44,7 @@ public final class OBCanvasRendering {
     private static final float COVER_OFFSET = 0.024F;
     private static final ModelProperty<Geometry> GEOMETRY = new ModelProperty<>();
 
-    private record Geometry(ModelData modelData, long seed, AABB bounds) {}
+    private record Geometry(ModelData modelData, long seed, AABB bounds, int hiddenFaces) {}
 
     private OBCanvasRendering() {}
 
@@ -89,7 +89,16 @@ public final class OBCanvasRendering {
                     : modelFor(original).getModelData(level, pos, original, ModelData.EMPTY);
             final var shape = geometryState.getShape(level, pos);
             final AABB bounds = shape.isEmpty() ? new AABB(0, 0, 0, 1, 1, 1) : shape.bounds();
-            return data.derive().with(GEOMETRY, new Geometry(originalData, geometryState.getSeed(pos), bounds)).build();
+            // Forge can hide an adjacent block's face. Preserve the original state's culling on the canvas side too.
+            int hiddenFaces = 0;
+            if (!original.isAir()) {
+                for (final Direction side : Direction.values()) {
+                    if (original.skipRendering(level.getBlockState(pos.relative(side)), side)) {
+                        hiddenFaces |= 1 << side.get3DDataValue();
+                    }
+                }
+            }
+            return data.derive().with(GEOMETRY, new Geometry(originalData, geometryState.getSeed(pos), bounds, hiddenFaces)).build();
         }
 
         private static ModelData baseData(final ModelData data) {
@@ -124,6 +133,7 @@ public final class OBCanvasRendering {
             final Surface surface = data.get(OBCanvasBlockEntity.SURFACE);
             if (surface == null || state == null) return super.getQuads(state, side, random, data, layer);
             final Geometry geometry = data.get(GEOMETRY);
+            if (side != null && geometry != null && (geometry.hiddenFaces() & (1 << side.get3DDataValue())) != 0) return List.of();
             final long seed = geometry == null ? 0 : geometry.seed();
             final ChunkRenderTypeSet layers = originalLayers(state, RandomSource.create(seed), data, surface);
             final List<BakedQuad> result = new ArrayList<>();
