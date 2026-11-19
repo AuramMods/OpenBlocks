@@ -250,8 +250,8 @@ Current validation status:
     - fluid: `liquidxp` -> `xpjuice`
 - Systems skeleton note:
   - `src/main/java/art/arcane/openblocks/command/OBCommands.java` now registers the three legacy command IDs in Brigadier form (`flimflam`, `luck`, `ob_inventory`).
-  - `src/main/java/art/arcane/openblocks/command/OBInventoryStore.java` now provides the breadth-stage inventory dump backend used by `/ob_inventory`.
-  - `src/main/java/art/arcane/openblocks/command/OBInventoryHooks.java` now stores command-consumable inventory dumps on player death.
+  - `src/main/java/art/arcane/openblocks/command/OBInventoryStore.java` writes complete compressed inventory dumps for `/ob_inventory` and reads existing 1.20.1 files.
+  - `src/main/java/art/arcane/openblocks/command/OBInventoryHooks.java` stores pre-drop inventory when a player death is accepted and `additional.dumpDeadPlayersInventories` is enabled.
   - `src/main/java/art/arcane/openblocks/api/OBInventoryEvent.java` now mirrors legacy inventory store/load event semantics for arbitrary subsystem payload IDs.
   - `src/main/java/art/arcane/openblocks/api/OBGraveDropsEvent.java` now mirrors legacy grave drop-action event semantics (`STORE`/`DROP`/`DELETE`) for grave filtering hooks.
   - `src/main/java/art/arcane/openblocks/world/OBGameRules.java` now registers legacy grave gamerule key `openblocks:spawn_graves` (default `true`).
@@ -298,14 +298,13 @@ Current validation status:
     - `flimflam` supports all 17 legacy effect IDs. Operators can run named effects independently of the automatic rules. Snowballs are ownerless and the teleport pearl is owned by the target. Mount chooses an eligible mob and uses normal riding rules. Dummy creepers use vanilla AI, a charged aura, and a saved explosion radius of zero. The potion action picks two distinct effects from the original ranges.
     - Encase fills available cells in the original dirt shell. Skyblock places five ice blocks at the legacy Y 250 cap and accounts for shorter dimensions. Both honor Forge block placement checks and restore original states if placement is canceled. Skyblock also honors a denied teleport and requires clear arrival space.
     - `ob_inventory` now supports main + built-in sub-inventory dump/restore/spawn:
-      - dumps written to `<world>/data/inventory-*.dat`,
-      - restore loads stored main inventory onto target player,
-      - restore also reapplies serialized ender chest payload when present,
-      - spawn drops target inventory stacks (or selected slot) at command source for `main`, `armor`, `offhand`, and `ender_chest`,
-      - store/restore now also round-trip arbitrary sub-inventory payload maps through `OBInventoryEvent.Store`/`OBInventoryEvent.Load`,
+      - fully written dumps are published under `<world>/data/inventory-*.dat`,
+      - restore validates the saved items and updates the player inventory and any saved ender chest contents,
+      - spawn drops a complete set or a selected logical slot at the command position. `main` includes armor and offhand, and the individual sections remain available,
+      - the Store and Load events exchange sparse sub-inventories with other Forge mods. Namespaced targets use quoted command arguments and are quoted by tab completion,
       - dump root now includes player `Location` metadata (`X`,`Y`,`Z`,`Dimension`) for future grave/backend integrations.
       - grave backup lookup preserves the original timestamp punctuation, and its main target keeps every item slot. Restoring a grave backup releases overflow before changing player slots and rolls back the released items if a drop is denied.
-    - legacy arbitrary subsystem payload consumers and producers remain pending.
+      - the reader recognizes the OpenModsLib 1.12.2 compound inventory format and applies Minecraft's vanilla item data fixes. Unsupported legacy modded items abort the import before the destination is changed. [OpenModsLib 1.12.2 inventory format](https://raw.githubusercontent.com/OpenMods/OpenModsLib/master/src/main/java/openmods/inventory/GenericInventory.java)
   - `/luck` state storage now reads/writes through `OBCapabilities` (`open_blocks:luck`) rather than ad-hoc player persistent data.
   - `OBCapabilities` registers `open_blocks:luck`, `open_blocks:pedometer_state`, and `open_blocks:bowels`. It carries luck through clones, preserves stored bricks on non-death clones, and preserves a Pedometer route on non-death clones within the same dimension.
   - `OBCapabilities.PedometerState` keeps the sampled route and report data. The player capability provider restores access to the same data when Forge revives capabilities after a dimension change or during a respawn copy.

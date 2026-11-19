@@ -17,7 +17,6 @@ import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.Containers;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -85,7 +84,7 @@ public final class OBCommands {
                                                 StringArgumentType.getString(ctx, "inventory_id"),
                                                 "main",
                                                 null))
-                                        .then(Commands.argument("sub_inventory", StringArgumentType.word())
+                                        .then(Commands.argument("sub_inventory", StringArgumentType.string())
                                                 .suggests(OBCommands::suggestInventoryTargets)
                                                 .executes(ctx -> spawnInventory(
                                                         ctx,
@@ -167,7 +166,7 @@ public final class OBCommands {
         }
 
         final List<String> targets = OBInventoryStore.getAvailableTargets(ctx.getSource().getLevel(), inventoryId);
-        return SharedSuggestionProvider.suggest(targets, builder);
+        return SharedSuggestionProvider.suggest(targets.stream().map(StringArgumentType::escapeIfRequired), builder);
     }
 
     private static int storeInventory(final CommandContext<CommandSourceStack> ctx, final ServerPlayer player) {
@@ -235,8 +234,10 @@ public final class OBCommands {
         final var level = source.getLevel();
         final var pos = source.getPosition();
 
-        for (final ItemStack stack : stacks) {
-            Containers.dropItemStack(level, pos.x, pos.y, pos.z, stack.copy());
+        if (!OBInventoryStore.spawnStacks(level, pos, stacks)) {
+            source.sendFailure(Component.translatableWithFallback("commands.open_blocks.inventory.spawn_denied",
+                    "Could not spawn the complete inventory '%s' at this position.", inventoryId));
+            return 0;
         }
 
         final String slotInfo = slot == null ? "" : (" slot " + slot);

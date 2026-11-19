@@ -164,9 +164,7 @@ Checklist:
 - [ ] Reconcile crafting and acquisition against the full legacy recipe inventory.
 - [x] Restore and verify the Flim-Flam snowball, teleport, mount, encase, dummy creeper, random potion, and skyblock actions.
 - [x] Restore grave-owned loot, optional recovery files, the two-point shovel cost, and the persistent empty memorial. Verify rejected drops, older dump-backed graves, and backup recovery beyond ordinary player slots.
-- [ ] Deepen `/ob_inventory` parity beyond current built-in + event-bridge baseline:
-  - add first concrete subsystem consumers/producers for `OBInventoryEvent` payloads (legacy-style arbitrary subsystem parity in practice, not just schema support)
-  - verify full inventory and external subsystem restore behavior against the legacy commands
+- [x] Verify `/ob_inventory` store, restore, and spawn for the full player inventory, ender chest, and Forge extension payloads. Restore the death backup switch and support vanilla-item 1.12.2 inventory dumps.
 - [x] Restore the grave placement event, legacy search order, height bounds, dirt base, destructive fallback, and optional consumption of a carried grave.
 - [x] Restore grave facing, epitaph and model variants, blast resistance, and ambient skeleton and bat spawning.
 - [ ] Finish legacy recipe migration for skipped recipe files and remaining metadata-collapsed color or subtype conversions.

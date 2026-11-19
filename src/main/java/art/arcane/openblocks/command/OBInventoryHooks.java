@@ -1,11 +1,13 @@
 package art.arcane.openblocks.command;
 
 import art.arcane.openblocks.OpenBlocks;
+import art.arcane.openblocks.config.OBServerConfig;
 import java.io.IOException;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -14,10 +16,10 @@ public final class OBInventoryHooks {
 
     private OBInventoryHooks() {}
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void onLivingDeath(final LivingDeathEvent event) {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
-        if (player instanceof FakePlayer) return;
+        if (player instanceof FakePlayer || !OBServerConfig.DUMP_DEATH_INVENTORY.get()) return;
 
         try {
             final String id = OBInventoryStore.storePlayerInventory(player, "death");

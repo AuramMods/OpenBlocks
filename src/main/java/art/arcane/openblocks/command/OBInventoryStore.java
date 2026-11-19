@@ -1,9 +1,12 @@
 package art.arcane.openblocks.command;
 
 import art.arcane.openblocks.api.OBInventoryEvent;
+import com.mojang.serialization.Dynamic;
 import java.io.IOException;
+import java.nio.file.AtomicMoveNotSupportedException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -13,13 +16,17 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.NavigableMap;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.regex.Pattern;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtIo;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
@@ -27,6 +34,10 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.LevelResource;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.SharedConstants;
+import net.minecraft.util.datafix.DataFixers;
+import net.minecraft.util.datafix.fixes.References;
 import net.minecraftforge.common.MinecraftForge;
 
 public final class OBInventoryStore {
@@ -56,7 +67,8 @@ public final class OBInventoryStore {
     private static final int ARMOR_SLOT_BASE = 100;
     private static final int ARMOR_SLOT_COUNT = 4;
     private static final int OFFHAND_SLOT = 150;
-    private static final int OFFHAND_SLOT_COUNT = 1;
+    private static final int PLAYER_SLOTS = MAIN_SLOTS + ARMOR_SLOT_COUNT + 1;
+    private static final int LEGACY_DATA_VERSION = 1343;
 
     private static final Pattern SAFE_CHARS = Pattern.compile("[^A-Za-z0-9_-]");
     private static final Pattern SAFE_DUMP_ID_CHARS = Pattern.compile("[^A-Za-z0-9_.-]");
@@ -66,37 +78,17 @@ public final class OBInventoryStore {
     private OBInventoryStore() {}
 
     public static String storePlayerInventory(final ServerPlayer player, final String type) throws IOException {
-        final String safePlayerName = sanitize(player.getGameProfile().getName());
-        final Path dumpPath = createDumpPath(player.serverLevel(), safePlayerName, sanitize(type));
         final Map<String, OBInventoryEvent.SubInventory> subInventories = collectSubInventories(player);
-
-        final CompoundTag root = new CompoundTag();
-        final ListTag inventoryData = player.getInventory().save(new ListTag());
-        root.put(TAG_INVENTORY, inventoryData);
-        root.putLong(TAG_CREATED, System.currentTimeMillis());
-        root.putString(TAG_TYPE, type);
-        root.putString(TAG_PLAYER_NAME, player.getGameProfile().getName());
-        root.putString(TAG_PLAYER_UUID, player.getUUID().toString());
-        root.put(TAG_LOCATION, encodePlayerLocation(player));
+        final CompoundTag root = dumpMetadata(player, type);
+        root.put(TAG_INVENTORY, player.getInventory().save(new ListTag()));
         root.put(TAG_SUB_INVENTORIES, encodeSubInventories(subInventories));
-
-        Files.createDirectories(dumpPath.getParent());
-        NbtIo.writeCompressed(root, dumpPath.toFile());
-        return stripFilename(dumpPath.getFileName().toString());
+        return writeDump(player, type, root);
     }
 
     public static String storeGraveBackup(final ServerPlayer player, final BlockPos gravePos, final List<ItemStack> drops)
             throws IOException {
-        final String safePlayerName = sanitize(player.getGameProfile().getName());
-        final Path dumpPath = createDumpPath(player.serverLevel(), safePlayerName, TYPE_GRAVE);
-
-        final CompoundTag root = new CompoundTag();
+        final CompoundTag root = dumpMetadata(player, TYPE_GRAVE);
         root.put(TAG_INVENTORY, encodeMainInventoryList(drops));
-        root.putLong(TAG_CREATED, System.currentTimeMillis());
-        root.putString(TAG_TYPE, TYPE_GRAVE);
-        root.putString(TAG_PLAYER_NAME, player.getGameProfile().getName());
-        root.putString(TAG_PLAYER_UUID, player.getUUID().toString());
-        root.put(TAG_LOCATION, encodePlayerLocation(player));
         root.putBoolean("Placed", gravePos != null);
         if (gravePos != null) {
             final var location = new CompoundTag();
@@ -107,34 +99,31 @@ public final class OBInventoryStore {
             root.put("GraveLocation", location);
         }
         root.put(TAG_SUB_INVENTORIES, new CompoundTag());
+        return writeDump(player, TYPE_GRAVE, root);
+    }
 
-        Files.createDirectories(dumpPath.getParent());
-        NbtIo.writeCompressed(root, dumpPath.toFile());
-        return stripFilename(dumpPath.getFileName().toString());
+    private static CompoundTag dumpMetadata(final ServerPlayer player, final String type) {
+        final var root = new CompoundTag();
+        root.putLong(TAG_CREATED, System.currentTimeMillis());
+        root.putString(TAG_TYPE, type);
+        root.putString(TAG_PLAYER_NAME, player.getGameProfile().getName());
+        root.putString(TAG_PLAYER_UUID, player.getUUID().toString());
+        root.put(TAG_LOCATION, encodePlayerLocation(player));
+        return root;
     }
 
     public static boolean restoreInventory(final ServerPlayer player, final String inventoryId) throws IOException {
-        final CompoundTag root = readInventoryTag(player.serverLevel(), inventoryId);
-        if (root == null || !root.contains(TAG_INVENTORY, Tag.TAG_LIST)) return false;
+        final Snapshot backup = readSnapshot(player.serverLevel(), inventoryId);
+        if (backup == null || !restoreMain(player, backup.main())) return false;
 
-        final ListTag inventoryData = root.getList(TAG_INVENTORY, Tag.TAG_COMPOUND);
-        if (TYPE_GRAVE.equals(root.getString(TAG_TYPE))) {
-            if (!restoreGraveLoot(player, decodeIndexedStacks(inventoryData, 0))) return false;
-        } else {
-            player.getInventory().load(inventoryData);
-        }
-        final CompoundTag encodedSubInventories = root.contains(TAG_SUB_INVENTORIES, Tag.TAG_COMPOUND)
-                ? root.getCompound(TAG_SUB_INVENTORIES)
-                : new CompoundTag();
-        final Map<String, OBInventoryEvent.SubInventory> subInventories = decodeSubInventories(encodedSubInventories);
-
-        final ListTag armorSubInventory = findSubInventory(encodedSubInventories, ID_ARMOR_INVENTORY);
+        final Map<String, OBInventoryEvent.SubInventory> subInventories = backup.subInventories();
+        final var armorSubInventory = findSubInventory(subInventories, ID_ARMOR_INVENTORY);
         if (armorSubInventory != null) applyIndexedStacks(player.getInventory().armor, armorSubInventory);
 
-        final ListTag offhandSubInventory = findSubInventory(encodedSubInventories, ID_OFFHAND_INVENTORY);
+        final var offhandSubInventory = findSubInventory(subInventories, ID_OFFHAND_INVENTORY);
         if (offhandSubInventory != null) applyIndexedStacks(player.getInventory().offhand, offhandSubInventory);
 
-        final ListTag enderChestSubInventory = findSubInventory(encodedSubInventories, ID_ENDER_CHEST_INVENTORY);
+        final var enderChestSubInventory = findSubInventory(subInventories, ID_ENDER_CHEST_INVENTORY);
         if (enderChestSubInventory != null) {
             applyContainer(player.getEnderChestInventory(), enderChestSubInventory);
             player.getEnderChestInventory().setChanged();
@@ -147,27 +136,13 @@ public final class OBInventoryStore {
         return true;
     }
 
-    private static boolean restoreGraveLoot(final ServerPlayer player, final List<ItemStack> stacks) {
+    private static boolean restoreMain(final ServerPlayer player, final IndexedInventory saved) {
         final var inventory = player.getInventory();
-        final int slots = Math.min(stacks.size(), inventory.getContainerSize());
-        final List<ItemEntity> overflow = new ArrayList<>();
-        boolean restored = false;
-        try {
-            for (int i = slots; i < stacks.size(); i++) {
-                final ItemStack stack = stacks.get(i);
-                if (stack.isEmpty()) continue;
-                final var drop = new ItemEntity(player.serverLevel(), player.getX(), player.getY(), player.getZ(), stack.copy());
-                drop.setDefaultPickUpDelay();
-                if (!player.serverLevel().addFreshEntity(drop)) return false;
-                overflow.add(drop);
-            }
-            for (int i = 0; i < slots; i++) inventory.setItem(i, stacks.get(i));
-            inventory.setChanged();
-            restored = true;
-            return true;
-        } finally {
-            if (!restored) overflow.forEach(Entity::discard);
-        }
+        final int slots = (int) Math.min(saved.size(), inventory.getContainerSize());
+        if (!spawnStacks(player.serverLevel(), player.position(), saved.stacks().tailMap(slots, true).values())) return false;
+        for (int i = 0; i < slots; i++) inventory.setItem(i, saved.stacks().getOrDefault(i, ItemStack.EMPTY));
+        inventory.setChanged();
+        return true;
     }
 
     public static List<ItemStack> getSpawnStacks(
@@ -175,72 +150,66 @@ public final class OBInventoryStore {
             final String inventoryId,
             final String target,
             final Integer slotIndex) throws IOException {
-        final CompoundTag root = readInventoryTag(level, inventoryId);
-        if (root == null || !root.contains(TAG_INVENTORY, Tag.TAG_LIST)) return List.of();
+        final Snapshot backup = readSnapshot(level, inventoryId);
+        if (backup == null) return List.of();
+        if (ID_MAIN_INVENTORY.equalsIgnoreCase(target)) return selectStacks(backup.main(), slotIndex);
 
-        final ListTag inventoryData = root.getList(TAG_INVENTORY, Tag.TAG_COMPOUND);
-        final MainInventorySections mainSections = decodeMainInventorySections(inventoryData);
-        final CompoundTag subInventories = root.contains(TAG_SUB_INVENTORIES, Tag.TAG_COMPOUND)
-                ? root.getCompound(TAG_SUB_INVENTORIES)
-                : new CompoundTag();
-        final String normalizedTarget = target.toLowerCase(Locale.ROOT);
-
-        final List<ItemStack> inventory = switch (normalizedTarget) {
-            case ID_MAIN_INVENTORY -> TYPE_GRAVE.equals(root.getString(TAG_TYPE))
-                    ? decodeIndexedStacks(inventoryData, 0) : mainSections.main();
-            case ID_ARMOR_INVENTORY -> {
-                final String key = resolveSubInventoryKey(subInventories, ID_ARMOR_INVENTORY);
-                if (key != null) yield decodeIndexedStacks(getSubInventory(subInventories, key), ARMOR_SLOT_COUNT);
-                yield mainSections.armor();
-            }
-            case ID_OFFHAND_INVENTORY -> {
-                final String key = resolveSubInventoryKey(subInventories, ID_OFFHAND_INVENTORY);
-                if (key != null) yield decodeIndexedStacks(getSubInventory(subInventories, key), OFFHAND_SLOT_COUNT);
-                yield mainSections.offhand();
-            }
-            case ID_ENDER_CHEST_INVENTORY -> {
-                final String key = resolveSubInventoryKey(subInventories, ID_ENDER_CHEST_INVENTORY);
-                if (key == null) throw new IllegalArgumentException("Unsupported sub inventory: " + target);
-                yield decodeIndexedStacks(getSubInventory(subInventories, key), 27);
-            }
-            default -> {
-                final String key = resolveSubInventoryKey(subInventories, normalizedTarget);
-                if (key == null) throw new IllegalArgumentException("Unsupported sub inventory: " + target);
-                yield decodeIndexedStacks(getSubInventory(subInventories, key), 0);
-            }
-        };
-
-        if (slotIndex != null) {
-            if (slotIndex < 0 || slotIndex >= inventory.size()) throw new IllegalArgumentException("Invalid slot index: " + slotIndex);
-            final ItemStack stack = inventory.get(slotIndex);
-            if (stack.isEmpty()) return List.of();
-            return List.of(stack.copy());
+        final var subInventory = findSubInventory(backup.subInventories(), target);
+        if (subInventory != null) {
+            final var slots = new TreeMap<>(subInventory.asMap());
+            final long size = switch (target.toLowerCase(Locale.ROOT)) {
+                case ID_ARMOR_INVENTORY -> ARMOR_SLOT_COUNT;
+                case ID_OFFHAND_INVENTORY -> 1;
+                case ID_ENDER_CHEST_INVENTORY -> 27;
+                default -> slots.isEmpty() ? 0 : (long) slots.lastKey() + 1;
+            };
+            return selectStacks(new IndexedInventory(size, slots), slotIndex);
         }
-
-        final List<ItemStack> result = new ArrayList<>();
-        for (final ItemStack stack : inventory) {
-            if (!stack.isEmpty()) result.add(stack.copy());
+        if (!backup.grave() && ID_ARMOR_INVENTORY.equalsIgnoreCase(target)) {
+            return selectStacks(backup.main().section(MAIN_SLOTS, ARMOR_SLOT_COUNT), slotIndex);
         }
+        if (!backup.grave() && ID_OFFHAND_INVENTORY.equalsIgnoreCase(target)) {
+            return selectStacks(backup.main().section(PLAYER_SLOTS - 1, 1), slotIndex);
+        }
+        throw new IllegalArgumentException("Unsupported sub inventory: " + target);
+    }
 
-        return result;
+    private static List<ItemStack> selectStacks(final IndexedInventory inventory, final Integer slotIndex) {
+        if (slotIndex == null) return inventory.stacks().values().stream().map(ItemStack::copy).toList();
+        if (slotIndex < 0 || slotIndex >= inventory.size()) throw new IllegalArgumentException("Invalid slot index: " + slotIndex);
+        final ItemStack stack = inventory.stacks().get(slotIndex);
+        return stack == null ? List.of() : List.of(stack.copy());
+    }
+
+    public static boolean spawnStacks(final ServerLevel level, final Vec3 pos, final Iterable<ItemStack> stacks) {
+        final List<ItemEntity> spawned = new ArrayList<>();
+        boolean complete = false;
+        try {
+            for (final ItemStack stack : stacks) {
+                final var drop = new ItemEntity(level, pos.x, pos.y, pos.z, stack.copy());
+                drop.setDefaultPickUpDelay();
+                if (!level.addFreshEntity(drop)) return false;
+                spawned.add(drop);
+            }
+            complete = true;
+            return true;
+        } finally {
+            if (!complete) spawned.forEach(Entity::discard);
+        }
     }
 
     public static List<String> getAvailableTargets(final ServerLevel level, final String inventoryId) {
         try {
-            final CompoundTag root = readInventoryTag(level, inventoryId);
-            if (root == null || !root.contains(TAG_INVENTORY, Tag.TAG_LIST)) return List.of();
+            final Snapshot backup = readSnapshot(level, inventoryId);
+            if (backup == null) return List.of();
 
             final Set<String> targets = new LinkedHashSet<>();
             targets.add(ID_MAIN_INVENTORY);
-            targets.add(ID_ARMOR_INVENTORY);
-            targets.add(ID_OFFHAND_INVENTORY);
-            targets.add(ID_ENDER_CHEST_INVENTORY);
-
-            if (root.contains(TAG_SUB_INVENTORIES, Tag.TAG_COMPOUND)) {
-                final CompoundTag subInventories = root.getCompound(TAG_SUB_INVENTORIES);
-                targets.addAll(subInventories.getAllKeys());
+            if (!backup.grave()) {
+                targets.add(ID_ARMOR_INVENTORY);
+                targets.add(ID_OFFHAND_INVENTORY);
             }
-
+            targets.addAll(backup.subInventories().keySet());
             return List.copyOf(targets);
         } catch (final IOException ignored) {
             // Suggestion path should stay quiet.
@@ -276,20 +245,32 @@ public final class OBInventoryStore {
     }
 
     public static List<ItemStack> readDroppedItems(final ServerLevel level, final String inventoryId) throws IOException {
-        final CompoundTag root = readInventoryTag(level, inventoryId);
-        if (root == null || !root.contains(TAG_INVENTORY, Tag.TAG_LIST)) return List.of();
-
-        final ListTag inventoryData = root.getList(TAG_INVENTORY, Tag.TAG_COMPOUND);
-        final List<ItemStack> result = new ArrayList<>();
-        for (int i = 0; i < inventoryData.size(); i++) {
-            final ItemStack stack = ItemStack.of(inventoryData.getCompound(i));
-            if (!stack.isEmpty()) result.add(stack);
-        }
-        return result;
+        final Snapshot backup = readSnapshot(level, inventoryId);
+        return backup == null ? List.of() : selectStacks(backup.main(), null);
     }
 
     public static boolean deleteDump(final ServerLevel level, final String inventoryId) throws IOException {
         return Files.deleteIfExists(resolveDumpPath(level, inventoryId));
+    }
+
+    private static String writeDump(final ServerPlayer player, final String type, final CompoundTag root) throws IOException {
+        final ServerLevel level = player.serverLevel();
+        final Path folder = Files.createDirectories(getSaveFolder(level));
+        final Path pending = Files.createTempFile(folder, ".inventory-", ".tmp");
+        try {
+            NbtIo.writeCompressed(root, pending.toFile());
+            synchronized (OBInventoryStore.class) {
+                final Path dest = createDumpPath(level, sanitize(player.getGameProfile().getName()), sanitize(type));
+                try {
+                    Files.move(pending, dest, StandardCopyOption.ATOMIC_MOVE);
+                } catch (final AtomicMoveNotSupportedException e) {
+                    Files.move(pending, dest);
+                }
+                return stripFilename(dest.getFileName().toString());
+            }
+        } finally {
+            Files.deleteIfExists(pending);
+        }
     }
 
     private static Path createDumpPath(final ServerLevel level, final String playerName, final String type) {
@@ -308,6 +289,95 @@ public final class OBInventoryStore {
         final Path path = resolveDumpPath(level, inventoryId);
         if (!Files.isRegularFile(path)) return null;
         return NbtIo.readCompressed(path.toFile());
+    }
+
+    private static Snapshot readSnapshot(final ServerLevel level, final String inventoryId) throws IOException {
+        final CompoundTag root = readInventoryTag(level, inventoryId);
+        if (root == null) return null;
+        final Tag inventory = root.get(TAG_INVENTORY);
+        final boolean legacy = inventory instanceof CompoundTag;
+        final boolean grave = TYPE_GRAVE.equals(root.getString(TAG_TYPE));
+        final IndexedInventory main;
+        if (inventory instanceof CompoundTag legacyInventory) {
+            if (!legacyInventory.contains("size", Tag.TAG_INT) || legacyInventory.getInt("size") < 0) {
+                throw new IOException("Invalid 1.12.2 inventory size");
+            }
+            final int size = legacyInventory.getInt("size");
+            main = new IndexedInventory(size, decodeStacks(requireItemList(legacyInventory.get("Items")), true, false, size));
+        } else if (grave) {
+            final var slots = decodeStacks(requireItemList(inventory), false, false, (long) Integer.MAX_VALUE + 1);
+            main = new IndexedInventory(slots.isEmpty() ? 0 : (long) slots.lastKey() + 1, slots);
+        } else {
+            main = new IndexedInventory(PLAYER_SLOTS, decodeStacks(requireItemList(inventory), false, true, PLAYER_SLOTS));
+        }
+
+        final Map<String, OBInventoryEvent.SubInventory> subs = new LinkedHashMap<>();
+        if (root.get(TAG_SUB_INVENTORIES) instanceof CompoundTag subTag) {
+            for (final String key : subTag.getAllKeys()) {
+                if (key.isBlank() || ID_MAIN_INVENTORY.equalsIgnoreCase(key)) continue;
+                final long size = switch (key.toLowerCase(Locale.ROOT)) {
+                    case ID_ARMOR_INVENTORY -> ARMOR_SLOT_COUNT;
+                    case ID_OFFHAND_INVENTORY -> 1;
+                    case ID_ENDER_CHEST_INVENTORY -> 27;
+                    default -> (long) Integer.MAX_VALUE + 1;
+                };
+                final var sub = new OBInventoryEvent.SubInventory();
+                decodeStacks(requireItemList(subTag.get(key)), legacy, false, size).forEach(sub::addItemStack);
+                subs.put(key, sub);
+            }
+        }
+        return new Snapshot(main, subs, grave);
+    }
+
+    private static ListTag requireItemList(final Tag tag) throws IOException {
+        if (!(tag instanceof ListTag list) || (!list.isEmpty() && list.getElementType() != Tag.TAG_COMPOUND)) {
+            throw new IOException("Inventory must contain a list of item stacks");
+        }
+        return list;
+    }
+
+    private static NavigableMap<Integer, ItemStack> decodeStacks(final ListTag list, final boolean legacy, final boolean playerSlots,
+            final long size) throws IOException {
+        final var result = new TreeMap<Integer, ItemStack>();
+        for (int i = 0; i < list.size(); i++) {
+            final CompoundTag tag = list.getCompound(i);
+            if (tag.isEmpty() || (tag.contains("Count", Tag.TAG_ANY_NUMERIC) && tag.getInt("Count") <= 0)) continue;
+            final int savedSlot = readSlotIndex(tag);
+            final int slot = playerSlots ? playerSlot(savedSlot) : savedSlot;
+            if (slot < 0 || slot >= size || result.containsKey(slot)) throw new IOException("Invalid or duplicate inventory slot " + savedSlot);
+            final ItemStack stack = ItemStack.of(legacy ? updateLegacyItem(tag) : tag);
+            if (stack.isEmpty()) throw new IOException("Could not read item '" + tag.getString("id") + "' in slot " + savedSlot);
+            result.put(slot, stack);
+        }
+        return result;
+    }
+
+    private static CompoundTag updateLegacyItem(final CompoundTag stack) throws IOException {
+        requireVanillaLegacyItems(stack);
+        final Tag updated = DataFixers.getDataFixer().update(References.ITEM_STACK, new Dynamic<>(NbtOps.INSTANCE, stack.copy()),
+                LEGACY_DATA_VERSION, SharedConstants.getCurrentVersion().getDataVersion().getVersion()).getValue();
+        if (updated instanceof CompoundTag tag) return tag;
+        throw new IOException("Could not convert legacy item '" + stack.getString("id") + "'");
+    }
+
+    private static void requireVanillaLegacyItems(final Tag data) throws IOException {
+        if (data instanceof CompoundTag tag) {
+            if (tag.contains("id", Tag.TAG_STRING) && tag.contains("Count", Tag.TAG_ANY_NUMERIC) && tag.getInt("Count") > 0) {
+                final ResourceLocation id = ResourceLocation.tryParse(tag.getString("id"));
+                if (id == null || !"minecraft".equals(id.getNamespace())) {
+                    throw new IOException("Legacy modded item '" + tag.getString("id") + "' needs its own migration");
+                }
+            }
+            for (final String key : tag.getAllKeys()) requireVanillaLegacyItems(tag.get(key));
+        } else if (data instanceof ListTag list) {
+            for (final Tag entry : list) requireVanillaLegacyItems(entry);
+        }
+    }
+
+    private static int playerSlot(final int savedSlot) {
+        if (savedSlot >= 0 && savedSlot < MAIN_SLOTS) return savedSlot;
+        if (savedSlot >= ARMOR_SLOT_BASE && savedSlot < ARMOR_SLOT_BASE + ARMOR_SLOT_COUNT) return MAIN_SLOTS + savedSlot - ARMOR_SLOT_BASE;
+        return savedSlot == OFFHAND_SLOT ? PLAYER_SLOTS - 1 : -1;
     }
 
     private static Path getSaveFolder(final ServerLevel level) {
@@ -348,16 +418,6 @@ public final class OBInventoryStore {
         return encoded;
     }
 
-    private static Map<String, OBInventoryEvent.SubInventory> decodeSubInventories(final CompoundTag subInventoriesTag) {
-        final Map<String, OBInventoryEvent.SubInventory> subInventories = new LinkedHashMap<>();
-        for (final String key : subInventoriesTag.getAllKeys()) {
-            if (!subInventoriesTag.contains(key, Tag.TAG_LIST)) continue;
-            final ListTag encoded = subInventoriesTag.getList(key, Tag.TAG_COMPOUND);
-            subInventories.put(key, decodeSubInventory(encoded));
-        }
-        return subInventories;
-    }
-
     private static Map<String, OBInventoryEvent.SubInventory> collectSubInventories(final ServerPlayer player) {
         final Map<String, OBInventoryEvent.SubInventory> result = new LinkedHashMap<>();
         result.put(ID_ARMOR_INVENTORY, createSubInventory(player.getInventory().armor));
@@ -367,7 +427,8 @@ public final class OBInventoryStore {
         final OBInventoryEvent.Store event = new OBInventoryEvent.Store(player);
         MinecraftForge.EVENT_BUS.post(event);
         for (final Map.Entry<String, OBInventoryEvent.SubInventory> entry : event.getSubInventories().entrySet()) {
-            result.putIfAbsent(entry.getKey(), entry.getValue());
+            final String id = entry.getKey();
+            if (!ID_MAIN_INVENTORY.equalsIgnoreCase(id) && findSubInventory(result, id) == null) result.put(id, entry.getValue());
         }
 
         return result;
@@ -410,114 +471,22 @@ public final class OBInventoryStore {
         return encoded;
     }
 
-    private static OBInventoryEvent.SubInventory decodeSubInventory(final ListTag encodedSubInventory) {
-        final OBInventoryEvent.SubInventory subInventory = new OBInventoryEvent.SubInventory();
-        for (int i = 0; i < encodedSubInventory.size(); i++) {
-            final CompoundTag stackTag = encodedSubInventory.getCompound(i);
-            final int slot = readSlotIndex(stackTag);
-            if (slot < 0) continue;
-
-            final ItemStack stack = ItemStack.of(stackTag);
-            if (stack.isEmpty()) continue;
-
-            subInventory.addItemStack(slot, stack);
-        }
-        return subInventory;
-    }
-
-    private static ListTag findSubInventory(final CompoundTag subInventories, final String key) {
-        final String resolved = resolveSubInventoryKey(subInventories, key);
-        if (resolved == null) return null;
-        return subInventories.getList(resolved, Tag.TAG_COMPOUND);
-    }
-
-    private static void applyIndexedStacks(final List<ItemStack> target, final ListTag inventoryData) {
-        for (int i = 0; i < target.size(); i++) {
-            target.set(i, ItemStack.EMPTY);
-        }
-
-        for (int i = 0; i < inventoryData.size(); i++) {
-            final CompoundTag stackTag = inventoryData.getCompound(i);
-            final int slot = readSlotIndex(stackTag);
-            if (slot < 0 || slot >= target.size()) continue;
-
-            final ItemStack stack = ItemStack.of(stackTag);
-            if (!stack.isEmpty()) target.set(slot, stack);
-        }
-    }
-
-    private static void applyContainer(final Container target, final ListTag inventoryData) {
-        for (int i = 0; i < target.getContainerSize(); i++) {
-            target.setItem(i, ItemStack.EMPTY);
-        }
-
-        for (int i = 0; i < inventoryData.size(); i++) {
-            final CompoundTag stackTag = inventoryData.getCompound(i);
-            final int slot = readSlotIndex(stackTag);
-            if (slot < 0 || slot >= target.getContainerSize()) continue;
-
-            final ItemStack stack = ItemStack.of(stackTag);
-            if (!stack.isEmpty()) target.setItem(slot, stack);
-        }
-    }
-
-    private static ListTag getSubInventory(final CompoundTag subInventories, final String key) {
-        if (!subInventories.contains(key, Tag.TAG_LIST)) return new ListTag();
-        return subInventories.getList(key, Tag.TAG_COMPOUND);
-    }
-
-    private static String resolveSubInventoryKey(final CompoundTag subInventories, final String requested) {
-        for (final String key : subInventories.getAllKeys()) {
-            if (key.equalsIgnoreCase(requested)) return key;
+    private static OBInventoryEvent.SubInventory findSubInventory(
+            final Map<String, OBInventoryEvent.SubInventory> inventories, final String requested) {
+        final var exact = inventories.get(requested);
+        if (exact != null) return exact;
+        for (final var entry : inventories.entrySet()) {
+            if (entry.getKey().equalsIgnoreCase(requested)) return entry.getValue();
         }
         return null;
     }
 
-    private static MainInventorySections decodeMainInventorySections(final ListTag inventoryData) {
-        final List<ItemStack> main = emptySlots(MAIN_SLOTS);
-        final List<ItemStack> armor = emptySlots(ARMOR_SLOT_COUNT);
-        final List<ItemStack> offhand = emptySlots(OFFHAND_SLOT_COUNT);
-
-        for (int i = 0; i < inventoryData.size(); i++) {
-            final CompoundTag stackTag = inventoryData.getCompound(i);
-            final ItemStack stack = ItemStack.of(stackTag);
-            if (stack.isEmpty()) continue;
-
-            final int encodedSlot = stackTag.getByte(TAG_SLOT) & 255;
-            if (encodedSlot >= 0 && encodedSlot < MAIN_SLOTS) {
-                main.set(encodedSlot, stack);
-                continue;
-            }
-
-            if (encodedSlot >= ARMOR_SLOT_BASE && encodedSlot < ARMOR_SLOT_BASE + ARMOR_SLOT_COUNT) {
-                armor.set(encodedSlot - ARMOR_SLOT_BASE, stack);
-                continue;
-            }
-
-            if (encodedSlot == OFFHAND_SLOT) offhand.set(0, stack);
-        }
-
-        return new MainInventorySections(main, armor, offhand);
+    private static void applyIndexedStacks(final List<ItemStack> target, final OBInventoryEvent.SubInventory saved) {
+        for (int i = 0; i < target.size(); i++) target.set(i, saved.getItemStack(i));
     }
 
-    private static List<ItemStack> decodeIndexedStacks(final ListTag inventoryData, final int minimumSize) {
-        int size = Math.max(minimumSize, 0);
-        for (int i = 0; i < inventoryData.size(); i++) {
-            final int slot = readSlotIndex(inventoryData.getCompound(i));
-            if (slot >= 0) size = Math.max(size, slot + 1);
-        }
-
-        final List<ItemStack> inventory = emptySlots(size);
-        for (int i = 0; i < inventoryData.size(); i++) {
-            final CompoundTag stackTag = inventoryData.getCompound(i);
-            final ItemStack stack = ItemStack.of(stackTag);
-            if (stack.isEmpty()) continue;
-
-            final int slot = readSlotIndex(stackTag);
-            if (slot >= 0 && slot < inventory.size()) inventory.set(slot, stack);
-        }
-
-        return inventory;
+    private static void applyContainer(final Container target, final OBInventoryEvent.SubInventory saved) {
+        for (int i = 0; i < target.getContainerSize(); i++) target.setItem(i, saved.getItemStack(i));
     }
 
     private static int readSlotIndex(final CompoundTag stackTag) {
@@ -533,14 +502,6 @@ public final class OBInventoryStore {
         return -1;
     }
 
-    private static List<ItemStack> emptySlots(final int size) {
-        final List<ItemStack> result = new ArrayList<>(size);
-        for (int i = 0; i < size; i++) {
-            result.add(ItemStack.EMPTY);
-        }
-        return result;
-    }
-
     private static String stripFilename(final String name) {
         String value = name;
         if (value.startsWith(PREFIX)) value = value.substring(PREFIX.length());
@@ -552,5 +513,13 @@ public final class OBInventoryStore {
         return SAFE_CHARS.matcher(input).replaceAll("_");
     }
 
-    private record MainInventorySections(List<ItemStack> main, List<ItemStack> armor, List<ItemStack> offhand) {}
+    private record IndexedInventory(long size, NavigableMap<Integer, ItemStack> stacks) {
+        IndexedInventory section(final int start, final int length) {
+            final var section = new TreeMap<Integer, ItemStack>();
+            stacks.subMap(start, true, start + length, false).forEach((slot, stack) -> section.put(slot - start, stack));
+            return new IndexedInventory(length, section);
+        }
+    }
+
+    private record Snapshot(IndexedInventory main, Map<String, OBInventoryEvent.SubInventory> subInventories, boolean grave) {}
 }

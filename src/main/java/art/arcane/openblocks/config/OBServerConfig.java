@@ -27,6 +27,7 @@ public final class OBServerConfig {
     public static final ForgeConfigSpec.IntValue GRAVE_MAX_Y;
     public static final ForgeConfigSpec.BooleanValue GRAVE_AMBIENT_MOBS;
     public static final ForgeConfigSpec.DoubleValue GRAVE_AMBIENT_RATE;
+    public static final ForgeConfigSpec.BooleanValue DUMP_DEATH_INVENTORY;
     public static final ForgeConfigSpec.IntValue SPONGE_RANGE;
     public static final ForgeConfigSpec.BooleanValue SPONGE_BLOCK_UPDATE;
     public static final ForgeConfigSpec.IntValue SPONGE_STICK_RANGE;
@@ -147,6 +148,10 @@ public final class OBServerConfig {
         GRAVE_AMBIENT_MOBS = builder.define("spawnSkeletons", true);
         GRAVE_AMBIENT_RATE = builder.comment("Per-tick chance to try spawning a skeleton or bat at a grave.")
                 .defineInRange("skeletonSpawnRate", 0.002D, 0.0D, 1.0D);
+        builder.pop();
+        builder.push("additional");
+        DUMP_DEATH_INVENTORY = builder.comment("Save a separate inventory snapshot for administrator recovery when a player dies.")
+                .define("dumpDeadPlayersInventories", true);
         builder.pop();
         builder.push("sponge");
         SPONGE_RANGE = builder.comment("Liquid removal radius of the sponge block.")
