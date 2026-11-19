@@ -6,8 +6,10 @@ import art.arcane.openblocks.block.OBImaginaryBlock;
 import art.arcane.openblocks.block.OBRopeLadderBlock;
 import art.arcane.openblocks.block.OBSkyBlock;
 import art.arcane.openblocks.block.OBTankBlock;
+import art.arcane.openblocks.block.OBTrophyBlock;
 import art.arcane.openblocks.block.entity.OBTankBlockEntity;
 import art.arcane.openblocks.registry.OBBlocks;
+import art.arcane.openblocks.trophy.OBTrophyType;
 import java.util.Set;
 import net.minecraft.advancements.critereon.StatePropertiesPredicate;
 import net.minecraft.world.item.DyeColor;
@@ -56,6 +58,10 @@ public class OBBlockLootSubProvider extends BlockLootSubProvider {
                         LootPool.lootPool().setRolls(ConstantValue.exactly(1)).add(LootItem.lootTableItem(block).when(recoverable)))));
             } else if (block instanceof OBImaginaryBlock) {
                 add(block, noDrop());
+            } else if (block instanceof OBTrophyBlock) {
+                add(block, createSingleItemTable(block).apply(CopyNbtFunction.copyData(ContextNbtProvider.BLOCK_ENTITY)
+                        .copy(OBTrophyType.ENTITY_ID, OBTrophyType.ENTITY_ID, CopyNbtFunction.MergeStrategy.REPLACE)
+                        .copy(OBTrophyType.COOLDOWN, OBTrophyType.COOLDOWN, CopyNbtFunction.MergeStrategy.REPLACE)));
             } else if (block instanceof OBTankBlock) {
                 final String tag = OBTankBlockEntity.FLUID_TAG;
                 add(block, createSingleItemTable(block).apply(CopyNbtFunction.copyData(ContextNbtProvider.BLOCK_ENTITY)

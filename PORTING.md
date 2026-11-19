@@ -133,7 +133,7 @@ Suggested order:
 - [-] Utility/domain: block breaker/placer/dropper, auto anvil/enchantment table
 - [x] Visual/domain: canvas, paint, stencils, and glyphs
 - [-] Entity/domain: mini-me, golden eye, and the remaining entities in the manifest
-- [ ] Fun/domain: trophies, flim-flam, sounds/effects
+- [-] Fun/domain: mob trophies are restored. Flim-Flam and the remaining sound and effect parity are pending.
 
 Per-feature checklist template:
 - [ ] Registration complete
@@ -206,4 +206,5 @@ Checklist:
 - [x] Restore imaginary blocks, Magic Pencil and Crayon placement, color recipes, and the four imagination glasses, including Technicolor chest loot.
 - [x] Restore the Golden Egg's hatching sequence, optional block lift, and explosion, and Mini-Me's skin, foraging, and player pickup behavior.
 - [x] Restore the Golden Eye's structure lock, rechargeable durability, and recoverable horizontal and downward flights.
-- [ ] Restore trophies, their acquisition from mobs, and their display and interaction behavior.
+- [x] Restore all 44 mob trophies, Looting-aware drops, miniature models, sounds, special effects, and cooldown persistence.
+- [ ] Restore the Village Highlighter against the modern village and point-of-interest system.

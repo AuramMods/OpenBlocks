@@ -31,6 +31,7 @@ import art.arcane.openblocks.block.OBSkyBlock;
 import art.arcane.openblocks.block.OBSpongeBlock;
 import art.arcane.openblocks.block.OBSprinklerBlock;
 import art.arcane.openblocks.block.OBTankBlock;
+import art.arcane.openblocks.block.OBTrophyBlock;
 import art.arcane.openblocks.block.OBVacuumHopperBlock;
 import art.arcane.openblocks.block.OBXPBottlerBlock;
 import art.arcane.openblocks.block.OBXPDrainBlock;
@@ -55,7 +56,6 @@ public final class OBBlocks {
 
     private static final List<RegistryObject<Block>> CREATIVE_ORDER = new ArrayList<>();
     private static final VoxelShape SHAPE_PATH = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 1.6D, 16.0D);
-    private static final VoxelShape SHAPE_TROPHY = Block.box(3.2D, 0.0D, 3.2D, 12.8D, 3.2D, 12.8D);
     private static final VoxelShape SHAPE_VILLAGE_HIGHLIGHTER = Block.box(2.0D, 0.0D, 1.0D, 14.0D, 16.0D, 15.0D);
     private static final VoxelShape SHAPE_GRAVE = Shapes.or(
             Block.box(0.0D, 0.0D, 0.0D, 16.0D, 1.0D, 16.0D),
@@ -134,6 +134,7 @@ public final class OBBlocks {
         if ("path".equals(id)) return new OBPathBlock(properties, shape, collisionShape);
         if ("sponge".equals(id)) return new OBSpongeBlock(BlockBehaviour.Properties.copy(Blocks.SPONGE));
         if ("grave".equals(id)) return new OBGraveBlock(properties, shape, collisionShape);
+        if ("trophy".equals(id)) return new OBTrophyBlock(properties);
         if ("tank".equals(id)) return new OBTankBlock(properties);
         if ("vacuum_hopper".equals(id)) return new OBVacuumHopperBlock(properties);
         if ("xp_bottler".equals(id)) return new OBXPBottlerBlock(properties);
@@ -182,7 +183,6 @@ public final class OBBlocks {
         return switch (id) {
             case "path" -> SHAPE_PATH;
             case "grave" -> SHAPE_GRAVE;
-            case "trophy" -> SHAPE_TROPHY;
             case "village_highlighter" -> SHAPE_VILLAGE_HIGHLIGHTER;
             default -> null;
         };

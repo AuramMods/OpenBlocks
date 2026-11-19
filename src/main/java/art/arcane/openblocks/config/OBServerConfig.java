@@ -74,6 +74,8 @@ public final class OBServerConfig {
 
     public static final ForgeConfigSpec.BooleanValue GOLDEN_EYE_DEBUG;
 
+    public static final ForgeConfigSpec.DoubleValue TROPHY_DROP_CHANCE;
+
     static {
         final var builder = new ForgeConfigSpec.Builder();
         builder.push("elevator");
@@ -208,6 +210,10 @@ public final class OBServerConfig {
 
         builder.push("debug");
         GOLDEN_EYE_DEBUG = builder.comment("Show the structure ID and coordinates selected by the Golden Eye.").define("goldenEyeDebug", false);
+        builder.pop();
+        builder.push("trophy");
+        TROPHY_DROP_CHANCE = builder.comment("Base trophy chance. Multiplied by the sum of Looting level and a random bias below 0.25.")
+                .defineInRange("trophyDropChance", 0.001, 0.0, 1.0);
         builder.pop();
         builder.push("egg");
         GOLDEN_EGG_PICK_BLOCKS = builder.comment("The hatching Golden Egg can lift nearby blocks.").define("pickBlocks", true);

@@ -28,6 +28,7 @@ import art.arcane.openblocks.item.OBScaffoldingItem;
 import art.arcane.openblocks.item.OBSkyItem;
 import art.arcane.openblocks.item.OBSpongeOnAStickItem;
 import art.arcane.openblocks.item.OBTankItem;
+import art.arcane.openblocks.item.OBTrophyItem;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -62,7 +63,7 @@ public final class OBItems {
     public static final RegistryObject<Item> GRAVE = registerBlockItem("grave", OBBlocks.GRAVE);
     public static final RegistryObject<Item> FLAG = registerItem("flag", () -> new OBFlagItem(OBBlocks.FLAG.get(), new Item.Properties()));
     public static final RegistryObject<Item> TANK = registerItem("tank", () -> new OBTankItem(OBBlocks.TANK.get(), new Item.Properties()));
-    public static final RegistryObject<Item> TROPHY = registerBlockItem("trophy", OBBlocks.TROPHY);
+    public static final RegistryObject<Item> TROPHY = registerItem("trophy", () -> new OBTrophyItem(OBBlocks.TROPHY.get()));
     public static final RegistryObject<Item> BEARTRAP = registerItem("beartrap", () -> new OBAnimatedFloorItem(OBBlocks.BEARTRAP.get(), new Item.Properties()));
     public static final RegistryObject<Item> SPRINKLER = registerBlockItem("sprinkler", OBBlocks.SPRINKLER);
     public static final RegistryObject<Item> CANNON = registerItem("cannon", () -> new OBCannonItem(OBBlocks.CANNON.get(), new Item.Properties()));

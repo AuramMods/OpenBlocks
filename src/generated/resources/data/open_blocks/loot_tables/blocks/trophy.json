@@ -1,5 +1,23 @@
 {
   "type": "minecraft:block",
+  "functions": [
+    {
+      "function": "minecraft:copy_nbt",
+      "ops": [
+        {
+          "op": "replace",
+          "source": "entity_id",
+          "target": "entity_id"
+        },
+        {
+          "op": "replace",
+          "source": "cooldown",
+          "target": "cooldown"
+        }
+      ],
+      "source": "block_entity"
+    }
+  ],
   "pools": [
     {
       "bonus_rolls": 0.0,

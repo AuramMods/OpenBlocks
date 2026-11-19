@@ -17,6 +17,8 @@ import art.arcane.openblocks.item.OBSkyItem;
 import art.arcane.openblocks.item.OBStencilItem;
 import art.arcane.openblocks.item.OBStencilPattern;
 import art.arcane.openblocks.item.OBTankItem;
+import art.arcane.openblocks.item.OBTrophyItem;
+import art.arcane.openblocks.trophy.OBTrophyType;
 import art.arcane.openblocks.world.OBHeightMapData;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
@@ -55,6 +57,8 @@ public final class OBCreativeTabs {
                             for (final DyeColor dye : DyeColor.values()) output.accept(OBPaintBrushItem.create(OBPaintColors.palette(dye)));
                         } else if (item instanceof OBStencilItem) {
                             for (final var pattern : OBStencilPattern.values()) output.accept(OBStencilItem.create(pattern, 1));
+                        } else if (item instanceof OBTrophyItem) {
+                            for (final var type : OBTrophyType.values()) output.accept(OBTrophyItem.create(type, 0));
                         } else if (item instanceof OBGoldenEyeItem) {
                             output.accept(item);
                             final var depleted = new ItemStack(item);

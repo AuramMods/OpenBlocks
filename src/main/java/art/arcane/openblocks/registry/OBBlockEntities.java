@@ -24,6 +24,7 @@ import art.arcane.openblocks.block.entity.OBRedstoneMachineBlockEntity;
 import art.arcane.openblocks.block.entity.OBSkyBlockEntity;
 import art.arcane.openblocks.block.entity.OBSprinklerBlockEntity;
 import art.arcane.openblocks.block.entity.OBTankBlockEntity;
+import art.arcane.openblocks.block.entity.OBTrophyBlockEntity;
 import art.arcane.openblocks.block.entity.OBVacuumHopperBlockEntity;
 import art.arcane.openblocks.block.entity.OBXPBottlerBlockEntity;
 import art.arcane.openblocks.block.entity.OBXPDrainBlockEntity;
@@ -53,7 +54,8 @@ public final class OBBlockEntities {
     public static final RegistryObject<BlockEntityType<OBGraveBlockEntity>> GRAVE = register("grave", OBGraveBlockEntity::new, OBBlocks.GRAVE);
     public static final RegistryObject<BlockEntityType<OBFlagBlockEntity>> FLAG = register("flag", OBFlagBlockEntity::new, OBBlocks.FLAG);
     public static final RegistryObject<BlockEntityType<OBTankBlockEntity>> TANK = register("tank", OBTankBlockEntity::new, OBBlocks.TANK);
-    public static final RegistryObject<BlockEntityType<OBPlaceholderBlockEntity>> TROPHY = register("trophy", OBBlocks.TROPHY);
+    public static final RegistryObject<BlockEntityType<OBTrophyBlockEntity>> TROPHY = BLOCK_ENTITY_TYPES.register("trophy",
+            () -> BlockEntityType.Builder.of(OBTrophyBlockEntity::new, OBBlocks.TROPHY.get()).build(null));
     public static final RegistryObject<BlockEntityType<OBBearTrapBlockEntity>> BEARTRAP = register("beartrap", OBBearTrapBlockEntity::new, OBBlocks.BEARTRAP);
     public static final RegistryObject<BlockEntityType<OBSprinklerBlockEntity>> SPRINKLER = register("sprinkler", OBSprinklerBlockEntity::new, OBBlocks.SPRINKLER);
     public static final RegistryObject<BlockEntityType<OBCannonBlockEntity>> CANNON = register("cannon", OBCannonBlockEntity::new, OBBlocks.CANNON);

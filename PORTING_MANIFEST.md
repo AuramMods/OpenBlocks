@@ -103,6 +103,12 @@ Current registry classes:
   - `src/main/java/art/arcane/openblocks/recipe/OBGoldenEyeRechargeRecipe.java`
   - `src/main/java/art/arcane/openblocks/client/OBGoldenEyeRendering.java`
   - `src/main/resources/data/open_blocks/tags/worldgen/structure/golden_eye_targets.json`
+- Mob trophies:
+  - `src/main/java/art/arcane/openblocks/trophy/OBTrophyType.java` maps all 44 legacy variants, including names and ordinal IDs.
+  - `src/main/java/art/arcane/openblocks/trophy/OBTrophyDrops.java` applies Looting and the world mob-loot rule.
+  - `src/main/java/art/arcane/openblocks/trophy/OBTrophyEffects.java` handles the variants' rewards and special interactions.
+  - `src/main/java/art/arcane/openblocks/block/entity/OBTrophyBlockEntity.java` saves and synchronizes the mob identity and persists the cooldown.
+  - `src/main/java/art/arcane/openblocks/client/OBTrophyRendering.java` renders the pedestal and miniature for items and placed blocks.
 - Sound register: `src/main/java/art/arcane/openblocks/registry/OBSounds.java`
 - Custom statistic register for Bricks dropped: `src/main/java/art/arcane/openblocks/registry/OBStats.java`
 - Enchantment register: `src/main/java/art/arcane/openblocks/registry/OBEnchantments.java`
@@ -353,7 +359,7 @@ Source: `old-1.12.2/src/main/java/openblocks/OpenBlocks.java`
 | grave | BlockGrave | `Blocks.grave` | TileEntityGrave | default | - |
 | flag | BlockFlag | `Blocks.flag` | TileEntityFlag | ItemFlagBlock | 1.20.1 uses `OBFlagBlock`, `OBFlagBlockEntity`, and `OBFlagItem`. Wall facing and cloth color are block properties. Upright yaw is synced block-entity data. |
 | tank | BlockTank | `Blocks.tank` | TileEntityTank | ItemTankBlock | - |
-| trophy | BlockTrophy | `Blocks.trophy` | TileEntityTrophy | ItemTrophyBlock | - |
+| trophy | BlockTrophy | `Blocks.trophy` | TileEntityTrophy | ItemTrophyBlock | All 44 original variants have Looting-aware acquisition, miniature models, and their original interactions. Breaking and replacing a trophy preserves its cooldown. |
 | beartrap | BlockBearTrap | `Blocks.bearTrap` | TileEntityBearTrap | default | - |
 | sprinkler | BlockSprinkler | `Blocks.sprinkler` | TileEntitySprinkler | default | - |
 | cannon | BlockCannon | `Blocks.cannon` | TileEntityCannon | default | `OpenBlock` TESR path |
