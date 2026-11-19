@@ -37,6 +37,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.EnchantmentTableBlock;
 import net.minecraft.world.level.block.FarmBlock;
 import net.minecraft.world.level.block.FireBlock;
+import net.minecraft.world.level.block.LeavesBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -305,6 +306,41 @@ public final class PaintGameTests {
             helper.assertTrue(use(player, field, Direction.UP).consumesAction() && level.getBlockState(crop).is(Blocks.WHEAT),
                     "Wheat seed placement did not plant a crop");
             helper.succeed();
+        });
+    }
+
+    @GameTest(template = "empty")
+    public static void paintedLogsSupportLeavesUntilBroken(final GameTestHelper helper) {
+        final Player player = player(helper);
+        final var level = helper.getLevel();
+        final BlockPos pos = helper.absolutePos(new BlockPos(2, 0, 2));
+        paint(helper, player, pos, Blocks.OAK_LOG.defaultBlockState());
+        player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.OAK_LEAVES));
+        helper.assertTrue(use(player, pos, Direction.UP).consumesAction(), "Could not place leaves above the painted log");
+        final BlockState placed = level.getBlockState(pos.above());
+        helper.assertTrue(placed.is(Blocks.OAK_LEAVES) && placed.getValue(LeavesBlock.DISTANCE) == 1,
+                "New leaves ignored the painted trunk");
+        final BlockState leaves = placed.setValue(LeavesBlock.PERSISTENT, false);
+        level.setBlockAndUpdate(pos.above(), leaves);
+        for (int distance = 2; distance < LeavesBlock.DECAY_DISTANCE; distance++) {
+            final BlockPos branch = pos.above(distance);
+            level.setBlockAndUpdate(branch, Blocks.OAK_LEAVES.defaultBlockState());
+            level.getBlockState(branch).tick(level, branch, level.random);
+            helper.assertTrue(level.getBlockState(branch).getValue(LeavesBlock.DISTANCE) == distance,
+                    "The leaves did not carry support from the painted log to distance " + distance);
+        }
+
+        final BlockPos stone = pos.east(2);
+        paint(helper, player, stone, Blocks.STONE.defaultBlockState());
+        level.setBlockAndUpdate(stone.above(), Blocks.OAK_LEAVES.defaultBlockState());
+        level.getBlockState(stone.above()).tick(level, stone.above(), level.random);
+        helper.assertTrue(level.getBlockState(stone.above()).getValue(LeavesBlock.DISTANCE) == LeavesBlock.DECAY_DISTANCE,
+                "A painted non-log supported leaves");
+        level.destroyBlock(pos, false);
+        helper.succeedWhen(() -> {
+            final BlockState formerCanopy = level.getBlockState(pos.above());
+            helper.assertTrue(formerCanopy.isAir() || formerCanopy.getValue(LeavesBlock.DISTANCE) == LeavesBlock.DECAY_DISTANCE,
+                    "The canopy kept support after the painted log was broken");
         });
     }
 

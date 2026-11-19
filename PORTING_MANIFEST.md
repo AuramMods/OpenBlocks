@@ -433,7 +433,7 @@ Source: `old-1.12.2/src/main/java/openblocks/OpenBlocks.java`
 | rope_ladder | BlockRopeLadder | `Blocks.ropeLadder` | - | default | `ropeladder` |
 | donation_station | BlockDonationStation | `Blocks.donationStation` | TileEntityDonationStation | default | `donationStation` |
 | paint_mixer | BlockPaintMixer | `Blocks.paintMixer` | TileEntityPaintMixer | default | `paintmixer`. Stores four pigments and makes arbitrary RGB paint from a milk bucket or can. |
-| canvas | BlockCanvas | `Blocks.canvas` | TileEntityCanvas | default | Craftable white surface. Both wrappers preserve original collision, drops, friction, landing, fire, crop support, and enchanting power. Leaf support around painted logs remains open. |
+| canvas | BlockCanvas | `Blocks.canvas` | TileEntityCanvas | default | Craftable white surface. Both wrappers preserve original collision, drops, friction, landing, fire, crop support, and enchanting power. Saved originals in the log tag support nearby leaves. |
 | paint_can | BlockPaintCan | `Blocks.paintCan` | TileEntityPaintCan | ItemPaintCan | `paintcan`. Color and up to 30 brush charges survive breaking and placement. |
 | canvas_glass | BlockCanvasGlass | `Blocks.canvasGlass` | TileEntityCanvasGlass | default | `canvasglass`. Wraps painted blocks with a non-solid rendering shape and retains their original models, layers, and shared-face culling with unpainted and wrapped neighbors. |
 | projector | BlockProjector | `Blocks.projector` | TileEntityProjector | One automation-accessible map slot, rotatable terrain and liquid hologram, and interactive preview | Optional `openblocks_projector` peripheral |
