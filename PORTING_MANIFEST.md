@@ -83,6 +83,14 @@ Current registry classes:
   - `src/main/java/art/arcane/openblocks/guide/OBGuideControls.java`
   - `src/main/java/art/arcane/openblocks/client/OBGuideRendering.java`
   - `src/main/java/art/arcane/openblocks/integration/OBComputerCraftGuide.java`
+- Imaginary drawings and glasses:
+  - `src/main/java/art/arcane/openblocks/block/OBImaginaryBlock.java`
+  - `src/main/java/art/arcane/openblocks/block/entity/OBImaginaryBlockEntity.java`
+  - `src/main/java/art/arcane/openblocks/item/OBImaginaryItem.java`
+  - `src/main/java/art/arcane/openblocks/item/OBImaginationGlasses.java`
+  - `src/main/java/art/arcane/openblocks/recipe/OBImaginaryRecipe.java`
+  - `src/main/java/art/arcane/openblocks/client/OBImaginationRendering.java`
+  - `src/main/java/art/arcane/openblocks/world/OBTechnicolorLoot.java`
 - Sound register: `src/main/java/art/arcane/openblocks/registry/OBSounds.java`
 - Custom statistic register for Bricks dropped: `src/main/java/art/arcane/openblocks/registry/OBStats.java`
 - Enchantment register: `src/main/java/art/arcane/openblocks/registry/OBEnchantments.java`
@@ -341,7 +349,7 @@ Source: `old-1.12.2/src/main/java/openblocks/OpenBlocks.java`
 | sponge | BlockSponge | `Blocks.sponge` | - | default | - |
 | big_button | BlockBigButton | `Blocks.bigButton` | TileEntityBigButton | default | `bigbutton` |
 | big_button_wood | BlockBigButtonWood | `Blocks.bigButtonWood` | TileEntityBigButtonWood | default | - |
-| imaginary | BlockImaginary | `Blocks.imaginary` | TileEntityImaginary | ItemImaginary | custom item models; no default model |
+| imaginary | BlockImaginary | `Blocks.imaginary` | TileEntityImaginary | ItemImaginary | One ID for the Magic Pencil and all crayon colors. Four shapes, inverted modes, per-player visibility and collision, and color-aware pick-block. |
 | fan | BlockFan | `Blocks.fan` | TileEntityFan | default | - |
 | xp_bottler | BlockXPBottler | `Blocks.xpBottler` | TileEntityXPBottler | default | `xpbottler` |
 | village_highlighter | BlockVillageHighlighter | `Blocks.villageHighlighter` | TileEntityVillageHighlighter | default | - |
@@ -374,10 +382,10 @@ Source: `old-1.12.2/src/main/java/openblocks/OpenBlocks.java`
 | generic | ItemOBGeneric | `Items.generic` | no default model; meta item holder |
 | luggage | ItemLuggage | `Items.luggage` | `OBLuggageItem` deploys from the main hand and restores the stored slots, custom name, and lightning upgrade. Packed drops resist damage and despawn. |
 | sonic_glasses | ItemSonicGlasses | `Items.sonicGlasses` | `sonicglasses` |
-| pencil_glasses | ItemImaginationGlasses | `Items.pencilGlasses` | `pencilGlasses`, unlocalized `glasses.pencil` |
-| crayon_glasses | ItemCrayonGlasses | `Items.crayonGlasses` | `crayonGlasses`, unlocalized `glasses.crayon` |
-| technicolor_glasses | ItemImaginationGlasses | `Items.technicolorGlasses` | `technicolorGlasses`, unlocalized `glasses.technicolor` |
-| serious_glasses | ItemImaginationGlasses | `Items.seriousGlasses` | `seriousGlasses`, unlocalized `glasses.admin` |
+| pencil_glasses | ItemImaginationGlasses | `Items.pencilGlasses` | `pencilGlasses`. Shows and selects pencil shapes. |
+| crayon_glasses | ItemCrayonGlasses | `Items.crayonGlasses` | `crayonGlasses`. Helmets keep the exact crafted lens color and respond to crayons with that RGB. |
+| technicolor_glasses | ItemImaginationGlasses | `Items.technicolorGlasses` | `technicolorGlasses`. Shows all drawings. Added to the original mineshaft and dungeon loot tables by a Forge global loot modifier. |
+| serious_glasses | ItemImaginationGlasses | `Items.seriousGlasses` | `seriousGlasses`. Shows and selects all pencil and crayon shapes and grants collision. |
 | crane_control | ItemCraneControl | `Items.craneControl` | Hold use to raise or sneak-use to lower. Attack toggles attachment and the item layers show direction and lock state. |
 | crane_backpack | ItemCraneBackpack | `Items.craneBackpack` | Iron-tier chest equipment that deploys a player-bound magnet. |
 | slimalyzer | ItemSlimalyzer | `Items.slimalyzer` | - |
@@ -607,9 +615,9 @@ Tile-based container/gui providers (via `IHasGui` in tile entities):
 Custom code-registered recipes:
 - Source: `old-1.12.2/src/main/java/openblocks/CustomRecipesSetup.java`
 - IDs:
-  - `openblocks:crayon_merge`
-  - `openblocks:crayon_mix`
-  - `openblocks:crayon_glasses`
+  - `openblocks:crayon_merge` → `open_blocks:crayon_merge`
+  - `openblocks:crayon_mix` → `open_blocks:crayon_mix`
+  - `openblocks:crayon_glasses` → `open_blocks:crayon_glasses`. The former metadata-sensitive Pencil Glasses recipe now uses `open_blocks:pencil_glasses` as its serializer.
   - `openblocks:map_clone`
   - `openblocks:map_resize`
   - `openblocks:golden_eye_recharge`

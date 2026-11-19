@@ -24,6 +24,8 @@ import art.arcane.openblocks.registry.OBRecipeSerializers;
 import art.arcane.openblocks.registry.OBSounds;
 import art.arcane.openblocks.registry.OBStats;
 import art.arcane.openblocks.world.OBGameRules;
+import art.arcane.openblocks.world.OBTechnicolorLoot;
+import com.mojang.serialization.Codec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -33,11 +35,20 @@ import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.loading.FMLEnvironment;
+import net.minecraftforge.common.loot.IGlobalLootModifier;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
 
 @Mod(OpenBlocks.MODID)
 public class OpenBlocks {
 
     public static final String MODID = "open_blocks";
+    private static final DeferredRegister<Codec<? extends IGlobalLootModifier>> LOOT_MODIFIERS =
+            DeferredRegister.create(ForgeRegistries.Keys.GLOBAL_LOOT_MODIFIER_SERIALIZERS, MODID);
+
+    static {
+        LOOT_MODIFIERS.register("technicolor_glasses", () -> OBTechnicolorLoot.CODEC);
+    }
 
     public static ResourceLocation id(final String path) {
         return ResourceLocation.fromNamespaceAndPath(MODID, path);
@@ -61,6 +72,7 @@ public class OpenBlocks {
         OBEnchantments.ENCHANTMENTS.register(modEventBus);
         OBMenuTypes.MENU_TYPES.register(modEventBus);
         OBRecipeSerializers.RECIPE_SERIALIZERS.register(modEventBus);
+        LOOT_MODIFIERS.register(modEventBus);
         modEventBus.addListener(OBCapabilities::onRegisterCapabilities);
         if (ModList.get().isLoaded("computercraft")) {
             modEventBus.addListener(this::setupComputerCraft);

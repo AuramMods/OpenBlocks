@@ -14,6 +14,8 @@ import art.arcane.openblocks.item.OBGlyphItem;
 import art.arcane.openblocks.item.OBGuideItem;
 import art.arcane.openblocks.item.OBHangGliderItem;
 import art.arcane.openblocks.item.OBHeightMapItem;
+import art.arcane.openblocks.item.OBImaginaryItem;
+import art.arcane.openblocks.item.OBImaginationGlasses;
 import art.arcane.openblocks.item.OBLuggageItem;
 import art.arcane.openblocks.item.OBPedometerItem;
 import art.arcane.openblocks.item.OBPaintBrushItem;
@@ -67,7 +69,7 @@ public final class OBItems {
     public static final RegistryObject<Item> SPONGE = registerBlockItem("sponge", OBBlocks.SPONGE);
     public static final RegistryObject<Item> BIG_BUTTON = registerBlockItem("big_button", OBBlocks.BIG_BUTTON);
     public static final RegistryObject<Item> BIG_BUTTON_WOOD = registerBlockItem("big_button_wood", OBBlocks.BIG_BUTTON_WOOD);
-    public static final RegistryObject<Item> IMAGINARY = registerBlockItem("imaginary", OBBlocks.IMAGINARY);
+    public static final RegistryObject<Item> IMAGINARY = registerItem("imaginary", () -> new OBImaginaryItem(OBBlocks.IMAGINARY.get()));
     public static final RegistryObject<Item> FAN = registerItem("fan", () -> new OBAnimatedFloorItem(OBBlocks.FAN.get(), new Item.Properties()));
     public static final RegistryObject<Item> XP_BOTTLER = registerBlockItem("xp_bottler", OBBlocks.XP_BOTTLER);
     public static final RegistryObject<Item> VILLAGE_HIGHLIGHTER = registerBlockItem("village_highlighter", OBBlocks.VILLAGE_HIGHLIGHTER);
@@ -113,10 +115,14 @@ public final class OBItems {
     public static final RegistryObject<Item> POINTER = registerItem("pointer", () -> new OBPointerItem(new Item.Properties().stacksTo(1)));
     public static final RegistryObject<Item> LUGGAGE = registerItem("luggage", OBLuggageItem::new);
     public static final RegistryObject<Item> SONIC_GLASSES = registerItem("sonic_glasses");
-    public static final RegistryObject<Item> PENCIL_GLASSES = registerItem("pencil_glasses");
-    public static final RegistryObject<Item> CRAYON_GLASSES = registerItem("crayon_glasses");
-    public static final RegistryObject<Item> TECHNICOLOR_GLASSES = registerItem("technicolor_glasses");
-    public static final RegistryObject<Item> SERIOUS_GLASSES = registerItem("serious_glasses");
+    public static final RegistryObject<Item> PENCIL_GLASSES = registerItem("pencil_glasses",
+            () -> new OBImaginationGlasses(OBImaginationGlasses.Kind.PENCIL));
+    public static final RegistryObject<Item> CRAYON_GLASSES = registerItem("crayon_glasses",
+            () -> new OBImaginationGlasses(OBImaginationGlasses.Kind.CRAYON));
+    public static final RegistryObject<Item> TECHNICOLOR_GLASSES = registerItem("technicolor_glasses",
+            () -> new OBImaginationGlasses(OBImaginationGlasses.Kind.TECHNICOLOR));
+    public static final RegistryObject<Item> SERIOUS_GLASSES = registerItem("serious_glasses",
+            () -> new OBImaginationGlasses(OBImaginationGlasses.Kind.SERIOUS));
     public static final RegistryObject<Item> CRANE_CONTROL = registerItem("crane_control", OBCraneControlItem::new);
     public static final RegistryObject<Item> CRANE_BACKPACK = registerItem("crane_backpack", OBCraneBackpackItem::new);
     public static final RegistryObject<Item> SLIMALYZER = registerItem("slimalyzer");

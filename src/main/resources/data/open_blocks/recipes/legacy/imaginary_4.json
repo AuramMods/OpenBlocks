@@ -16,6 +16,11 @@
     }
   ],
   "result": {
-    "item": "open_blocks:imaginary"
+    "item": "open_blocks:imaginary",
+    "nbt": {
+      "Uses": 10.0,
+      "Color": 3887386,
+      "Mode": 0
+    }
   }
 }

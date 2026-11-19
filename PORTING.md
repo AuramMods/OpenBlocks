@@ -203,4 +203,5 @@ Checklist:
 - [x] Restore the Drawing Table and prepared stencils, including multiple painted layers and sheet recovery.
 - [x] Restore glyph selection, text printing, hand and wall models, and wall placement on the 1/16-block grid.
 - [x] Restore Guide and Builder Guide shapes, controls, previews, survival building, creative filling, and the optional CC: Tweaked peripheral.
-- [ ] Restore imaginary blocks, crayon recipes, and imagination glasses.
+- [x] Restore imaginary blocks, Magic Pencil and Crayon placement, color recipes, and the four imagination glasses, including Technicolor chest loot.
+- [ ] Restore the Golden Egg and Mini-Me.

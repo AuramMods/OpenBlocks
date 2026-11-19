@@ -1,3 +1,103 @@
 {
-  "parent": "open_blocks:block/imaginary"
+  "parent": "open_blocks:item/pencil_block",
+  "overrides": [
+    {
+      "predicate": {
+        "open_blocks:mode": 1
+      },
+      "model": "open_blocks:item/pencil_panel"
+    },
+    {
+      "predicate": {
+        "open_blocks:mode": 2
+      },
+      "model": "open_blocks:item/pencil_half"
+    },
+    {
+      "predicate": {
+        "open_blocks:mode": 3
+      },
+      "model": "open_blocks:item/pencil_stairs"
+    },
+    {
+      "predicate": {
+        "open_blocks:mode": 4
+      },
+      "model": "open_blocks:item/pencil_inverted_block"
+    },
+    {
+      "predicate": {
+        "open_blocks:mode": 5
+      },
+      "model": "open_blocks:item/pencil_inverted_panel"
+    },
+    {
+      "predicate": {
+        "open_blocks:mode": 6
+      },
+      "model": "open_blocks:item/pencil_inverted_half"
+    },
+    {
+      "predicate": {
+        "open_blocks:mode": 7
+      },
+      "model": "open_blocks:item/pencil_inverted_stairs"
+    },
+    {
+      "predicate": {
+        "open_blocks:mode": 0,
+        "open_blocks:crayon": 1
+      },
+      "model": "open_blocks:item/crayon_block"
+    },
+    {
+      "predicate": {
+        "open_blocks:mode": 1,
+        "open_blocks:crayon": 1
+      },
+      "model": "open_blocks:item/crayon_panel"
+    },
+    {
+      "predicate": {
+        "open_blocks:mode": 2,
+        "open_blocks:crayon": 1
+      },
+      "model": "open_blocks:item/crayon_half"
+    },
+    {
+      "predicate": {
+        "open_blocks:mode": 3,
+        "open_blocks:crayon": 1
+      },
+      "model": "open_blocks:item/crayon_stairs"
+    },
+    {
+      "predicate": {
+        "open_blocks:mode": 4,
+        "open_blocks:crayon": 1
+      },
+      "model": "open_blocks:item/crayon_inverted_block"
+    },
+    {
+      "predicate": {
+        "open_blocks:mode": 5,
+        "open_blocks:crayon": 1
+      },
+      "model": "open_blocks:item/crayon_inverted_panel"
+    },
+    {
+      "predicate": {
+        "open_blocks:mode": 6,
+        "open_blocks:crayon": 1
+      },
+      "model": "open_blocks:item/crayon_inverted_half"
+    },
+    {
+      "predicate": {
+        "open_blocks:mode": 7,
+        "open_blocks:crayon": 1
+      },
+      "model": "open_blocks:item/crayon_inverted_stairs"
+    }
+  ]
 }

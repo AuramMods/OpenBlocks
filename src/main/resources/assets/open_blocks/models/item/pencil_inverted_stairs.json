@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "open_blocks:item/pencil",
+    "layer1": "open_blocks:item/overlay_inverted_stairs"
+  }
+}

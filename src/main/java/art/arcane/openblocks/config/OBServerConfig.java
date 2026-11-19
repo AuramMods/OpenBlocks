@@ -67,6 +67,9 @@ public final class OBServerConfig {
     public static final ForgeConfigSpec.ConfigValue<List<? extends String>> CANVAS_BLACKLIST;
     public static final ForgeConfigSpec.BooleanValue SERIOUS_MODE;
 
+    public static final ForgeConfigSpec.DoubleValue IMAGINARY_USES;
+    public static final ForgeConfigSpec.BooleanValue TECHNICOLOR_LOOT;
+
     static {
         final var builder = new ForgeConfigSpec.Builder();
         builder.push("elevator");
@@ -199,6 +202,14 @@ public final class OBServerConfig {
         PROJECTOR_LIGHT_LEVEL = builder.defineInRange("lightLevel", 10, 0, 15);
         builder.pop();
 
+        builder.push("imaginary");
+        IMAGINARY_USES = builder.comment("Placement charges in new creative inventory and pick-block pencils and crayons.")
+                .defineInRange("numberOfUses", 10.0, 0.5, 1000000.0);
+        builder.pop();
+        builder.push("loot");
+        TECHNICOLOR_LOOT = builder.comment("Add Technicolor Glasses to mineshaft and dungeon loot.")
+                .define("technicolorGlasses", true);
+        builder.pop();
         builder.push("canvas");
         CANVAS_REPLACE = builder.comment("Allow brushes to paint suitable blocks by wrapping their original block state.")
                 .define("paintbrushReplacesBlocks", true);

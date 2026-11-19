@@ -3,6 +3,7 @@ package art.arcane.openblocks.registry;
 import art.arcane.openblocks.OpenBlocks;
 import art.arcane.openblocks.recipe.OBElevatorUpgradeRecipe;
 import art.arcane.openblocks.recipe.OBFlimFlamBookRecipe;
+import art.arcane.openblocks.recipe.OBImaginaryRecipe;
 import art.arcane.openblocks.recipe.OBMapCloneRecipe;
 import art.arcane.openblocks.recipe.OBMapResizeRecipe;
 import art.arcane.openblocks.recipe.OBNoopSpecialRecipe;
@@ -18,9 +19,9 @@ public final class OBRecipeSerializers {
     public static final DeferredRegister<RecipeSerializer<?>> RECIPE_SERIALIZERS =
             DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS, OpenBlocks.MODID);
 
-    public static final RegistryObject<RecipeSerializer<?>> CRAYON_MERGE = register("crayon_merge");
-    public static final RegistryObject<RecipeSerializer<?>> CRAYON_MIX = register("crayon_mix");
-    public static final RegistryObject<RecipeSerializer<?>> CRAYON_GLASSES = register("crayon_glasses");
+    public static final RegistryObject<RecipeSerializer<?>> CRAYON_MERGE = registerImaginary("crayon_merge", OBImaginaryRecipe.Kind.MERGE);
+    public static final RegistryObject<RecipeSerializer<?>> CRAYON_MIX = registerImaginary("crayon_mix", OBImaginaryRecipe.Kind.MIX);
+    public static final RegistryObject<RecipeSerializer<?>> CRAYON_GLASSES = registerImaginary("crayon_glasses", OBImaginaryRecipe.Kind.CRAYON_GLASSES);
     public static final RegistryObject<RecipeSerializer<?>> MAP_CLONE = RECIPE_SERIALIZERS.register("map_clone",
             () -> new SimpleCraftingRecipeSerializer<>(OBMapCloneRecipe::new));
     public static final RegistryObject<RecipeSerializer<?>> MAP_RESIZE = RECIPE_SERIALIZERS.register("map_resize",
@@ -34,7 +35,15 @@ public final class OBRecipeSerializers {
     public static final RegistryObject<RecipeSerializer<?>> SKY_INVERSION = RECIPE_SERIALIZERS.register("sky_inversion",
             () -> new SimpleCraftingRecipeSerializer<>(OBSkyInversionRecipe::new));
 
+    public static final RegistryObject<RecipeSerializer<?>> PENCIL_GLASSES =
+            registerImaginary("pencil_glasses", OBImaginaryRecipe.Kind.PENCIL_GLASSES);
+
     private OBRecipeSerializers() {}
+
+    private static RegistryObject<RecipeSerializer<?>> registerImaginary(final String id, final OBImaginaryRecipe.Kind kind) {
+        return RECIPE_SERIALIZERS.register(id, () -> new SimpleCraftingRecipeSerializer<>(
+                (name, category) -> new OBImaginaryRecipe(name, category, kind)));
+    }
 
     private static RegistryObject<RecipeSerializer<?>> register(final String id) {
         return RECIPE_SERIALIZERS.register(id, () -> new SimpleCraftingRecipeSerializer<>(OBNoopSpecialRecipe::new));

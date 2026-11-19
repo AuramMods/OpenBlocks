@@ -12,6 +12,7 @@ import art.arcane.openblocks.block.OBFlagBlock;
 import art.arcane.openblocks.block.OBFoldingTargetBlock;
 import art.arcane.openblocks.block.OBGraveBlock;
 import art.arcane.openblocks.block.OBHealBlock;
+import art.arcane.openblocks.block.OBImaginaryBlock;
 import art.arcane.openblocks.block.OBLadderBlock;
 import art.arcane.openblocks.block.OBPathBlock;
 import art.arcane.openblocks.block.OBCanvasBlock;
@@ -158,6 +159,7 @@ public final class OBBlocks {
         if ("canvas".equals(id)) return new OBCanvasBlock(BlockBehaviour.Properties.copy(Blocks.SPONGE), false);
         if ("canvas_glass".equals(id)) return new OBCanvasBlock(BlockBehaviour.Properties.copy(Blocks.GLASS), true);
         if ("projector".equals(id)) return new OBProjectorBlock(properties);
+        if ("imaginary".equals(id)) return new OBImaginaryBlock(BlockBehaviour.Properties.of().instabreak().noOcclusion().dynamicShape());
         if ("sky".equals(id)) return new OBSkyBlock(properties.sound(SoundType.METAL));
         if (shape != null) return new OBShapeBlock(properties, shape, collisionShape);
         return new Block(properties);

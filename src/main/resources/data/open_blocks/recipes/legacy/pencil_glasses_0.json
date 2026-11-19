@@ -1,15 +1,4 @@
 {
-  "type": "minecraft:crafting_shapeless",
-  "group": "open_blocks:pencil_glasses",
-  "ingredients": [
-    {
-      "item": "open_blocks:imaginary"
-    },
-    {
-      "item": "minecraft:paper"
-    }
-  ],
-  "result": {
-    "item": "open_blocks:pencil_glasses"
-  }
+  "type": "open_blocks:pencil_glasses",
+  "category": "equipment"
 }

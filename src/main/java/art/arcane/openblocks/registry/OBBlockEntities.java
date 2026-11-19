@@ -11,6 +11,7 @@ import art.arcane.openblocks.block.entity.OBFlagBlockEntity;
 import art.arcane.openblocks.block.entity.OBFoldingTargetBlockEntity;
 import art.arcane.openblocks.block.entity.OBGraveBlockEntity;
 import art.arcane.openblocks.block.entity.OBHealBlockEntity;
+import art.arcane.openblocks.block.entity.OBImaginaryBlockEntity;
 import art.arcane.openblocks.block.entity.OBPlaceholderBlockEntity;
 import art.arcane.openblocks.block.entity.OBCanvasBlockEntity;
 import art.arcane.openblocks.block.entity.OBGuideBlockEntity;
@@ -60,7 +61,8 @@ public final class OBBlockEntities {
             (pos, state) -> new OBBigButtonBlockEntity(false, pos, state), OBBlocks.BIG_BUTTON);
     public static final RegistryObject<BlockEntityType<OBBigButtonBlockEntity>> BIG_BUTTON_WOOD = register("big_button_wood",
             (pos, state) -> new OBBigButtonBlockEntity(true, pos, state), OBBlocks.BIG_BUTTON_WOOD);
-    public static final RegistryObject<BlockEntityType<OBPlaceholderBlockEntity>> IMAGINARY = register("imaginary", OBBlocks.IMAGINARY);
+    public static final RegistryObject<BlockEntityType<OBImaginaryBlockEntity>> IMAGINARY = BLOCK_ENTITY_TYPES.register("imaginary",
+            () -> BlockEntityType.Builder.of(OBImaginaryBlockEntity::new, OBBlocks.IMAGINARY.get()).build(null));
     public static final RegistryObject<BlockEntityType<OBFanBlockEntity>> FAN = register("fan", OBFanBlockEntity::new, OBBlocks.FAN);
     public static final RegistryObject<BlockEntityType<OBXPBottlerBlockEntity>> XP_BOTTLER = register("xp_bottler", OBXPBottlerBlockEntity::new, OBBlocks.XP_BOTTLER);
     public static final RegistryObject<BlockEntityType<OBPlaceholderBlockEntity>> VILLAGE_HIGHLIGHTER = register("village_highlighter", OBBlocks.VILLAGE_HIGHLIGHTER);

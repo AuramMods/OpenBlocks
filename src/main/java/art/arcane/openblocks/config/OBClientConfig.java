@@ -14,6 +14,8 @@ public final class OBClientConfig {
     public static final ForgeConfigSpec.BooleanValue GLYPHS_IN_SEARCH;
     public static final ForgeConfigSpec.DoubleValue GUIDE_RENDER_DISTANCE_SQ;
 
+    public static final ForgeConfigSpec.DoubleValue IMAGINARY_FADE;
+
     static {
         final var builder = new ForgeConfigSpec.Builder();
         builder.push("skyblock");
@@ -37,6 +39,10 @@ public final class OBClientConfig {
         builder.push("guide");
         GUIDE_RENDER_DISTANCE_SQ = builder.comment("Squared distance at which Guide markers can render.")
                 .defineInRange("renderDistanceSq", 65536.0, 1.0, 262144.0);
+        builder.pop();
+        builder.push("imaginary");
+        IMAGINARY_FADE = builder.comment("Visibility change per 1/60 second when imaginary blocks appear or fade.")
+                .defineInRange("fadingSpeed", 0.0075, 0.0001, 1.0);
         builder.pop();
         builder.push("glyphs");
         GLYPHS_IN_SEARCH = builder.comment("Include every printable glyph in the creative search tab.").define("showInCreativeSearch", false);

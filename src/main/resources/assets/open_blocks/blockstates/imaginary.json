@@ -1,5 +1,7 @@
 {
   "variants": {
-    "": { "model": "open_blocks:block/imaginary" }
+    "": {
+      "model": "open_blocks:block/imaginary"
+    }
   }
 }
