@@ -17,6 +17,8 @@ public final class OBServerConfig {
     public static final ForgeConfigSpec.ConfigValue<List<? extends String>> ELEVATOR_OVERRIDES;
     public static final ForgeConfigSpec.BooleanValue ROPE_LADDER_INFINITE;
     public static final ForgeConfigSpec.IntValue SCAFFOLDING_DESPAWN_RATE;
+    public static final ForgeConfigSpec.BooleanValue GRAVE_BACKUPS;
+    public static final ForgeConfigSpec.DoubleValue GRAVE_SPECIAL_ACTION;
     public static final ForgeConfigSpec.IntValue SPONGE_RANGE;
     public static final ForgeConfigSpec.BooleanValue SPONGE_BLOCK_UPDATE;
     public static final ForgeConfigSpec.IntValue SPONGE_STICK_RANGE;
@@ -121,6 +123,11 @@ public final class OBServerConfig {
         builder.push("scaffolding");
         SCAFFOLDING_DESPAWN_RATE = builder.comment("A scaffold breaks on one in this many random ticks. 0 breaks on every random tick.")
                 .defineInRange("despawnRate", 4, 0, Integer.MAX_VALUE);
+        builder.pop();
+        builder.push("graves");
+        GRAVE_BACKUPS = builder.comment("Keep a separate administrator recovery file for grave loot.").define("storeContents", true);
+        GRAVE_SPECIAL_ACTION = builder.comment("Chance that a successful dig plays the grave sound and starts a short thunderstorm.")
+                .defineInRange("specialActionFrequency", 0.03D, 0.0D, 1.0D);
         builder.pop();
         builder.push("sponge");
         SPONGE_RANGE = builder.comment("Liquid removal radius of the sponge block.")

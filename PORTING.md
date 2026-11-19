@@ -163,13 +163,14 @@ Checklist:
 - [ ] Run a muted client in an isolated or background graphical session to verify models, transparency, and face culling.
 - [ ] Reconcile crafting and acquisition against the full legacy recipe inventory.
 - [x] Restore and verify the Flim-Flam snowball, teleport, mount, encase, dummy creeper, random potion, and skyblock actions.
+- [x] Restore grave-owned loot, optional recovery files, the two-point shovel cost, and the persistent empty memorial. Verify rejected drops, older dump-backed graves, and backup recovery beyond ordinary player slots.
 - [ ] Deepen `/ob_inventory` parity beyond current built-in + event-bridge baseline:
   - add first concrete subsystem consumers/producers for `OBInventoryEvent` payloads (legacy-style arbitrary subsystem parity in practice, not just schema support)
-  - reconnect gravestone/inventory-backend integrations to reuse the dump pipeline (grave placement + claim now wired; subsystem-specific restore UX and backend consumers still pending)
+  - verify full inventory and external subsystem restore behavior against the legacy commands
 - [ ] Deepen grave parity from current place+claim skeleton:
   - expand `OBGraveDropsEvent` parity beyond current action filtering (hook concrete listeners/producers and mirror more legacy filtering/consumption flows)
-  - restore owner identity and epitaph rendering, styled death messages, grave base and facing, and the legacy shovel interaction in block and entity state
-  - harden grave placement edge-cases (destructive fallback policy, cross-dimension guarantees, failure-path UX/messages)
+  - render the saved owner or memorial name and restore the original grave base and facing, blast resistance, and skeleton and bat spawning
+  - restore the legacy grave placement event and configuration for search range, bounds, base, destructive fallback, and consuming a carried grave
 - [ ] Finish legacy recipe migration for skipped recipe files and remaining metadata-collapsed color or subtype conversions.
 - [x] Restore configurable sponge cleanup, Sponge on a Stick, scattered-stone path rendering, and the healing block's one-tick pulses.
 - [x] Restore tank block and item storage, connected transfer and rendering, XP and bucket exchange, and the Liquid XP block assets.

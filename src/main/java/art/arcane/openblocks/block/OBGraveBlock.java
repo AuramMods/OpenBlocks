@@ -11,6 +11,7 @@ import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.common.ToolActions;
@@ -45,11 +46,20 @@ public class OBGraveBlock extends OBShapeBlock implements EntityBlock {
         if (!(blockEntity instanceof OBGraveBlockEntity graveBlockEntity)) return InteractionResult.PASS;
 
         if (player.getItemInHand(hand).canPerformAction(ToolActions.SHOVEL_DIG)) {
-            graveBlockEntity.claimLoot(serverPlayer);
+            if (graveBlockEntity.claimLoot(serverPlayer)) {
+                player.getItemInHand(hand).hurtAndBreak(2, player, owner -> owner.broadcastBreakEvent(hand));
+            }
         } else {
             graveBlockEntity.sendDeathMessage(serverPlayer);
         }
 
         return InteractionResult.CONSUME;
+    }
+
+    @Override
+    public boolean onDestroyedByPlayer(final BlockState state, final Level level, final BlockPos pos,
+            final Player player, final boolean willHarvest, final FluidState fluid) {
+        if (level.getBlockEntity(pos) instanceof OBGraveBlockEntity grave && grave.hasLoot()) return false;
+        return super.onDestroyedByPlayer(state, level, pos, player, willHarvest, fluid);
     }
 }

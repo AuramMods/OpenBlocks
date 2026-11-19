@@ -15,6 +15,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtIo;
@@ -22,6 +23,8 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.LevelResource;
 import net.minecraftforge.common.MinecraftForge;
@@ -47,6 +50,7 @@ public final class OBInventoryStore {
     private static final String TAG_INVENTORY = "Inventory";
     private static final String TAG_SUB_INVENTORIES = "SubInventories";
     private static final String TAG_SLOT = "Slot";
+    private static final String TYPE_GRAVE = "grave";
 
     private static final int MAIN_SLOTS = 36;
     private static final int ARMOR_SLOT_BASE = 100;
@@ -55,6 +59,7 @@ public final class OBInventoryStore {
     private static final int OFFHAND_SLOT_COUNT = 1;
 
     private static final Pattern SAFE_CHARS = Pattern.compile("[^A-Za-z0-9_-]");
+    private static final Pattern SAFE_DUMP_ID_CHARS = Pattern.compile("[^A-Za-z0-9_.-]");
     private static final ThreadLocal<SimpleDateFormat> FILE_FORMAT =
             ThreadLocal.withInitial(() -> new SimpleDateFormat("yyyy-MM-dd_HH.mm.ss", Locale.ROOT));
 
@@ -80,18 +85,27 @@ public final class OBInventoryStore {
         return stripFilename(dumpPath.getFileName().toString());
     }
 
-    public static String storeDroppedItems(final ServerPlayer player, final String type, final List<ItemStack> drops)
+    public static String storeGraveBackup(final ServerPlayer player, final BlockPos gravePos, final List<ItemStack> drops)
             throws IOException {
         final String safePlayerName = sanitize(player.getGameProfile().getName());
-        final Path dumpPath = createDumpPath(player.serverLevel(), safePlayerName, sanitize(type));
+        final Path dumpPath = createDumpPath(player.serverLevel(), safePlayerName, TYPE_GRAVE);
 
         final CompoundTag root = new CompoundTag();
         root.put(TAG_INVENTORY, encodeMainInventoryList(drops));
         root.putLong(TAG_CREATED, System.currentTimeMillis());
-        root.putString(TAG_TYPE, type);
+        root.putString(TAG_TYPE, TYPE_GRAVE);
         root.putString(TAG_PLAYER_NAME, player.getGameProfile().getName());
         root.putString(TAG_PLAYER_UUID, player.getUUID().toString());
         root.put(TAG_LOCATION, encodePlayerLocation(player));
+        root.putBoolean("Placed", gravePos != null);
+        if (gravePos != null) {
+            final var location = new CompoundTag();
+            location.putInt(TAG_LOCATION_X, gravePos.getX());
+            location.putInt(TAG_LOCATION_Y, gravePos.getY());
+            location.putInt(TAG_LOCATION_Z, gravePos.getZ());
+            location.putString(TAG_LOCATION_DIMENSION, player.level().dimension().location().toString());
+            root.put("GraveLocation", location);
+        }
         root.put(TAG_SUB_INVENTORIES, new CompoundTag());
 
         Files.createDirectories(dumpPath.getParent());
@@ -104,7 +118,11 @@ public final class OBInventoryStore {
         if (root == null || !root.contains(TAG_INVENTORY, Tag.TAG_LIST)) return false;
 
         final ListTag inventoryData = root.getList(TAG_INVENTORY, Tag.TAG_COMPOUND);
-        player.getInventory().load(inventoryData);
+        if (TYPE_GRAVE.equals(root.getString(TAG_TYPE))) {
+            if (!restoreGraveLoot(player, decodeIndexedStacks(inventoryData, 0))) return false;
+        } else {
+            player.getInventory().load(inventoryData);
+        }
         final CompoundTag encodedSubInventories = root.contains(TAG_SUB_INVENTORIES, Tag.TAG_COMPOUND)
                 ? root.getCompound(TAG_SUB_INVENTORIES)
                 : new CompoundTag();
@@ -129,6 +147,29 @@ public final class OBInventoryStore {
         return true;
     }
 
+    private static boolean restoreGraveLoot(final ServerPlayer player, final List<ItemStack> stacks) {
+        final var inventory = player.getInventory();
+        final int slots = Math.min(stacks.size(), inventory.getContainerSize());
+        final List<ItemEntity> overflow = new ArrayList<>();
+        boolean restored = false;
+        try {
+            for (int i = slots; i < stacks.size(); i++) {
+                final ItemStack stack = stacks.get(i);
+                if (stack.isEmpty()) continue;
+                final var drop = new ItemEntity(player.serverLevel(), player.getX(), player.getY(), player.getZ(), stack.copy());
+                drop.setDefaultPickUpDelay();
+                if (!player.serverLevel().addFreshEntity(drop)) return false;
+                overflow.add(drop);
+            }
+            for (int i = 0; i < slots; i++) inventory.setItem(i, stacks.get(i));
+            inventory.setChanged();
+            restored = true;
+            return true;
+        } finally {
+            if (!restored) overflow.forEach(Entity::discard);
+        }
+    }
+
     public static List<ItemStack> getSpawnStacks(
             final ServerLevel level,
             final String inventoryId,
@@ -145,7 +186,8 @@ public final class OBInventoryStore {
         final String normalizedTarget = target.toLowerCase(Locale.ROOT);
 
         final List<ItemStack> inventory = switch (normalizedTarget) {
-            case ID_MAIN_INVENTORY -> mainSections.main();
+            case ID_MAIN_INVENTORY -> TYPE_GRAVE.equals(root.getString(TAG_TYPE))
+                    ? decodeIndexedStacks(inventoryData, 0) : mainSections.main();
             case ID_ARMOR_INVENTORY -> {
                 final String key = resolveSubInventoryKey(subInventories, ID_ARMOR_INVENTORY);
                 if (key != null) yield decodeIndexedStacks(getSubInventory(subInventories, key), ARMOR_SLOT_COUNT);
@@ -229,7 +271,7 @@ public final class OBInventoryStore {
     }
 
     public static Path resolveDumpPath(final ServerLevel level, final String inventoryId) {
-        final String id = sanitize(stripFilename(inventoryId));
+        final String id = SAFE_DUMP_ID_CHARS.matcher(stripFilename(inventoryId)).replaceAll("_");
         return getSaveFolder(level).resolve(PREFIX + id + EXT);
     }
 

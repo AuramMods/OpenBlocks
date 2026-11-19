@@ -4,11 +4,14 @@ import art.arcane.openblocks.OpenBlocks;
 import art.arcane.openblocks.api.OBGraveDropsEvent;
 import art.arcane.openblocks.block.entity.OBGraveBlockEntity;
 import art.arcane.openblocks.command.OBInventoryStore;
+import art.arcane.openblocks.config.OBServerConfig;
 import art.arcane.openblocks.registry.OBBlocks;
 import art.arcane.openblocks.world.OBGameRules;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -17,9 +20,12 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.FakePlayer;
+import net.minecraftforge.common.util.BlockSnapshot;
+import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -30,6 +36,7 @@ public final class OBGraveHooks {
 
     private static final int[] SEARCH_Y_OFFSETS = {0, 1, -1, 2, -2, 3, -3};
     private static final int MAX_SEARCH_RADIUS = 4;
+    private static final int PLACEMENT_FLAGS = Block.UPDATE_KNOWN_SHAPE | Block.UPDATE_SUPPRESS_DROPS;
 
     private OBGraveHooks() {}
 
@@ -75,58 +82,55 @@ public final class OBGraveHooks {
     private static boolean tryStoreInGrave(
             final ServerLevel level, final ServerPlayer player, final List<ItemEntity> graveDrops) {
         final List<ItemStack> stacks = graveDrops.stream().map(drop -> drop.getItem().copy()).toList();
-        final String id;
+        final BlockPos gravePos = findPlacement(level, player, player.blockPosition());
+        final boolean placed = gravePos != null && placeGrave(level, gravePos, player, stacks);
+        if (placed) {
+            player.sendSystemMessage(Component.translatableWithFallback("grave.open_blocks.placed",
+                    "Your grave is at %s, %s, %s.", gravePos.getX(), gravePos.getY(), gravePos.getZ()));
+        }
+        if (OBServerConfig.GRAVE_BACKUPS.get()) backup(player, placed ? gravePos : null, stacks);
+        return placed;
+    }
+
+    private static void backup(final ServerPlayer player, final BlockPos gravePos, final List<ItemStack> stacks) {
         try {
-            id = OBInventoryStore.storeDroppedItems(player, "grave", stacks);
+            final String id = OBInventoryStore.storeGraveBackup(player, gravePos, stacks);
+            player.sendSystemMessage(Component.translatableWithFallback("grave.open_blocks.backup_saved",
+                    "Grave backup saved as '%s'.", id));
         } catch (final IOException e) {
-            player.sendSystemMessage(Component.literal(
-                    "OpenBlocks failed to store grave backup: " + e.getMessage()));
-            return false;
+            player.sendSystemMessage(Component.translatableWithFallback("grave.open_blocks.backup_write_failed",
+                    "Could not write the grave backup. %s", e.getMessage()));
         }
-
-        final BlockPos gravePos = findPlacement(level, player.blockPosition());
-        if (gravePos == null) {
-            player.sendSystemMessage(Component.literal(
-                    "OpenBlocks stored your grave backup as '" + id + "' (no valid placement found)."));
-            return false;
-        }
-
-        if (!placeGrave(level, gravePos, player, id)) {
-            player.sendSystemMessage(Component.literal(
-                    "OpenBlocks stored your grave backup as '" + id + "' (grave placement failed)."));
-            return false;
-        }
-
-        player.sendSystemMessage(Component.literal(
-                "OpenBlocks placed your grave at "
-                        + gravePos.getX() + ", " + gravePos.getY() + ", " + gravePos.getZ()
-                        + " with backup '" + id + "'."));
-        return true;
     }
 
     private static boolean placeGrave(
             final ServerLevel level,
             final BlockPos gravePos,
             final ServerPlayer player,
-            final String inventoryId) {
-        if (!level.setBlock(gravePos, OBBlocks.GRAVE.get().defaultBlockState(), 3)) return false;
-
-        if (!(level.getBlockEntity(gravePos) instanceof OBGraveBlockEntity graveBlockEntity)) {
-            level.removeBlock(gravePos, false);
-            return false;
+            final List<ItemStack> stacks) {
+        final BlockState state = OBBlocks.GRAVE.get().defaultBlockState();
+        final var snapshot = BlockSnapshot.create(level.dimension(), level, gravePos, PLACEMENT_FLAGS);
+        if (!level.setBlock(gravePos, state, PLACEMENT_FLAGS)) return false;
+        boolean placed = false;
+        try {
+            if (ForgeEventFactory.onBlockPlace(player, snapshot, Direction.UP)
+                    || !(level.getBlockEntity(gravePos) instanceof OBGraveBlockEntity grave)) return false;
+            grave.initializeFromDeath(player, stacks, deathMessage(player));
+            placed = true;
+        } finally {
+            if (!placed) snapshot.restore(true, false);
         }
-
-        graveBlockEntity.initializeFromDeath(player, inventoryId, deathMessage(player));
+        level.markAndNotifyBlock(gravePos, level.getChunkAt(gravePos), snapshot.getReplacedBlock(), state, Block.UPDATE_ALL, Block.UPDATE_LIMIT);
         return true;
     }
 
-    private static String deathMessage(final ServerPlayer player) {
-        final Component message = player.getCombatTracker().getDeathMessage();
-        if (message == null) return "";
-        return message.getString();
+    private static Component deathMessage(final ServerPlayer player) {
+        final String day = String.format(Locale.ROOT, "%.1f", player.level().getGameTime() / 24000.0);
+        return Component.translatableWithFallback("grave.open_blocks.death_message", "%s (day: %s)",
+                player.getCombatTracker().getDeathMessage(), Component.literal(day).withStyle(ChatFormatting.WHITE, ChatFormatting.BOLD));
     }
 
-    private static BlockPos findPlacement(final ServerLevel level, final BlockPos origin) {
+    private static BlockPos findPlacement(final ServerLevel level, final ServerPlayer player, final BlockPos origin) {
         for (int radius = 0; radius <= MAX_SEARCH_RADIUS; radius++) {
             for (final int yOffset : SEARCH_Y_OFFSETS) {
                 final int y = origin.getY() + yOffset;
@@ -135,7 +139,7 @@ public final class OBGraveHooks {
                         if (Math.max(Math.abs(xOffset), Math.abs(zOffset)) != radius) continue;
 
                         final BlockPos candidate = new BlockPos(origin.getX() + xOffset, y, origin.getZ() + zOffset);
-                        if (canPlaceGrave(level, candidate)) return candidate;
+                        if (canPlaceGrave(level, player, candidate)) return candidate;
                     }
                 }
             }
@@ -144,11 +148,12 @@ public final class OBGraveHooks {
         return null;
     }
 
-    private static boolean canPlaceGrave(final ServerLevel level, final BlockPos pos) {
-        if (!level.isInWorldBounds(pos)) return false;
+    private static boolean canPlaceGrave(final ServerLevel level, final ServerPlayer player, final BlockPos pos) {
+        if (!level.isInWorldBounds(pos) || !level.hasChunkAt(pos) || !level.getWorldBorder().isWithinBounds(pos)
+                || !level.mayInteract(player, pos)) return false;
 
         final BlockState stateAtPos = level.getBlockState(pos);
-        if (!stateAtPos.canBeReplaced()) return false;
+        if (!stateAtPos.canBeReplaced() || stateAtPos.hasBlockEntity()) return false;
 
         final BlockPos belowPos = pos.below();
         if (!level.isInWorldBounds(belowPos)) return false;

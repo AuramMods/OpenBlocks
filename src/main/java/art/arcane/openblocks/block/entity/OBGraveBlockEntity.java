@@ -1,18 +1,29 @@
 package art.arcane.openblocks.block.entity;
 
 import art.arcane.openblocks.command.OBInventoryStore;
+import art.arcane.openblocks.config.OBServerConfig;
 import art.arcane.openblocks.registry.OBBlockEntities;
+import art.arcane.openblocks.registry.OBSounds;
+import com.google.gson.JsonParseException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.Containers;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 
 public class OBGraveBlockEntity extends BlockEntity {
 
@@ -20,120 +31,145 @@ public class OBGraveBlockEntity extends BlockEntity {
     private static final String TAG_OWNER_NAME = "OwnerName";
     private static final String TAG_OWNER_UUID = "OwnerUUID";
     private static final String TAG_DEATH_MESSAGE = "DeathMessage";
+    private static final String TAG_DEATH_COMPONENT = "DeathMessageComponent";
+    private static final String TAG_LOOT = "Loot";
     private static final String TAG_CREATED = "Created";
 
-    private String inventoryId = "";
+    private String legacyDumpId = "";
+    private List<ItemStack> loot = List.of();
     private String ownerName = "";
     private String ownerUuid = "";
-    private String deathMessage = "";
+    private Component deathMessage;
     private long created;
+    private boolean claiming;
 
     public OBGraveBlockEntity(final BlockPos pos, final BlockState state) {
         super(OBBlockEntities.GRAVE.get(), pos, state);
     }
 
-    public void initializeFromDeath(final ServerPlayer player, final String inventoryId) {
-        initializeFromDeath(player, inventoryId, "");
-    }
-
-    public void initializeFromDeath(final ServerPlayer player, final String inventoryId, final String deathMessage) {
-        this.inventoryId = inventoryId == null ? "" : inventoryId;
+    public void initializeFromDeath(final ServerPlayer player, final List<ItemStack> stacks, final Component deathMessage) {
+        this.legacyDumpId = "";
+        this.loot = stacks.stream().filter(stack -> !stack.isEmpty()).map(ItemStack::copy).toList();
         this.ownerName = player.getGameProfile().getName();
         this.ownerUuid = player.getUUID().toString();
-        this.deathMessage = deathMessage == null ? "" : deathMessage;
+        this.deathMessage = deathMessage.copy();
         this.created = System.currentTimeMillis();
         setChanged();
     }
 
     public void sendDeathMessage(final ServerPlayer player) {
-        if (!deathMessage.isBlank()) {
-            player.sendSystemMessage(Component.literal(deathMessage));
+        if (deathMessage != null) {
+            player.sendSystemMessage(deathMessage);
             return;
         }
 
         if (!ownerName.isBlank()) {
-            player.sendSystemMessage(Component.literal("Here lies " + ownerName + "."));
+            player.sendSystemMessage(Component.translatableWithFallback("grave.open_blocks.owner", "Here lies %s.", ownerName));
             return;
         }
 
-        player.sendSystemMessage(Component.literal("A weathered gravestone."));
+        player.sendSystemMessage(Component.translatableWithFallback("grave.open_blocks.memorial", "A weathered gravestone."));
+    }
+
+    public boolean hasLoot() {
+        return !loot.isEmpty() || !legacyDumpId.isBlank();
     }
 
     public boolean claimLoot(final ServerPlayer player) {
-        if (!(level instanceof ServerLevel serverLevel)) return false;
-        if (inventoryId == null || inventoryId.isBlank()) {
-            player.sendSystemMessage(Component.literal("This grave is empty."));
-            return false;
-        }
-
-        final String dumpId = inventoryId;
-        final List<ItemStack> loot;
+        if (!(level instanceof ServerLevel serverLevel) || player.serverLevel() != serverLevel || claiming || player.isSpectator()
+                || !serverLevel.mayInteract(player, worldPosition)) return false;
+        claiming = true;
         try {
-            loot = OBInventoryStore.readDroppedItems(serverLevel, dumpId);
-        } catch (final IOException e) {
-            player.sendSystemMessage(Component.literal(
-                    "OpenBlocks failed to read grave backup '" + dumpId + "': " + e.getMessage()));
-            return false;
-        }
-
-        if (loot.isEmpty()) {
-            try {
-                OBInventoryStore.deleteDump(serverLevel, dumpId);
-            } catch (final IOException ignored) {
-                // Empty dump cleanup is best-effort.
+            final String dumpId = legacyDumpId;
+            final List<ItemStack> stacks = dumpId.isBlank() ? loot : OBInventoryStore.readDroppedItems(serverLevel, dumpId);
+            if (stacks.isEmpty()) {
+                player.sendSystemMessage(dumpId.isBlank()
+                        ? Component.translatableWithFallback("grave.open_blocks.empty", "This grave is empty.")
+                        : Component.translatableWithFallback("grave.open_blocks.backup_missing", "Grave backup '%s' is missing or empty.", dumpId));
+                return false;
             }
-            clearAndRemove(serverLevel);
-            player.sendSystemMessage(Component.literal("This grave is empty."));
+            if (!releaseLoot(serverLevel, stacks, dumpId)) {
+                player.sendSystemMessage(Component.translatableWithFallback("grave.open_blocks.release_denied", "The grave kept its items. Try digging it again where drops are allowed."));
+                return false;
+            }
+            serverLevel.levelEvent(2001, worldPosition, Block.getId(Blocks.DIRT.defaultBlockState()));
+            if (serverLevel.random.nextDouble() < OBServerConfig.GRAVE_SPECIAL_ACTION.get()) {
+                serverLevel.playSound(null, player.blockPosition(), OBSounds.GRAVE_ROB.get(), SoundSource.BLOCKS, 1, 1);
+                serverLevel.setWeatherParameters(0, 35 * 20, true, true);
+            }
             return true;
-        }
-
-        final double x = worldPosition.getX() + 0.5D;
-        final double y = worldPosition.getY() + 0.5D;
-        final double z = worldPosition.getZ() + 0.5D;
-        for (final ItemStack stack : loot) {
-            Containers.dropItemStack(serverLevel, x, y, z, stack.copy());
-        }
-
-        try {
-            OBInventoryStore.deleteDump(serverLevel, dumpId);
         } catch (final IOException e) {
-            player.sendSystemMessage(Component.literal(
-                    "OpenBlocks recovered grave loot but failed to delete backup '" + dumpId + "': " + e.getMessage()));
+            player.sendSystemMessage(Component.translatableWithFallback("grave.open_blocks.backup_failed",
+                    "Could not access grave backup '%s'. %s", legacyDumpId, e.getMessage()));
+            return false;
+        } finally {
+            claiming = false;
         }
-
-        clearAndRemove(serverLevel);
-        player.sendSystemMessage(Component.literal(
-                "Recovered " + loot.size() + " stack(s) from grave '" + dumpId + "'."));
-        return true;
     }
 
-    private void clearAndRemove(final ServerLevel level) {
-        this.inventoryId = "";
-        this.ownerName = "";
-        this.ownerUuid = "";
-        this.deathMessage = "";
-        this.created = 0L;
-        setChanged();
-        level.removeBlock(worldPosition, false);
+    private boolean releaseLoot(final ServerLevel serverLevel, final List<ItemStack> stacks, final String dumpId) throws IOException {
+        final Vec3 center = Vec3.atCenterOf(worldPosition);
+        final List<ItemEntity> spawned = new ArrayList<>(stacks.size());
+        boolean released = false;
+        try {
+            for (final ItemStack stack : stacks) {
+                final var drop = new ItemEntity(serverLevel, center.x, center.y, center.z, stack.copy());
+                drop.setDefaultPickUpDelay();
+                if (!serverLevel.addFreshEntity(drop)) return false;
+                spawned.add(drop);
+            }
+            if (serverLevel.getBlockEntity(worldPosition) != this || !dumpId.isBlank() && !OBInventoryStore.deleteDump(serverLevel, dumpId)) {
+                return false;
+            }
+            loot = List.of();
+            legacyDumpId = "";
+            setChanged();
+            released = true;
+            return true;
+        } finally {
+            if (!released) spawned.forEach(Entity::discard);
+        }
     }
 
     @Override
     protected void saveAdditional(final CompoundTag tag) {
         super.saveAdditional(tag);
-        tag.putString(TAG_INVENTORY_ID, inventoryId);
+        if (!legacyDumpId.isBlank()) tag.putString(TAG_INVENTORY_ID, legacyDumpId);
+        final var savedLoot = new ListTag();
+        for (final ItemStack stack : loot) savedLoot.add(stack.save(new CompoundTag()));
+        tag.put(TAG_LOOT, savedLoot);
         tag.putString(TAG_OWNER_NAME, ownerName);
         tag.putString(TAG_OWNER_UUID, ownerUuid);
-        tag.putString(TAG_DEATH_MESSAGE, deathMessage);
+        if (deathMessage != null) tag.putString(TAG_DEATH_COMPONENT, Component.Serializer.toJson(deathMessage));
         tag.putLong(TAG_CREATED, created);
     }
 
     @Override
     public void load(final CompoundTag tag) {
         super.load(tag);
-        this.inventoryId = tag.getString(TAG_INVENTORY_ID);
+        this.legacyDumpId = tag.getString(TAG_INVENTORY_ID);
+        final ListTag savedLoot = tag.getList(TAG_LOOT, Tag.TAG_COMPOUND);
+        final List<ItemStack> stacks = new ArrayList<>(savedLoot.size());
+        for (int i = 0; i < savedLoot.size(); i++) {
+            final ItemStack stack = ItemStack.of(savedLoot.getCompound(i));
+            if (!stack.isEmpty()) stacks.add(stack);
+        }
+        this.loot = List.copyOf(stacks);
         this.ownerName = tag.getString(TAG_OWNER_NAME);
         this.ownerUuid = tag.getString(TAG_OWNER_UUID);
-        this.deathMessage = tag.getString(TAG_DEATH_MESSAGE);
+        this.deathMessage = readDeathMessage(tag);
         this.created = tag.getLong(TAG_CREATED);
+    }
+
+    private static Component readDeathMessage(final CompoundTag tag) {
+        if (tag.contains(TAG_DEATH_COMPONENT, Tag.TAG_STRING)) {
+            try {
+                return Component.Serializer.fromJson(tag.getString(TAG_DEATH_COMPONENT));
+            } catch (final JsonParseException ignored) {
+                // Older saves store the message as plain text.
+            }
+        }
+        final String text = tag.getString(TAG_DEATH_MESSAGE);
+        return text.isBlank() ? null : Component.literal(text);
     }
 }
