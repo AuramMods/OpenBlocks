@@ -142,6 +142,7 @@ public final class OBCartographer extends Entity {
         int id = OBHeightMapItem.mapId(source);
         OBHeightMapData map = OBHeightMapData.get(server, id);
         if (map == null) {
+            OBHeightMapData.reportMissingReference(server, blockPosition(), id);
             id = OBHeightMapData.create(server, blockPosition(), OBEmptyMapItem.scale(source));
             map = OBHeightMapData.get(server, id);
         } else {

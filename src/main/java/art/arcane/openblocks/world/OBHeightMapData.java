@@ -1,5 +1,7 @@
 package art.arcane.openblocks.world;
 
+import art.arcane.openblocks.config.OBServerConfig;
+import com.mojang.logging.LogUtils;
 import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.List;
@@ -104,6 +106,13 @@ public final class OBHeightMapData extends SavedData {
     @Nullable
     public static OBHeightMapData get(final ServerLevel level, final int id) {
         return id < 0 ? null : storage(level).get(OBHeightMapData::load, FILE_PREFIX + id);
+    }
+
+    public static void reportMissingReference(final ServerLevel level, final BlockPos pos, final int id) {
+        if (id >= 0 && OBServerConfig.REPORT_MISSING_MAP.get()) {
+            LogUtils.getLogger().info("Height map {} is missing at {} in {}. Creating a replacement map.",
+                    id, pos.toShortString(), level.dimension().location());
+        }
     }
 
     private static DimensionDataStorage storage(final ServerLevel level) {

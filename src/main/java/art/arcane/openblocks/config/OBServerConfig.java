@@ -70,6 +70,7 @@ public final class OBServerConfig {
     public static final ForgeConfigSpec.ConfigValue<List<? extends String>> MAGNET_ENTITY_ALLOWLIST;
     public static final ForgeConfigSpec.ConfigValue<List<? extends String>> MAGNET_BLOCK_ENTITY_ALLOWLIST;
     public static final ForgeConfigSpec.ConfigValue<List<? extends String>> CARTOGRAPHER_BLACKLIST;
+    public static final ForgeConfigSpec.BooleanValue REPORT_MISSING_MAP;
     public static final ForgeConfigSpec.BooleanValue PROJECTOR_LIGHT_ENABLED;
     public static final ForgeConfigSpec.IntValue PROJECTOR_LIGHT_LEVEL;
     public static final ForgeConfigSpec.IntValue GUIDE_REDSTONE;
@@ -84,6 +85,7 @@ public final class OBServerConfig {
     public static final ForgeConfigSpec.BooleanValue GOLDEN_EGG_PICK_BLOCKS;
 
     public static final ForgeConfigSpec.BooleanValue GOLDEN_EYE_DEBUG;
+    public static final ForgeConfigSpec.BooleanValue GRAVES_DEBUG;
 
     public static final ForgeConfigSpec.DoubleValue TROPHY_DROP_CHANCE;
     public static final ForgeConfigSpec.ConfigValue<String> TROPHY_DROP_FORMULA;
@@ -255,6 +257,8 @@ public final class OBServerConfig {
         builder.push("cartographer");
         CARTOGRAPHER_BLACKLIST = builder.comment("Block registry IDs the Cartographer should see through.")
                 .defineListAllowEmpty("blockBlacklist", List.of(), value -> value instanceof String);
+        REPORT_MISSING_MAP = builder.comment("Log when a missing saved height map is replaced by a new map.")
+                .define("reportInvalidRequest", false);
         builder.pop();
         builder.push("guide");
         GUIDE_REDSTONE = builder.comment("Guide redstone mode. 1 requires power, -1 requires no power, and 0 ignores redstone.")
@@ -270,6 +274,8 @@ public final class OBServerConfig {
 
         builder.push("debug");
         GOLDEN_EYE_DEBUG = builder.comment("Show the structure ID and coordinates selected by the Golden Eye.").define("goldenEyeDebug", false);
+        GRAVES_DEBUG = builder.comment("Log how death drops are handled and where a grave is placed.")
+                .define("gravesDebug", false);
         builder.pop();
         builder.push("trophy");
         TROPHY_DROP_CHANCE = builder.comment("Base trophy chance. Multiplied by the sum of Looting level and a random bias below 0.25.")

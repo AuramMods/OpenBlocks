@@ -120,6 +120,7 @@ public final class OBProjectorBlockEntity extends BlockEntity implements MenuPro
         final int id = mapId();
         final OBHeightMapData data = OBHeightMapData.get(server, id);
         if (data == null && acceptsMap(item)) {
+            OBHeightMapData.reportMissingReference(server, worldPosition, id);
             final int created = OBHeightMapData.createCanvas(server, worldPosition, OBEmptyMapItem.scale(item));
             inventory.setStackInSlot(0, OBHeightMapItem.create(item, created, OBHeightMapData.get(server, created)));
             return;

@@ -10,6 +10,7 @@ import art.arcane.openblocks.config.OBServerConfig;
 import art.arcane.openblocks.registry.OBBlocks;
 import art.arcane.openblocks.registry.OBItems;
 import art.arcane.openblocks.world.OBGameRules;
+import com.mojang.logging.LogUtils;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -55,22 +56,37 @@ public final class OBGraveHooks {
 
     private OBGraveHooks() {}
 
-    @SubscribeEvent(priority = EventPriority.LOWEST)
+    @SubscribeEvent(priority = EventPriority.LOWEST, receiveCanceled = true)
     public static void onLivingDrops(final LivingDropsEvent event) {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
         if (player instanceof FakePlayer) return;
-        if (event.isCanceled()) return;
+        if (event.isCanceled()) {
+            logDecision(player, "death drops canceled");
+            return;
+        }
 
         final ServerLevel level = player.serverLevel();
-        if (level.getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY)) return;
-        if (!level.getGameRules().getBoolean(OBGameRules.SPAWN_GRAVES)) return;
+        if (level.getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY)) {
+            logDecision(player, "keepInventory enabled");
+            return;
+        }
+        if (!level.getGameRules().getBoolean(OBGameRules.SPAWN_GRAVES)) {
+            logDecision(player, "grave spawning disabled");
+            return;
+        }
 
         final OBGraveDropsEvent dropsEvent = new OBGraveDropsEvent(player);
         for (final ItemEntity itemEntity : event.getDrops()) {
             if (!itemEntity.getItem().isEmpty()) dropsEvent.addItem(itemEntity);
         }
-        if (dropsEvent.getDrops().isEmpty()) return;
-        if (MinecraftForge.EVENT_BUS.post(dropsEvent)) return;
+        if (dropsEvent.getDrops().isEmpty()) {
+            logDecision(player, "no death drops");
+            return;
+        }
+        if (MinecraftForge.EVENT_BUS.post(dropsEvent)) {
+            logDecision(player, "grave drops event canceled");
+            return;
+        }
 
         final List<ItemEntity> graveDrops = new ArrayList<>();
         final List<ItemEntity> worldDrops = new ArrayList<>();
@@ -88,10 +104,22 @@ public final class OBGraveHooks {
             }
         }
 
+        if (OBServerConfig.GRAVES_DEBUG.get()) {
+            LogUtils.getLogger().info("Grave drop choices for {}: {} assigned to the grave, {} left in the world, {} deleted.",
+                    player.getGameProfile().getName(), graveDrops.size(), worldDrops.size(),
+                    handled.size() - graveDrops.size() - worldDrops.size());
+        }
         final boolean stored = !graveDrops.isEmpty() && tryStoreInGrave(level, player, graveDrops, worldDrops);
         event.getDrops().clear();
         for (final ItemEntity drop : worldDrops) if (!drop.getItem().isEmpty()) event.getDrops().add(drop);
         if (!stored) event.getDrops().addAll(graveDrops);
+    }
+
+    private static void logDecision(final ServerPlayer player, final String decision) {
+        if (OBServerConfig.GRAVES_DEBUG.get()) {
+            LogUtils.getLogger().info("Grave placement for {} at {} in {}: {}.", player.getGameProfile().getName(),
+                    player.blockPosition().toShortString(), player.level().dimension().location(), decision);
+        }
     }
 
     private static boolean tryStoreInGrave(
@@ -100,7 +128,10 @@ public final class OBGraveHooks {
         if (OBServerConfig.GRAVE_REQUIRES_ITEM.get() && !player.isCreative()) {
             consumed = java.util.stream.Stream.concat(graveDrops.stream(), worldDrops.stream())
                     .filter(drop -> drop.getItem().is(OBItems.GRAVE.get())).findFirst().orElse(null);
-            if (consumed == null) return false;
+            if (consumed == null) {
+                logDecision(player, "required grave item absent from drops");
+                return false;
+            }
         } else {
             consumed = null;
         }
@@ -116,6 +147,12 @@ public final class OBGraveHooks {
             if (consumed != null) consumed.getItem().shrink(1);
             player.sendSystemMessage(Component.translatableWithFallback("grave.open_blocks.placed",
                     "Your grave is at %s, %s, %s.", gravePos.getX(), gravePos.getY(), gravePos.getZ()));
+            if (OBServerConfig.GRAVES_DEBUG.get()) {
+                LogUtils.getLogger().info("Stored {} stacks in {}'s grave at {} in {}.", stacks.size(),
+                        player.getGameProfile().getName(), gravePos.toShortString(), level.dimension().location());
+            }
+        } else {
+            logDecision(player, canceled ? "grave spawn event canceled" : gravePos == null ? "no suitable location" : "placement rejected");
         }
         if (OBServerConfig.GRAVE_BACKUPS.get()) backup(player, placed ? gravePos : null, placed ? stacks : copyDrops(graveDrops, null));
         return placed;

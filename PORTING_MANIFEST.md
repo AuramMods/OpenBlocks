@@ -790,9 +790,19 @@ Injection behavior:
 - `assets/openblocks/loot_tables/inject` -> loot injection data
 - `assets/openblocks/advancements` -> advancement JSONs
 
+## Localization and Legacy Settings
+
+- The 1.20.1 jar includes the 15 non-English locales from the bundled source. Their translated names, controls, and messages use current translation keys. New text and gaps in the original translations use English. The updated Information Book instructions describe the Forge 1.20.1 controls and settings.
+- `debug.gravesDebug` logs the death-drop disposition and the result of grave placement. `cartographer.reportInvalidRequest` logs missing saved-map IDs when the Projector or Cartographer creates a replacement. Projector network requests are scoped to a projector the player is tracking.
+- `guide.useAdvancedRenderer` selected an OpenGL backend in 1.12.2. The port draws Guide markers through Forge's translucent vertex buffer. Modern canvases use color and stencil quads with shared atlas textures in place of the allocation pool controlled by `canvas.canvasTexturePoolSize`.
+- The 1.12.2 `skyblock.optifineOverride` setting controlled its legacy shader check. The 1.20.1 Sky Block uses Forge render stages and the `skyblock.renderingEnabled` client setting.
+- The 1.20.1 Liquid XP Bucket uses the mod's registered Forge fluid and bucket capabilities. The old `xpBucket.universalBucketSupport` setting controlled the separate Forge Universal Bucket registration in 1.12.2. Direct source pickup and creative visibility retain their own settings.
+- The source declares `hacks.enableExperimentalFeatures` without a consumer. `crane.showTurtles` calls the unfinished legacy creative-turtle helper. The current Miracle Magnet works through CC: Tweaked turtle crafting and equipping.
+
 ## Notable Unused/Inactive or Special Cases
 - `old-1.12.2/src/main/resources/assets/openblocks/blockstates/temp.json` exists and appears unused.
 - Integration modules are present but registration calls are commented out in `OpenBlocks.preInit`:
   - `ModuleAdapters`
   - `ModuleTurtles`
 - `old-1.12.2/OpenModsLib` submodule contents are absent in this snapshot (folder is empty).
+- Legacy language files include entries for a streaming Radio, Digital Fuse, Tuned Crystal, and Wallpaper. The bundled 1.12.2 mod leaves those objects outside its active registries. The Audiophile villager is active and ported.

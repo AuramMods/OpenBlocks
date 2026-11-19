@@ -1,0 +1,14 @@
+{
+  "block.open_blocks.guide": "Bouwplanner",
+  "block.open_blocks.elevator": "Lift",
+  "block.open_blocks.heal": "Verbanddoos",
+  "block.open_blocks.target": "Doel",
+  "block.open_blocks.grave": "Graf",
+  "block.open_blocks.flag": "Vlag",
+  "block.open_blocks.trophy": "Troffee",
+  "block.open_blocks.beartrap": "Berenval",
+  "block.open_blocks.sprinkler": "Sproeier",
+  "item.open_blocks.hang_glider": "Deltavlieger",
+  "item.open_blocks.glider_wing": "Vleugel",
+  "item.open_blocks.luggage": "Bagage"
+}
