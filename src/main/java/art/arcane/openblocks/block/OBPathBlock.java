@@ -9,15 +9,35 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class OBPathBlock extends OBShapeBlock {
+public final class OBPathBlock extends Block {
 
-    public OBPathBlock(
-            final BlockBehaviour.Properties properties,
-            final VoxelShape shape,
-            final VoxelShape collisionShape) {
-        super(properties, shape, collisionShape);
+    private static final VoxelShape SHAPE = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 1.6D, 16.0D);
+
+    public OBPathBlock(final BlockBehaviour.Properties properties) {
+        super(properties);
+    }
+
+    @Override
+    public VoxelShape getShape(final BlockState state, final BlockGetter level, final BlockPos pos, final CollisionContext context) {
+        return SHAPE;
+    }
+
+    @Override
+    public VoxelShape getCollisionShape(final BlockState state, final BlockGetter level, final BlockPos pos, final CollisionContext context) {
+        return Shapes.empty();
+    }
+
+    @Override
+    public VoxelShape getOcclusionShape(final BlockState state, final BlockGetter level, final BlockPos pos) {
+        return Shapes.empty();
+    }
+
+    @Override
+    public boolean propagatesSkylightDown(final BlockState state, final BlockGetter level, final BlockPos pos) {
+        return true;
     }
 
     @Override
@@ -28,7 +48,7 @@ public class OBPathBlock extends OBShapeBlock {
 
     @Override
     public VoxelShape getBlockSupportShape(final BlockState state, final BlockGetter level, final BlockPos pos) {
-        return getShape(state, level, pos, CollisionContext.empty());
+        return SHAPE;
     }
 
     @Override

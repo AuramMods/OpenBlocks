@@ -1,18 +1,22 @@
 package art.arcane.openblocks.gametest;
 
 import art.arcane.openblocks.OpenBlocks;
+import art.arcane.openblocks.block.OBElevatorBlock;
+import art.arcane.openblocks.block.OBElevatorRotatingBlock;
 import art.arcane.openblocks.block.entity.OBPaintCanBlockEntity;
 import art.arcane.openblocks.registry.OBBlocks;
 import art.arcane.openblocks.registry.OBItems;
 import art.arcane.openblocks.registry.OBMissingMappings;
 import java.util.List;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -72,6 +76,40 @@ public final class RegistryMigrationGameTests {
         helper.assertTrue(restored instanceof OBPaintCanBlockEntity can && can.color() == 0x12A4D8 && can.amount() == 17,
                 "The renamed type did not load its existing paint data");
         helper.assertTrue(unknown.getString("id").equals("openblocks:unregistered_block_entity"), "An unsupported type was rewritten");
+        helper.succeed();
+    }
+
+    @GameTest(template = "empty")
+    public static void retiredElevatorRecordsKeepTheBlockState(final GameTestHelper helper) {
+        final var pos = new BlockPos(2, 1, 2);
+        final var elevator = OBBlocks.ELEVATOR_ROTATING.get().defaultBlockState()
+                .setValue(OBElevatorBlock.COLOR, DyeColor.PURPLE).setValue(OBElevatorRotatingBlock.FACING, Direction.WEST);
+        helper.setBlock(pos, elevator);
+        final var location = helper.absolutePos(pos);
+        final var chunk = helper.getLevel().getChunkAt(location);
+
+        final var retired = new CompoundTag();
+        retired.putString("id", "open_blocks:elevator_rotating");
+        retired.putInt("x", location.getX());
+        retired.putInt("y", location.getY());
+        retired.putInt("z", location.getZ());
+        retired.putBoolean("keepPacked", true);
+        final var legacyName = retired.copy();
+        legacyName.putString("id", "OpenBlocks:elevator_rotating");
+        final var unexpected = retired.copy();
+        unexpected.putString("data", "preserve payloads this migration does not recognize");
+        final var entries = new ListTag();
+        entries.add(retired);
+        entries.add(legacyName);
+        entries.add(unexpected);
+        final var saved = new CompoundTag();
+        saved.put("block_entities", entries);
+
+        OBMissingMappings.onChunkDataLoad(new ChunkDataEvent.Load(chunk, saved, ChunkStatus.ChunkType.LEVELCHUNK));
+        helper.assertTrue(entries.size() == 1 && entries.getCompound(0).equals(unexpected),
+                "The migration did not discard only empty retired records");
+        helper.assertTrue(helper.getBlockState(pos) == elevator && chunk.getBlockEntity(location) == null,
+                "The migration changed a rotating elevator's color, facing or live block data");
         helper.succeed();
     }
 

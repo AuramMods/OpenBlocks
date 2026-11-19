@@ -6,6 +6,7 @@ import art.arcane.openblocks.OpenBlocks;
 import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import javax.annotation.Nullable;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -13,6 +14,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.chunk.ChunkStatus;
 import net.minecraftforge.event.level.ChunkDataEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -22,6 +24,8 @@ import net.minecraftforge.registries.RegistryManager;
 
 @Mod.EventBusSubscriber(modid = OpenBlocks.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public final class OBMissingMappings {
+
+    private static final Set<String> BLOCK_ENTITY_HEADER = Set.of("id", "x", "y", "z", "keepPacked");
 
     private static final Map<String, String> BLOCK_ALIASES = withLowercaseAliases(Map.ofEntries(
             entry("vacuumhopper", "vacuum_hopper"),
@@ -108,9 +112,17 @@ public final class OBMissingMappings {
     public static void onChunkDataLoad(final ChunkDataEvent.Load event) {
         // Forge does not save the block entity registry in 1.20.1. Fix the deferred NBT before vanilla reads it.
         final var entries = event.getData().getList("block_entities", Tag.TAG_COMPOUND);
-        for (int i = 0; i < entries.size(); i++) {
+        for (int i = entries.size() - 1; i >= 0; i--) {
             final var entry = entries.getCompound(i);
             final String id = entry.getString("id");
+            // The 1.20.1 scaffold never attached this type. Rotating elevators read their data from the block state.
+            if (event.getStatus() == ChunkStatus.ChunkType.LEVELCHUNK
+                    && ("open_blocks:elevator_rotating".equals(id) || "openblocks:elevator_rotating".equalsIgnoreCase(id))
+                    && BLOCK_ENTITY_HEADER.containsAll(entry.getAllKeys())) {
+                entries.remove(i);
+                event.getChunk().setUnsaved(true);
+                continue;
+            }
             final int separator = id.indexOf(':');
             if (separator < 0) continue;
             final ResourceLocation current = destination(id.substring(0, separator), id.substring(separator + 1), BLOCK_ALIASES);

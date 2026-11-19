@@ -405,7 +405,7 @@ Source: `old-1.12.2/src/main/java/openblocks/OpenBlocks.java`
 | guide | BlockGuide | `Blocks.guide` | TileEntityGuide | ItemGuide | 11 shapes, face controls, redstone gating, and colored marker previews. |
 | builder_guide | BlockBuilderGuide | `Blocks.builderGuide` | TileEntityBuilderGuide | ItemGuide | Adds material-consuming survival placement and obsidian-triggered creative fill. Both Guide types expose `openblocks_guide` with CC: Tweaked. |
 | elevator | BlockElevator | `Blocks.elevator` | - | ItemElevator | `registerDefaultItemModel = false` |
-| elevator_rotating | BlockElevatorRotating | `Blocks.elevatorRotating` | TileEntityElevatorRotating | ItemElevator | `registerDefaultItemModel = false` |
+| elevator_rotating | BlockElevatorRotating | `Blocks.elevatorRotating` | TileEntityElevatorRotating | ItemElevator | The port saves color and facing in the block state. Its early 1.20.1 placeholder type never attached to the block and is retired. |
 | heal | BlockHeal | `Blocks.heal` | TileEntityHealBlock | default | - |
 | target | BlockTarget | `Blocks.target` | TileEntityTarget | default | - |
 | grave | BlockGrave | `Blocks.grave` | TileEntityGrave | default | - |

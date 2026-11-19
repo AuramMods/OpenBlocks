@@ -26,7 +26,6 @@ import art.arcane.openblocks.block.OBRedstoneMachineBlock;
 import art.arcane.openblocks.block.OBRedstoneMachineBlock.Kind;
 import art.arcane.openblocks.block.OBRopeLadderBlock;
 import art.arcane.openblocks.block.OBScaffoldingBlock;
-import art.arcane.openblocks.block.OBShapeBlock;
 import art.arcane.openblocks.block.OBSkyBlock;
 import art.arcane.openblocks.block.OBSpongeBlock;
 import art.arcane.openblocks.block.OBSprinklerBlock;
@@ -45,8 +44,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.world.phys.shapes.Shapes;
-import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -56,7 +53,6 @@ public final class OBBlocks {
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, OpenBlocks.MODID);
 
     private static final List<RegistryObject<Block>> CREATIVE_ORDER = new ArrayList<>();
-    private static final VoxelShape SHAPE_PATH = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 1.6D, 16.0D);
 
     public static final RegistryObject<Block> LADDER = register("ladder");
     public static final RegistryObject<Block> GUIDE = register("guide");
@@ -113,8 +109,6 @@ public final class OBBlocks {
     }
 
     private static Block createBlock(final String id) {
-        final VoxelShape shape = shapeFor(id);
-        final VoxelShape collisionShape = collisionShapeFor(id, shape);
         final BlockBehaviour.Properties properties = isNonOccludingModel(id)
                 ? BlockBehaviour.Properties.copy(Blocks.STONE).noOcclusion()
                 : BlockBehaviour.Properties.copy(Blocks.STONE);
@@ -128,7 +122,7 @@ public final class OBBlocks {
         if ("scaffolding".equals(id)) return new OBScaffoldingBlock(BlockBehaviour.Properties.copy(Blocks.WHITE_WOOL)
                 .strength(0.1F).noOcclusion().randomTicks());
         if ("heal".equals(id)) return new OBHealBlock(properties);
-        if ("path".equals(id)) return new OBPathBlock(properties, shape, collisionShape);
+        if ("path".equals(id)) return new OBPathBlock(properties);
         if ("sponge".equals(id)) return new OBSpongeBlock(BlockBehaviour.Properties.copy(Blocks.SPONGE));
         if ("grave".equals(id)) return new OBGraveBlock(properties.strength(1.5F, 2000.0F)
                 .pushReaction(net.minecraft.world.level.material.PushReaction.BLOCK));
@@ -162,8 +156,7 @@ public final class OBBlocks {
         if ("imaginary".equals(id)) return new OBImaginaryBlock(BlockBehaviour.Properties.of().instabreak().noOcclusion().dynamicShape());
         if ("golden_egg".equals(id)) return new OBGoldenEggBlock(BlockBehaviour.Properties.copy(Blocks.DIRT).noOcclusion());
         if ("sky".equals(id)) return new OBSkyBlock(properties.sound(SoundType.METAL));
-        if (shape != null) return new OBShapeBlock(properties, shape, collisionShape);
-        return new Block(properties);
+        throw new IllegalArgumentException("No block implementation for " + id);
     }
 
     private static boolean isNonOccludingModel(final String id) {
@@ -178,17 +171,4 @@ public final class OBBlocks {
         };
     }
 
-    private static VoxelShape shapeFor(final String id) {
-        return switch (id) {
-            case "path" -> SHAPE_PATH;
-            default -> null;
-        };
-    }
-
-    private static VoxelShape collisionShapeFor(final String id, final VoxelShape shape) {
-        return switch (id) {
-            case "path" -> Shapes.empty();
-            default -> shape == null ? Shapes.block() : shape;
-        };
-    }
 }

@@ -13,7 +13,6 @@ import art.arcane.openblocks.block.entity.OBGraveBlockEntity;
 import art.arcane.openblocks.block.entity.OBGoldenEggBlockEntity;
 import art.arcane.openblocks.block.entity.OBHealBlockEntity;
 import art.arcane.openblocks.block.entity.OBImaginaryBlockEntity;
-import art.arcane.openblocks.block.entity.OBPlaceholderBlockEntity;
 import art.arcane.openblocks.block.entity.OBCanvasBlockEntity;
 import art.arcane.openblocks.block.entity.OBGuideBlockEntity;
 import art.arcane.openblocks.block.entity.OBDrawingTableBlockEntity;
@@ -49,7 +48,6 @@ public final class OBBlockEntities {
 
     public static final RegistryObject<BlockEntityType<OBGuideBlockEntity>> GUIDE = register("guide", (pos, state) -> guide(false, pos, state), OBBlocks.GUIDE);
     public static final RegistryObject<BlockEntityType<OBGuideBlockEntity>> BUILDER_GUIDE = register("builder_guide", (pos, state) -> guide(true, pos, state), OBBlocks.BUILDER_GUIDE);
-    public static final RegistryObject<BlockEntityType<OBPlaceholderBlockEntity>> ELEVATOR_ROTATING = register("elevator_rotating", OBBlocks.ELEVATOR_ROTATING);
     public static final RegistryObject<BlockEntityType<OBHealBlockEntity>> HEAL = register("heal", OBHealBlockEntity::new, OBBlocks.HEAL);
     public static final RegistryObject<BlockEntityType<OBFoldingTargetBlockEntity>> TARGET = register("target", OBFoldingTargetBlockEntity::new, OBBlocks.TARGET);
     public static final RegistryObject<BlockEntityType<OBGraveBlockEntity>> GRAVE = register("grave", OBGraveBlockEntity::new, OBBlocks.GRAVE);
@@ -107,17 +105,6 @@ public final class OBBlockEntities {
 
     public static List<RegistryObject<BlockEntityType<?>>> all() {
         return Collections.unmodifiableList(ALL);
-    }
-
-    @SafeVarargs
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    private static RegistryObject<BlockEntityType<OBPlaceholderBlockEntity>> register(final String id, final RegistryObject<Block>... blocks) {
-        final RegistryObject<BlockEntityType<OBPlaceholderBlockEntity>>[] holder = new RegistryObject[1];
-        holder[0] = BLOCK_ENTITY_TYPES.register(id, () -> BlockEntityType.Builder.of(
-                (pos, state) -> new OBPlaceholderBlockEntity(holder[0], pos, state),
-                resolveBlocks(blocks)).build(null));
-        ALL.add((RegistryObject) holder[0]);
-        return holder[0];
     }
 
     @SafeVarargs

@@ -152,7 +152,7 @@ Checklist:
 - [x] Add regression tests for critical gameplay flows.
 - [x] Multiplayer sanity pass with the packaged jar and all 12 Auram development jars. Two muted clients verified a shared painted glass canvas. JEI transferred the XP Bottler recipe, and Mekanism stored and supplied Liquid XP through its fluid tank.
 - [-] Performance pass for heavy systems (render/network/tick). Shared projector maps use one client snapshot per revision. Guide markers use packed vertex submission. The mixed populated-map and hopper yard sustained 20 TPS.
-- [-] Cleanup dead stubs and document final architecture. The README describes the current package, save compatibility, and isolated test workflow.
+- [x] Remove dead scaffolding and document the current architecture. All 41 legacy blocks have explicit implementations. The rotating elevator uses its block state, and the previous placeholder type never attached to it.
 
 ## Immediate Next Task
 - [x] Reproduce and repair the baseline defects in mixed elevator rotation, sponge handling of logged water, and grave placement fallback. Verified with the standalone GameTest server on 2026-11-18.
