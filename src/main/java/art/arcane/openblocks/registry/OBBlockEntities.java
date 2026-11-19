@@ -26,6 +26,7 @@ import art.arcane.openblocks.block.entity.OBSprinklerBlockEntity;
 import art.arcane.openblocks.block.entity.OBTankBlockEntity;
 import art.arcane.openblocks.block.entity.OBTrophyBlockEntity;
 import art.arcane.openblocks.block.entity.OBVacuumHopperBlockEntity;
+import art.arcane.openblocks.block.entity.OBVillageHighlighterBlockEntity;
 import art.arcane.openblocks.block.entity.OBXPBottlerBlockEntity;
 import art.arcane.openblocks.block.entity.OBXPDrainBlockEntity;
 import art.arcane.openblocks.block.entity.OBXPShowerBlockEntity;
@@ -68,7 +69,7 @@ public final class OBBlockEntities {
             () -> BlockEntityType.Builder.of(OBImaginaryBlockEntity::new, OBBlocks.IMAGINARY.get()).build(null));
     public static final RegistryObject<BlockEntityType<OBFanBlockEntity>> FAN = register("fan", OBFanBlockEntity::new, OBBlocks.FAN);
     public static final RegistryObject<BlockEntityType<OBXPBottlerBlockEntity>> XP_BOTTLER = register("xp_bottler", OBXPBottlerBlockEntity::new, OBBlocks.XP_BOTTLER);
-    public static final RegistryObject<BlockEntityType<OBPlaceholderBlockEntity>> VILLAGE_HIGHLIGHTER = register("village_highlighter", OBBlocks.VILLAGE_HIGHLIGHTER);
+    public static final RegistryObject<BlockEntityType<OBVillageHighlighterBlockEntity>> VILLAGE_HIGHLIGHTER = register("village_highlighter", OBVillageHighlighterBlockEntity::new, OBBlocks.VILLAGE_HIGHLIGHTER);
     public static final RegistryObject<BlockEntityType<OBXpWorkbenchBlockEntity>> AUTO_ANVIL = register("auto_anvil",
             (pos, state) -> new OBXpWorkbenchBlockEntity(false, pos, state), OBBlocks.AUTO_ANVIL);
     public static final RegistryObject<BlockEntityType<OBXpWorkbenchBlockEntity>> AUTO_ENCHANTMENT_TABLE = register("auto_enchantment_table",

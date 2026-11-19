@@ -207,4 +207,5 @@ Checklist:
 - [x] Restore the Golden Egg's hatching sequence, optional block lift, and explosion, and Mini-Me's skin, foraging, and player pickup behavior.
 - [x] Restore the Golden Eye's structure lock, rechargeable durability, and recoverable horizontal and downward flights.
 - [x] Restore all 44 mob trophies, Looting-aware drops, miniature models, sounds, special effects, and cooldown persistence.
-- [ ] Restore the Village Highlighter against the modern village and point-of-interest system.
+- [x] Restore the Village Highlighter's powered overlay, facing and active model, and redstone output for vacant beds.
+- [ ] Restore the Sleeping Bag's temporary sleep and the remaining utility items.

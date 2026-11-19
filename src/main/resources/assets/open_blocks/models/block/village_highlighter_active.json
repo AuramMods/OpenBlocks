@@ -1,0 +1,7 @@
+{
+  "parent": "open_blocks:block/village_highlighter",
+  "textures": {
+    "side": "open_blocks:block/village_side_active",
+    "back": "open_blocks:block/village_back_active"
+  }
+}

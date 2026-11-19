@@ -48,6 +48,6 @@ public final class OBDecorationChunkUpgrade {
 
     private static boolean needsRenderer(final BlockState state) {
         return state.is(OBBlocks.FLAG.get()) || state.is(OBBlocks.SKY.get()) || state.is(OBBlocks.IMAGINARY.get())
-                || state.is(OBBlocks.GOLDEN_EGG.get()) || state.is(OBBlocks.TROPHY.get());
+                || state.is(OBBlocks.GOLDEN_EGG.get()) || state.is(OBBlocks.TROPHY.get()) || state.is(OBBlocks.VILLAGE_HIGHLIGHTER.get());
     }
 }

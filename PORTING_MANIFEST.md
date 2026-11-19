@@ -109,6 +109,11 @@ Current registry classes:
   - `src/main/java/art/arcane/openblocks/trophy/OBTrophyEffects.java` handles the variants' rewards and special interactions.
   - `src/main/java/art/arcane/openblocks/block/entity/OBTrophyBlockEntity.java` saves and synchronizes the mob identity and persists the cooldown.
   - `src/main/java/art/arcane/openblocks/client/OBTrophyRendering.java` renders the pedestal and miniature for items and placed blocks.
+- Village Highlighter:
+  - `src/main/java/art/arcane/openblocks/block/OBVillageHighlighterBlock.java` restores orientation, overlay activation, and bed-capacity redstone output.
+  - `src/main/java/art/arcane/openblocks/world/OBVillageSurvey.java` surveys contiguous vanilla village sections and nearby adult villagers.
+  - `src/main/java/art/arcane/openblocks/block/entity/OBVillageHighlighterBlockEntity.java` sends updates when the live survey changes.
+  - `src/main/java/art/arcane/openblocks/client/OBVillageHighlighterRendering.java` renders the dotted perimeter and the candidate golem search volumes.
 - Sound register: `src/main/java/art/arcane/openblocks/registry/OBSounds.java`
 - Custom statistic register for Bricks dropped: `src/main/java/art/arcane/openblocks/registry/OBStats.java`
 - Enchantment register: `src/main/java/art/arcane/openblocks/registry/OBEnchantments.java`
@@ -370,7 +375,7 @@ Source: `old-1.12.2/src/main/java/openblocks/OpenBlocks.java`
 | imaginary | BlockImaginary | `Blocks.imaginary` | TileEntityImaginary | ItemImaginary | One ID for the Magic Pencil and all crayon colors. Four shapes, inverted modes, per-player visibility and collision, and color-aware pick-block. |
 | fan | BlockFan | `Blocks.fan` | TileEntityFan | default | - |
 | xp_bottler | BlockXPBottler | `Blocks.xpBottler` | TileEntityXPBottler | default | `xpbottler` |
-| village_highlighter | BlockVillageHighlighter | `Blocks.villageHighlighter` | TileEntityVillageHighlighter | default | - |
+| village_highlighter | BlockVillageHighlighter | `Blocks.villageHighlighter` | TileEntityVillageHighlighter | default | Powered overlay follows modern village sections and shows adult villagers' potential golem search volumes. The independent redstone output reports vacant beds in the surveyed area. |
 | path | BlockPath | `Blocks.path` | - | default | - |
 | auto_anvil | BlockAutoAnvil | `Blocks.autoAnvil` | TileEntityAutoAnvil | default | `autoanvil` |
 | auto_enchantment_table | BlockAutoEnchantmentTable | `Blocks.autoEnchantmentTable` | TileEntityAutoEnchantmentTable | default | `autoenchantmenttable` |
