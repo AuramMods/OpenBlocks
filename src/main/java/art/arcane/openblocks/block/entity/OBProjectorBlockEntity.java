@@ -8,6 +8,7 @@ import art.arcane.openblocks.network.OBNetwork;
 import art.arcane.openblocks.registry.OBBlockEntities;
 import art.arcane.openblocks.registry.OBItems;
 import art.arcane.openblocks.world.OBHeightMapData;
+import com.google.common.collect.MapMaker;
 import java.util.Map;
 import java.util.WeakHashMap;
 import javax.annotation.Nullable;
@@ -38,6 +39,15 @@ import net.minecraftforge.items.ItemStackHandler;
 
 public final class OBProjectorBlockEntity extends BlockEntity implements MenuProvider {
 
+    // Projectors on the same client level read one snapshot and build one mesh for each map.
+    // A snapshot can be reclaimed once no loaded projector holds it.
+    private static final Map<Level, Map<Integer, ClientProjection>> CLIENT_PROJECTIONS = new WeakHashMap<>();
+
+    private static final class ClientProjection {
+        @Nullable private OBHeightMapData data;
+        private long nextRequest;
+    }
+
     private final ItemStackHandler inventory = new ItemStackHandler(1) {
         @Override public int getSlotLimit(final int slot) { return 1; }
         @Override public boolean isItemValid(final int slot, final ItemStack stack) { return acceptsMap(stack); }
@@ -55,8 +65,7 @@ public final class OBProjectorBlockEntity extends BlockEntity implements MenuPro
     private int displayedMap = -1;
     private long revision = -1;
     private int emittedLight = -1;
-    @Nullable private OBHeightMapData clientMap;
-    private long nextRequest;
+    @Nullable private ClientProjection clientProjection;
 
     public OBProjectorBlockEntity(final BlockPos pos, final BlockState state) {
         super(OBBlockEntities.PROJECTOR.get(), pos, state);
@@ -72,7 +81,8 @@ public final class OBProjectorBlockEntity extends BlockEntity implements MenuPro
 
     @Nullable
     public OBHeightMapData map() {
-        return level instanceof ServerLevel server ? OBHeightMapData.get(server, mapId()) : clientMap;
+        if (level instanceof ServerLevel server) return OBHeightMapData.get(server, mapId());
+        return clientProjection == null ? null : clientProjection.data;
     }
 
     public void rotate(final int step) {
@@ -88,10 +98,21 @@ public final class OBProjectorBlockEntity extends BlockEntity implements MenuPro
     }
 
     public static void clientTick(final Level level, final BlockPos pos, final BlockState state, final OBProjectorBlockEntity projector) {
-        if (projector.displayedMap < 0 || (projector.clientMap != null && projector.clientMap.revision() >= projector.revision)
-                || level.getGameTime() < projector.nextRequest) return;
-        projector.nextRequest = level.getGameTime() + 20;
+        if (projector.displayedMap < 0) return;
+        final ClientProjection projection = projector.clientProjection(level);
+        if ((projection.data != null && projection.data.revision() >= projector.revision)
+                || level.getGameTime() < projection.nextRequest) return;
+        projection.nextRequest = level.getGameTime() + 20;
         OBNetwork.requestProjection(pos, projector.displayedMap);
+    }
+
+    private ClientProjection clientProjection(@Nullable final Level level) {
+        if (clientProjection == null) {
+            clientProjection = level == null ? new ClientProjection()
+                    : CLIENT_PROJECTIONS.computeIfAbsent(level, ignored -> new MapMaker().weakValues().makeMap())
+                            .computeIfAbsent(displayedMap, ignored -> new ClientProjection());
+        }
+        return clientProjection;
     }
 
     private void refresh(final ServerLevel server) {
@@ -136,9 +157,12 @@ public final class OBProjectorBlockEntity extends BlockEntity implements MenuPro
     }
 
     public void acceptProjection(final int id, final CompoundTag tag) {
-        if (id != displayedMap || tag.getLong("Revision") < revision
-                || (clientMap != null && tag.getLong("Revision") <= clientMap.revision())) return;
-        clientMap = OBHeightMapData.load(tag);
+        final long receivedRevision = tag.getLong("Revision");
+        if (id != displayedMap || receivedRevision < revision) return;
+        final ClientProjection projection = clientProjection(level);
+        if (projection.data != null && receivedRevision <= projection.data.revision()) return;
+        projection.data = OBHeightMapData.load(tag);
+        projection.nextRequest = 0;
     }
 
     private void notifyClients() {
@@ -208,8 +232,12 @@ public final class OBProjectorBlockEntity extends BlockEntity implements MenuPro
     public void handleUpdateTag(final CompoundTag tag) {
         final int id = tag.getInt("Map");
         final long nextRevision = tag.getLong("Revision");
-        if (id != displayedMap || nextRevision < revision) clientMap = null;
-        if (id != displayedMap || nextRevision != revision) nextRequest = 0;
+        if (id != displayedMap) {
+            clientProjection = null;
+        } else if (nextRevision < revision && clientProjection != null) {
+            clientProjection.data = null;
+            clientProjection.nextRequest = 0;
+        }
         displayedMap = id;
         revision = nextRevision;
         rotation = tag.getByte("Rotation") & 3;

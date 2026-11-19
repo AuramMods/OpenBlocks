@@ -54,6 +54,7 @@ Current registry classes:
 - Projector inventory, map display, and scripting:
   - `src/main/java/art/arcane/openblocks/block/OBProjectorBlock.java`
   - `src/main/java/art/arcane/openblocks/block/entity/OBProjectorBlockEntity.java`
+  - Projectors showing the same map on a client level share its downloaded snapshot and render mesh. Each projector keeps its own rotation, and requests still use an individually tracked projector position.
   - `src/main/java/art/arcane/openblocks/menu/OBProjectorMenu.java`
   - `src/main/java/art/arcane/openblocks/client/OBProjectorScreen.java`
   - `src/main/java/art/arcane/openblocks/client/OBProjectorRendering.java`

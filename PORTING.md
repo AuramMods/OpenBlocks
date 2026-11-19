@@ -151,7 +151,7 @@ Checklist:
 - [x] Verify Forge registry remaps and deferred block-entity ID repair on a disposable 1.20.1 save.
 - [x] Add regression tests for critical gameplay flows.
 - [x] Multiplayer sanity pass with the packaged jar and all 12 Auram development jars. Two muted clients verified a shared painted glass canvas. JEI transferred the XP Bottler recipe, and Mekanism stored and supplied Liquid XP through its fluid tank.
-- [ ] Performance pass for heavy systems (render/network/tick).
+- [-] Performance pass for heavy systems (render/network/tick). Shared projector maps now use one client snapshot per revision. The dense-scene profile identified Guide marker rendering as the next bottleneck.
 - [ ] Cleanup dead stubs and document final architecture.
 
 ## Immediate Next Task
