@@ -95,6 +95,7 @@ public final class OBMissingMappings {
         remap(event, Registries.ENCHANTMENT, Map.of());
         remap(event, Registries.MENU, MENU_ALIASES);
         remap(event, Registries.RECIPE_SERIALIZER, Map.of());
+        remap(event, Registries.VILLAGER_PROFESSION, Map.of());
     }
 
     private static <T> void remap(final MissingMappingsEvent event,

@@ -117,7 +117,7 @@ Checklist:
 - [-] Rebuild advancement trigger plumbing.
 - [-] Rebuild command registration.
 - [ ] Rebuild loot injection strategy.
-- [ ] Rebuild villager/trade registration strategy.
+- [x] Restore the Audiophile with a jukebox job site and the original three trade tiers.
 - [-] Rebuild game rule registration strategy.
 - [-] Rebuild world data persistence equivalents (map data, grave data dependencies, etc).
 
@@ -167,7 +167,7 @@ Checklist:
 - [x] Verify `/ob_inventory` store, restore, and spawn for the full player inventory, ender chest, and Forge extension payloads. Restore the death backup switch and support vanilla-item 1.12.2 inventory dumps.
 - [x] Restore the grave placement event, legacy search order, height bounds, dirt base, destructive fallback, and optional consumption of a carried grave.
 - [x] Restore grave facing, epitaph and model variants, blast resistance, and ambient skeleton and bat spawning.
-- [ ] Finish legacy recipe migration for skipped recipe files and remaining metadata-collapsed color or subtype conversions.
+- [x] Account for all 189 legacy recipe files. The 20 filenames absent from the port are represented by the rotating elevator upgrade, Sky Block inversion, and Flim-Flam book serializers.
 - [x] Restore configurable sponge cleanup, Sponge on a Stick, scattered-stone path rendering, and the healing block's one-tick pulses.
 - [x] Restore tank block and item storage, connected transfer and rendering, XP and bucket exchange, and the Liquid XP block assets.
 - [x] Restore the XP Drain and redstone-powered XP Shower. The drain transfers whole XP into a fluid receiver, and the shower releases falling XP orbs that a drain can collect.

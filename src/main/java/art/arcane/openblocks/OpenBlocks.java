@@ -20,6 +20,7 @@ import art.arcane.openblocks.registry.OBFluidTypes;
 import art.arcane.openblocks.registry.OBFluids;
 import art.arcane.openblocks.registry.OBItems;
 import art.arcane.openblocks.registry.OBMenuTypes;
+import art.arcane.openblocks.registry.OBProfessions;
 import art.arcane.openblocks.registry.OBRecipeSerializers;
 import art.arcane.openblocks.registry.OBSounds;
 import art.arcane.openblocks.registry.OBStats;
@@ -72,6 +73,8 @@ public class OpenBlocks {
         OBEnchantments.ENCHANTMENTS.register(modEventBus);
         OBMenuTypes.MENU_TYPES.register(modEventBus);
         OBRecipeSerializers.RECIPE_SERIALIZERS.register(modEventBus);
+        OBProfessions.POI_TYPES.register(modEventBus);
+        OBProfessions.PROFESSIONS.register(modEventBus);
         LOOT_MODIFIERS.register(modEventBus);
         modEventBus.addListener(OBCapabilities::onRegisterCapabilities);
         if (ModList.get().isLoaded("computercraft")) {

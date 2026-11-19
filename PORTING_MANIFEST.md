@@ -355,24 +355,24 @@ Source: `old-1.12.2/src/main/resources/assets/openblocks/recipes`
   - `forge:ore_shapeless`: 78
   - `openmods:enchanting`: 4
 - Modern special recipes are defined in `src/main/resources/data/open_blocks/recipes` alongside the legacy Pointer conversion.
+- The port retains 169 legacy recipe filenames. The three custom replacements account for the other 20:
+  - `elevator_rotating_1.json` upgrades all 16 elevator colors.
+  - `sky_1.json` toggles both Sky Block polarities with a redstone torch.
+  - `flim_flam_book.json` crafts all four legacy book levels from one to four emeralds.
 - Mechanical conversion output now present:
-  - `src/main/resources/data/open_blocks/recipes/legacy` (170 recipes, including the single upgrade that covers all elevator colors)
   - `src/main/resources/data/open_blocks/tags/items/legacy_ore_dict` (35 compatibility item-tag files for former ore-dict names)
   - Converted types:
     - `forge:ore_shaped` -> `minecraft:crafting_shaped`
     - `forge:ore_shapeless` -> `minecraft:crafting_shapeless`
   - Conversion baseline details:
     - legacy `openblocks:*` IDs remapped to `open_blocks:*`
-    - vanilla metadata resolves to flattened item IDs. Legacy generic components and the pointer now use distinct IDs. Color and state variants of other OpenBlocks items still need migration.
+    - Vanilla metadata resolves to flattened item IDs. Legacy generic components and the Pointer now use distinct IDs. Color and state variants use item tags or custom recipes.
     - ore dictionary entries translated to `open_blocks:legacy_ore_dict/*` tags (now populated with broader `forge`/`minecraft` group tags plus vanilla fallback items)
   - Legacy `openmods:enchanting` replacements:
     - `open_blocks:flim_flam_book` custom crafting recipe implemented in:
       - `src/main/java/art/arcane/openblocks/recipe/OBFlimFlamBookRecipe.java`
       - `src/main/resources/data/open_blocks/recipes/flim_flam_book.json`
-- Known conversion blockers (breadth-pass):
-  - Ore dictionary ingredient conversion (`forge:ore_dict` -> modern tags).
-  - Metadata-based result variants (`data` field) for color/state/meta-item fidelity.
-  - Metadata/meta-item fidelity for converted legacy recipes still needs a depth pass.
+- The release pass still needs to check loaded ingredients, result variants, and survival acquisition against the legacy corpus.
 
 ## Blocks (`OpenBlocks.Blocks`)
 Source: `old-1.12.2/src/main/java/openblocks/OpenBlocks.java`
@@ -735,7 +735,9 @@ Injection behavior:
 ## Other Registries and Global Hooks
 - Villager profession registry:
   - Source: `old-1.12.2/src/main/java/openblocks/common/RadioVillagerTrades.java`
-  - Registers profession `openblocks:radio`, career `audiophile`
+  - The legacy `openblocks:radio` profession and Audiophile career are now `open_blocks:radio`. Minecraft 1.20.1 villagers claim a jukebox and wear the original costume.
+  - The novice buys 5–7 note blocks for one emerald, the apprentice sells a jukebox for 10–15 emeralds, and the journeyman sells two distinct items from `minecraft:music_discs` for 3–6 emeralds each.
+  - The world server setting `radio.radioVillagerEnabled` controls generation of new offers. Saved villagers retain their profession and offers.
 - Ore dictionary:
   - Source: `old-1.12.2/src/main/java/openblocks/OpenBlocks.java`
   - `craftingTableWood`

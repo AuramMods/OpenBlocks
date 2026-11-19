@@ -95,6 +95,7 @@ public final class OBServerConfig {
     public static final ForgeConfigSpec.ConfigValue<List<? extends String>> FLIM_FLAM_BLACKLIST;
     public static final ForgeConfigSpec.BooleanValue FLIM_FLAM_REVERSE_BLACKLIST;
     public static final ForgeConfigSpec.BooleanValue FLIM_FLAM_SAFE_ONLY;
+    public static final ForgeConfigSpec.BooleanValue RADIO_VILLAGER_ENABLED;
 
     static {
         final var builder = new ForgeConfigSpec.Builder();
@@ -277,6 +278,10 @@ public final class OBServerConfig {
         builder.push("loot");
         TECHNICOLOR_LOOT = builder.comment("Add Technicolor Glasses to mineshaft and dungeon loot.")
                 .define("technicolorGlasses", true);
+        builder.pop();
+        builder.push("radio");
+        RADIO_VILLAGER_ENABLED = builder.comment("Generate new Audiophile trades. Existing offers stay available.")
+                .define("radioVillagerEnabled", true);
         builder.pop();
         builder.push("canvas");
         CANVAS_REPLACE = builder.comment("Allow brushes to paint suitable blocks by wrapping their original block state.")
