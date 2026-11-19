@@ -241,13 +241,14 @@ Current validation status:
 - Run-log note: `run/logs/latest.log` had a concrete missing texture warning for `open_blocks:paint_mixer` (`open_blocks:model/paint_mixer`).
   - Fixed by switching to atlas-safe `open_blocks:block/paint_mixer_model` and adding `textures/block/paint_mixer_model.png`.
 - Legacy remap note:
-  - `src/main/java/art/arcane/openblocks/registry/OBMissingMappings.java` now handles compatibility remaps for missing mappings.
-  - Namespace remap coverage: `openblocks` and `OpenBlocks` to canonical `open_blocks`.
-  - Alias coverage includes legacy camelCase/compact IDs and lowercased fallback forms for blocks/items/fluids/block entities/menus.
+  - `src/main/java/art/arcane/openblocks/registry/OBMissingMappings.java` resolves replacement IDs in Forge's active registry. Block-item aliases use the same names as the placed blocks. Unrecognized IDs remain subject to Forge's missing-mapping handling.
+  - Saved Forge snapshots can remap the `openblocks` namespace and known compact IDs under `open_blocks`. The chunk loader also repairs historical capitalization in raw block-entity NBT, while preserving its payload.
   - Core aliases include:
     - blocks: `vacuumhopper`, `bigbutton`, `xpbottler`, `autoanvil`, `autoenchantmenttable`, `xpdrain`, `blockbreaker`, `blockPlacer`, `itemDropper`, `ropeladder`, `donationStation`, `paintmixer`, `paintcan`, `canvasglass`, `drawingtable`, `xpshower`, `goldenegg`
     - items: `hangglider`, `sonicglasses`, `pencilGlasses`, `crayonGlasses`, `technicolorGlasses`, `seriousGlasses`, `craneControl`, `craneBackpack`, `filledbucket`, `sleepingBag`, `paintBrush`, `heightMap`, `emptyMap`, `tastyClay`, `goldenEye`, `genericUnstackable`, `infoBook`, `devnull`, `spongeonastick`, `epicEraser`
     - fluid: `liquidxp` -> `xpjuice`
+  - Packaged verification used a disposable flattened 1.20.1 save with legacy names in its snapshot, palettes, block entities, chest stacks, fluid tanks, and entity records.
+  - Native 1.12.2 worlds use numeric chunk IDs and metadata alongside the old `FML` registry snapshot. They need a separate conversion step. Loading a disposable native world directly left its OpenBlocks blocks as air and removed its modded chest stacks. The vanilla chest and diamonds survived.
 - Systems skeleton note:
   - `src/main/java/art/arcane/openblocks/command/OBCommands.java` now registers the three legacy command IDs in Brigadier form (`flimflam`, `luck`, `ob_inventory`).
   - `src/main/java/art/arcane/openblocks/command/OBInventoryStore.java` writes complete compressed inventory dumps for `/ob_inventory` and reads existing 1.20.1 files.

@@ -4,25 +4,24 @@ import static java.util.Map.entry;
 
 import art.arcane.openblocks.OpenBlocks;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import javax.annotation.Nullable;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.event.level.ChunkDataEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.MissingMappingsEvent;
+import net.minecraftforge.registries.RegistryManager;
 
 @Mod.EventBusSubscriber(modid = OpenBlocks.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public final class OBMissingMappings {
-
-    private static final List<String> LEGACY_MODIDS = List.of(
-            "openblocks",
-            "OpenBlocks");
 
     private static final Map<String, String> BLOCK_ALIASES = withLowercaseAliases(Map.ofEntries(
             entry("vacuumhopper", "vacuum_hopper"),
@@ -43,7 +42,7 @@ public final class OBMissingMappings {
             entry("xpshower", "xp_shower"),
             entry("goldenegg", "golden_egg")));
 
-    private static final Map<String, String> ITEM_ALIASES = withLowercaseAliases(Map.ofEntries(
+    private static final Map<String, String> ITEM_ALIASES = withBlockItemAliases(Map.ofEntries(
             entry("hangglider", "hang_glider"),
             entry("sonicglasses", "sonic_glasses"),
             entry("pencilGlasses", "pencil_glasses"),
@@ -98,33 +97,55 @@ public final class OBMissingMappings {
         remap(event, Registries.VILLAGER_PROFESSION, Map.of());
     }
 
+    @SubscribeEvent
+    public static void onChunkDataLoad(final ChunkDataEvent.Load event) {
+        // Forge does not save the block entity registry in 1.20.1. Fix the deferred NBT before vanilla reads it.
+        final var entries = event.getData().getList("block_entities", Tag.TAG_COMPOUND);
+        for (int i = 0; i < entries.size(); i++) {
+            final var entry = entries.getCompound(i);
+            final String id = entry.getString("id");
+            final int separator = id.indexOf(':');
+            if (separator < 0) continue;
+            final ResourceLocation current = destination(id.substring(0, separator), id.substring(separator + 1), BLOCK_ALIASES);
+            if (current != null && BuiltInRegistries.BLOCK_ENTITY_TYPE.containsKey(current)) {
+                entry.putString("id", current.toString());
+                event.getChunk().setUnsaved(true);
+            }
+        }
+    }
+
     private static <T> void remap(final MissingMappingsEvent event,
             final ResourceKey<? extends Registry<T>> registryKey,
             final Map<String, String> aliases) {
-        for (String legacyModid : LEGACY_MODIDS) remapNamespace(event, registryKey, legacyModid, aliases, true);
-        remapNamespace(event, registryKey, OpenBlocks.MODID, aliases, false);
-    }
-
-    private static <T> void remapNamespace(final MissingMappingsEvent event,
-            final ResourceKey<? extends Registry<T>> registryKey,
-            final String namespace,
-            final Map<String, String> aliases,
-            final boolean applyIdentity) {
-        for (MissingMappingsEvent.Mapping<T> mapping : event.getMappings(registryKey, namespace)) {
-            final String oldPath = mapping.getKey().getPath();
-            final String newPath = aliases.getOrDefault(oldPath, oldPath);
-            if (!applyIdentity && oldPath.equals(newPath)) continue;
-
-            final ResourceLocation targetId = ResourceLocation.fromNamespaceAndPath(OpenBlocks.MODID, newPath);
-            final T target = mapping.getRegistry().getValue(targetId);
+        if (event.getKey() != registryKey) return;
+        // The mapping's registry is still being reconstructed from the save. Its replacement may not be present yet.
+        final var registered = RegistryManager.ACTIVE.getRegistry(registryKey);
+        for (final var mapping : event.getAllMappings(registryKey)) {
+            final ResourceLocation id = mapping.getKey();
+            final ResourceLocation current = destination(id.getNamespace(), id.getPath(), aliases);
+            if (current == null) continue;
+            final T target = registered.getRaw(current);
             if (target != null) mapping.remap(target);
         }
+    }
+
+    @Nullable
+    private static ResourceLocation destination(final String namespace, final String path, final Map<String, String> aliases) {
+        final boolean legacyNamespace = "openblocks".equalsIgnoreCase(namespace);
+        if (!legacyNamespace && !OpenBlocks.MODID.equals(namespace)) return null;
+        final String newPath = aliases.getOrDefault(path.toLowerCase(Locale.ROOT), path);
+        return legacyNamespace || !path.equals(newPath) ? ResourceLocation.tryBuild(OpenBlocks.MODID, newPath) : null;
+    }
+
+    private static Map<String, String> withBlockItemAliases(final Map<String, String> standaloneItems) {
+        final var aliases = new LinkedHashMap<>(BLOCK_ALIASES);
+        aliases.putAll(withLowercaseAliases(standaloneItems));
+        return Map.copyOf(aliases);
     }
 
     private static Map<String, String> withLowercaseAliases(final Map<String, String> aliases) {
         final Map<String, String> expanded = new LinkedHashMap<>();
         for (Map.Entry<String, String> entry : aliases.entrySet()) {
-            expanded.put(entry.getKey(), entry.getValue());
             expanded.put(entry.getKey().toLowerCase(Locale.ROOT), entry.getValue());
         }
         return Map.copyOf(expanded);

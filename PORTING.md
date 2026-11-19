@@ -147,9 +147,9 @@ Per-feature checklist template:
 Goal: stabilize and protect the port.
 
 Checklist:
-- [ ] Validate old-world migration behavior where practical.
-- [ ] Revisit legacy ID mapping/remap behavior.
-- [ ] Add regression tests for critical gameplay flows.
+- [-] Validate old-world migration behavior where practical. Earlier 1.20.1 saves and flattened registry aliases are verified. Native 1.12.2 data needs conversion before opening it in 1.20.1.
+- [x] Verify Forge registry remaps and deferred block-entity ID repair on a disposable 1.20.1 save.
+- [x] Add regression tests for critical gameplay flows.
 - [ ] Multiplayer sanity pass.
 - [ ] Performance pass for heavy systems (render/network/tick).
 - [ ] Cleanup dead stubs and document final architecture.
