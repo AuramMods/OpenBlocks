@@ -75,7 +75,7 @@ Checklist:
 - [x] Cross-check that each registered block/item ID has matching model/lang assets.
 
 Exit criteria:
-- [ ] Data generation/resources run without missing-model or missing-lang spam for core objects.
+- [x] Datagen passes and packaged model, texture, and sound references resolve. Core blocks have English names, and the muted Forge client loaded the assets.
 
 Validation log:
 - [x] Repaired the canvas recipe to use oak fence and narrowed legacy tags to the intended materials and dye colors. The standalone game server loaded the canvas recipe and verified ingredient matching on 2026-11-18.
@@ -111,26 +111,26 @@ Validation log:
 Goal: recreate cross-cutting systems in thin form before deep feature parity.
 
 Checklist:
-- [ ] Replace old GUI/container flow with modern menu/screen flow.
-- [-] Rebuild capability equivalents (player/entity state).
-- [-] Rebuild networking layer for events/RPC replacements. The elevator request is the first registered serverbound packet.
-- [-] Rebuild advancement trigger plumbing.
-- [-] Rebuild command registration.
-- [ ] Rebuild loot injection strategy.
+- [x] Replace legacy containers and GUIs with Forge menus and client screens.
+- [x] Attach and persist luck, pedometer, and digestion state with Forge player capabilities.
+- [x] Synchronize gameplay controls and saved state through Forge packets, block entity updates, and menu data slots.
+- [x] Restore the Be Silly and /dev/null advancement triggers.
+- [x] Register the inventory, luck, and Flim-Flam commands with Brigadier.
+- [x] Inject Technicolor Glasses into both legacy chest loot tables.
 - [x] Restore the Audiophile with a jukebox job site and the original three trade tiers.
-- [-] Rebuild game rule registration strategy.
-- [-] Rebuild world data persistence equivalents (map data, grave data dependencies, etc).
+- [x] Register the `openblocks:spawn_graves` game rule.
+- [x] Persist height-map surveys, grave inventories, and inventory backups in the world save.
 
 Exit criteria:
-- [ ] Server and client run with all major systems wired (even if behavior is simplified).
+- [x] The packaged dedicated server and muted client ran with the major systems wired. Runtime checks are recorded in `PORTING_MEMORY.md`.
 
 ## Phase 4: Feature Depth Passes (By Domain)
 Goal: move from "exists" to "works correctly".
 
 Suggested order:
 - [x] Transportation/domain: Hang Glider, Luggage, wearable crane, and Miracle Magnet turtle upgrade
-- [-] Storage/domain: tanks, xp systems, vacuum hopper, donation station
-- [-] Utility/domain: block breaker/placer/dropper, auto anvil/enchantment table
+- [x] Storage/domain: tanks, XP systems, vacuum hopper, and donation station
+- [x] Utility/domain: block breaker, placer, and dropper, plus the auto anvil and enchantment table
 - [x] Visual/domain: canvas, paint, stencils, and glyphs
 - [-] Entity/domain: mini-me, golden eye, and the remaining entities in the manifest
 - [x] Fun/domain: mob trophies, Flim-Flam combat and luck, and the 17 prank actions.
@@ -151,8 +151,8 @@ Checklist:
 - [x] Verify Forge registry remaps and deferred block-entity ID repair on a disposable 1.20.1 save.
 - [x] Add regression tests for critical gameplay flows.
 - [x] Multiplayer sanity pass with the packaged jar and all 12 Auram development jars. Two muted clients verified a shared painted glass canvas. JEI transferred the XP Bottler recipe, and Mekanism stored and supplied Liquid XP through its fluid tank.
-- [-] Performance pass for heavy systems (render/network/tick). Shared projector maps now use one client snapshot per revision. The dense-scene profile identified Guide marker rendering as the next bottleneck.
-- [ ] Cleanup dead stubs and document final architecture.
+- [-] Performance pass for heavy systems (render/network/tick). Shared projector maps use one client snapshot per revision. Guide markers use packed vertex submission. The mixed populated-map and hopper yard sustained 20 TPS.
+- [-] Cleanup dead stubs and document final architecture. The README describes the current package, save compatibility, and isolated test workflow.
 
 ## Immediate Next Task
 - [x] Reproduce and repair the baseline defects in mixed elevator rotation, sponge handling of logged water, and grave placement fallback. Verified with the standalone GameTest server on 2026-11-18.

@@ -46,6 +46,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.joml.Matrix3f;
 import org.joml.Quaternionf;
+import org.joml.Vector3f;
+import org.joml.Vector4f;
 
 public final class OBGuideRendering {
 
@@ -97,6 +99,7 @@ public final class OBGuideRendering {
 
         private static final RenderType TRANSLUCENT = RenderType.entityTranslucent(TextureAtlas.LOCATION_BLOCKS);
         private static final int VERTEX_SIZE = DefaultVertexFormat.BLOCK.getIntegerSize();
+        private static final Direction[] FACES = Direction.values();
         private static final Map<OBGuideOrientation, Quaternionf> ROTATIONS = new java.util.EnumMap<>(OBGuideOrientation.class);
         private final Map<OBGuideBlockEntity, Preview> previews = new WeakHashMap<>();
         private BakedModel marker;
@@ -140,7 +143,7 @@ public final class OBGuideRendering {
             final var vertices = new ArrayList<MarkerVertex>();
             final var random = RandomSource.create(0);
             addQuads(vertices, model.getQuads(null, null, random, ModelData.EMPTY, null));
-            for (final Direction face : Direction.values()) addQuads(vertices, model.getQuads(null, face, random, ModelData.EMPTY, null));
+            for (final Direction face : FACES) addQuads(vertices, model.getQuads(null, face, random, ModelData.EMPTY, null));
             markerVertices = List.copyOf(vertices);
         }
 
@@ -159,9 +162,15 @@ public final class OBGuideRendering {
         private void renderMarkers(final List<Section> sections, final BlockPos origin, final Frustum frustum, final float scale, final int rgb,
                 final PoseStack.Pose pose, final VertexConsumer vertices, final int overlay) {
             if (scale <= 0) return;
-            final int red = rgb >> 16 & 255;
-            final int green = rgb >> 8 & 255;
-            final int blue = rgb & 255;
+            final float red = (rgb >> 16 & 255) / 255F;
+            final float green = (rgb >> 8 & 255) / 255F;
+            final float blue = (rgb & 255) / 255F;
+            final var position = new Vector4f();
+            final var matrix = pose.pose();
+            final var normals = new Vector3f[FACES.length];
+            for (final Direction face : FACES) {
+                normals[face.ordinal()] = pose.normal().transform(new Vector3f(face.getStepX(), face.getStepY(), face.getStepZ()));
+            }
             for (final Section section : sections) {
                 if (frustum != null && !frustum.isVisible(section.bounds().move(origin))) continue;
                 for (final BlockPos point : section.points()) {
@@ -169,9 +178,11 @@ public final class OBGuideRendering {
                     final float y = point.getY() + 0.5F;
                     final float z = point.getZ() + 0.5F;
                     for (final MarkerVertex vertex : markerVertices) {
-                        vertices.vertex(pose.pose(), x + scale * vertex.x(), y + scale * vertex.y(), z + scale * vertex.z())
-                                .color(red, green, blue, 255).uv(vertex.u(), vertex.v()).overlayCoords(overlay).uv2(LightTexture.FULL_BRIGHT)
-                                .normal(pose.normal(), vertex.face().getStepX(), vertex.face().getStepY(), vertex.face().getStepZ()).endVertex();
+                        matrix.transform(position.set(x + scale * vertex.x(), y + scale * vertex.y(), z + scale * vertex.z(), 1));
+                        final Vector3f normal = normals[vertex.face().ordinal()];
+                        // The packed quad format writes all vertex attributes together in BufferBuilder.
+                        vertices.vertex(position.x(), position.y(), position.z(), red, green, blue, 1, vertex.u(), vertex.v(),
+                                overlay, LightTexture.FULL_BRIGHT, normal.x(), normal.y(), normal.z());
                     }
                 }
             }

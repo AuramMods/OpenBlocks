@@ -79,6 +79,7 @@ Current registry classes:
 - Guide and Builder Guide:
   - `src/main/java/art/arcane/openblocks/block/OBGuideBlock.java`
   - `src/main/java/art/arcane/openblocks/block/entity/OBGuideBlockEntity.java`
+  - The client submits complete translucent marker vertices with shared face normals. The preview uses the stored shape, orientation, and color, with the existing redstone gating and shape transition.
   - `src/main/java/art/arcane/openblocks/guide/OBGuideShape.java`
   - `src/main/java/art/arcane/openblocks/guide/OBGuideOrientation.java`
   - `src/main/java/art/arcane/openblocks/guide/OBGuideControls.java`
