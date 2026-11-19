@@ -1,4 +1,5 @@
 {
+  "render_type": "minecraft:translucent",
   "parent": "minecraft:block/cube_column",
   "textures": {
     "end": "open_blocks:block/guide_top_new",

@@ -1,3 +1,12 @@
 {
-  "parent": "open_blocks:block/builder_guide"
+  "parent": "minecraft:block/block",
+  "loader": "forge:composite",
+  "children": {
+    "housing": {
+      "parent": "open_blocks:block/builder_guide"
+    },
+    "core": {
+      "parent": "open_blocks:block/builder_guide_core"
+    }
+  }
 }

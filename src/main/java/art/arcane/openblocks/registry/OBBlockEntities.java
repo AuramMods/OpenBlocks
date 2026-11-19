@@ -13,6 +13,7 @@ import art.arcane.openblocks.block.entity.OBGraveBlockEntity;
 import art.arcane.openblocks.block.entity.OBHealBlockEntity;
 import art.arcane.openblocks.block.entity.OBPlaceholderBlockEntity;
 import art.arcane.openblocks.block.entity.OBCanvasBlockEntity;
+import art.arcane.openblocks.block.entity.OBGuideBlockEntity;
 import art.arcane.openblocks.block.entity.OBDrawingTableBlockEntity;
 import art.arcane.openblocks.block.entity.OBPaintCanBlockEntity;
 import art.arcane.openblocks.block.entity.OBPaintMixerBlockEntity;
@@ -42,8 +43,8 @@ public final class OBBlockEntities {
 
     private static final List<RegistryObject<BlockEntityType<?>>> ALL = new ArrayList<>();
 
-    public static final RegistryObject<BlockEntityType<OBPlaceholderBlockEntity>> GUIDE = register("guide", OBBlocks.GUIDE);
-    public static final RegistryObject<BlockEntityType<OBPlaceholderBlockEntity>> BUILDER_GUIDE = register("builder_guide", OBBlocks.BUILDER_GUIDE);
+    public static final RegistryObject<BlockEntityType<OBGuideBlockEntity>> GUIDE = register("guide", (pos, state) -> guide(false, pos, state), OBBlocks.GUIDE);
+    public static final RegistryObject<BlockEntityType<OBGuideBlockEntity>> BUILDER_GUIDE = register("builder_guide", (pos, state) -> guide(true, pos, state), OBBlocks.BUILDER_GUIDE);
     public static final RegistryObject<BlockEntityType<OBPlaceholderBlockEntity>> ELEVATOR_ROTATING = register("elevator_rotating", OBBlocks.ELEVATOR_ROTATING);
     public static final RegistryObject<BlockEntityType<OBHealBlockEntity>> HEAL = register("heal", OBHealBlockEntity::new, OBBlocks.HEAL);
     public static final RegistryObject<BlockEntityType<OBFoldingTargetBlockEntity>> TARGET = register("target", OBFoldingTargetBlockEntity::new, OBBlocks.TARGET);
@@ -86,6 +87,11 @@ public final class OBBlockEntities {
     public static final RegistryObject<BlockEntityType<OBPlaceholderBlockEntity>> GOLDEN_EGG = register("golden_egg", OBBlocks.GOLDEN_EGG);
 
     private OBBlockEntities() {}
+
+    private static OBGuideBlockEntity guide(final boolean builder, final net.minecraft.core.BlockPos pos,
+            final net.minecraft.world.level.block.state.BlockState state) {
+        return new OBGuideBlockEntity((builder ? BUILDER_GUIDE : GUIDE).get(), pos, state);
+    }
 
     private static OBCanvasBlockEntity canvas(final boolean glass, final net.minecraft.core.BlockPos pos,
             final net.minecraft.world.level.block.state.BlockState state) {

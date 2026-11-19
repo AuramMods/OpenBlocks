@@ -11,6 +11,7 @@ import art.arcane.openblocks.item.OBElevatorItem;
 import art.arcane.openblocks.item.OBEmptyMapItem;
 import art.arcane.openblocks.item.OBFlagItem;
 import art.arcane.openblocks.item.OBGlyphItem;
+import art.arcane.openblocks.item.OBGuideItem;
 import art.arcane.openblocks.item.OBHangGliderItem;
 import art.arcane.openblocks.item.OBHeightMapItem;
 import art.arcane.openblocks.item.OBLuggageItem;
@@ -47,8 +48,8 @@ public final class OBItems {
 
     // Block items
     public static final RegistryObject<Item> LADDER = registerBlockItem("ladder", OBBlocks.LADDER);
-    public static final RegistryObject<Item> GUIDE = registerBlockItem("guide", OBBlocks.GUIDE);
-    public static final RegistryObject<Item> BUILDER_GUIDE = registerBlockItem("builder_guide", OBBlocks.BUILDER_GUIDE);
+    public static final RegistryObject<Item> GUIDE = registerItem("guide", () -> new OBGuideItem(OBBlocks.GUIDE.get()));
+    public static final RegistryObject<Item> BUILDER_GUIDE = registerItem("builder_guide", () -> new OBGuideItem(OBBlocks.BUILDER_GUIDE.get()));
     public static final RegistryObject<Item> ELEVATOR = registerItem("elevator",
             () -> new OBElevatorItem(OBBlocks.ELEVATOR.get(), new Item.Properties()));
     public static final RegistryObject<Item> ELEVATOR_ROTATING = registerItem("elevator_rotating",

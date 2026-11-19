@@ -12,6 +12,7 @@ public final class OBClientConfig {
     public static final ForgeConfigSpec.BooleanValue PROJECTOR_CONE;
     public static final ForgeConfigSpec.IntValue PROJECTOR_BRIGHTNESS;
     public static final ForgeConfigSpec.BooleanValue GLYPHS_IN_SEARCH;
+    public static final ForgeConfigSpec.DoubleValue GUIDE_RENDER_DISTANCE_SQ;
 
     static {
         final var builder = new ForgeConfigSpec.Builder();
@@ -32,6 +33,10 @@ public final class OBClientConfig {
         PROJECTOR_CONE = builder.define("renderHolographicCone", true);
         PROJECTOR_BRIGHTNESS = builder.comment("Brightness of the holographic cone. Use -1 for world lighting.")
                 .defineInRange("brightness", -1, -1, 255);
+        builder.pop();
+        builder.push("guide");
+        GUIDE_RENDER_DISTANCE_SQ = builder.comment("Squared distance at which Guide markers can render.")
+                .defineInRange("renderDistanceSq", 65536.0, 1.0, 262144.0);
         builder.pop();
         builder.push("glyphs");
         GLYPHS_IN_SEARCH = builder.comment("Include every printable glyph in the creative search tab.").define("showInCreativeSearch", false);

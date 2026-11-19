@@ -202,4 +202,5 @@ Checklist:
 - [x] Restore the Paint Mixer, paint cans, dyed brushes and their recipes, face-by-face canvas painting, and the squeegee.
 - [x] Restore the Drawing Table and prepared stencils, including multiple painted layers and sheet recovery.
 - [x] Restore glyph selection, text printing, hand and wall models, and wall placement on the 1/16-block grid.
-- [ ] Restore Guide and Builder Guide shapes, controls, and previews.
+- [x] Restore Guide and Builder Guide shapes, controls, previews, survival building, creative filling, and the optional CC: Tweaked peripheral.
+- [ ] Restore imaginary blocks, crayon recipes, and imagination glasses.

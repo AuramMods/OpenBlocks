@@ -15,6 +15,7 @@ import art.arcane.openblocks.block.OBHealBlock;
 import art.arcane.openblocks.block.OBLadderBlock;
 import art.arcane.openblocks.block.OBPathBlock;
 import art.arcane.openblocks.block.OBCanvasBlock;
+import art.arcane.openblocks.block.OBGuideBlock;
 import art.arcane.openblocks.block.OBDrawingTableBlock;
 import art.arcane.openblocks.block.OBPaintCanBlock;
 import art.arcane.openblocks.block.OBPaintMixerBlock;
@@ -120,6 +121,8 @@ public final class OBBlocks {
                 ? BlockBehaviour.Properties.copy(Blocks.STONE).noOcclusion()
                 : BlockBehaviour.Properties.copy(Blocks.STONE);
 
+        if ("guide".equals(id)) return new OBGuideBlock(properties, false);
+        if ("builder_guide".equals(id)) return new OBGuideBlock(properties, true);
         if ("elevator".equals(id)) return new OBElevatorBlock(properties);
         if ("elevator_rotating".equals(id)) return new OBElevatorRotatingBlock(properties);
         if ("ladder".equals(id)) return new OBLadderBlock(BlockBehaviour.Properties.copy(Blocks.OAK_TRAPDOOR).strength(3.0F));

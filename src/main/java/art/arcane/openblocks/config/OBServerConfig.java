@@ -61,6 +61,8 @@ public final class OBServerConfig {
     public static final ForgeConfigSpec.ConfigValue<List<? extends String>> CARTOGRAPHER_BLACKLIST;
     public static final ForgeConfigSpec.BooleanValue PROJECTOR_LIGHT_ENABLED;
     public static final ForgeConfigSpec.IntValue PROJECTOR_LIGHT_LEVEL;
+    public static final ForgeConfigSpec.IntValue GUIDE_REDSTONE;
+    public static final ForgeConfigSpec.IntValue GUIDE_MAX_HALF_AXIS;
     public static final ForgeConfigSpec.BooleanValue CANVAS_REPLACE;
     public static final ForgeConfigSpec.ConfigValue<List<? extends String>> CANVAS_BLACKLIST;
     public static final ForgeConfigSpec.BooleanValue SERIOUS_MODE;
@@ -185,6 +187,13 @@ public final class OBServerConfig {
         CARTOGRAPHER_BLACKLIST = builder.comment("Block registry IDs the Cartographer should see through.")
                 .defineListAllowEmpty("blockBlacklist", List.of(), value -> value instanceof String);
         builder.pop();
+        builder.push("guide");
+        GUIDE_REDSTONE = builder.comment("Guide redstone mode. 1 requires power, -1 requires no power, and 0 ignores redstone.")
+                .defineInRange("redstoneSensitivity", 1, -1, 1);
+        GUIDE_MAX_HALF_AXIS = builder.comment("Maximum number of blocks a Guide can extend along each half-axis.")
+                .defineInRange("maxHalfAxis", 64, 8, 128);
+        builder.pop();
+
         builder.push("projector");
         PROJECTOR_LIGHT_ENABLED = builder.define("lightUpWhenWorking", true);
         PROJECTOR_LIGHT_LEVEL = builder.defineInRange("lightLevel", 10, 0, 15);

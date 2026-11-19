@@ -75,6 +75,14 @@ Current registry classes:
   - `src/main/java/art/arcane/openblocks/item/OBGlyphItem.java`
   - `src/main/java/art/arcane/openblocks/entity/OBGlyph.java`
   - `src/main/java/art/arcane/openblocks/client/OBGlyphRendering.java`
+- Guide and Builder Guide:
+  - `src/main/java/art/arcane/openblocks/block/OBGuideBlock.java`
+  - `src/main/java/art/arcane/openblocks/block/entity/OBGuideBlockEntity.java`
+  - `src/main/java/art/arcane/openblocks/guide/OBGuideShape.java`
+  - `src/main/java/art/arcane/openblocks/guide/OBGuideOrientation.java`
+  - `src/main/java/art/arcane/openblocks/guide/OBGuideControls.java`
+  - `src/main/java/art/arcane/openblocks/client/OBGuideRendering.java`
+  - `src/main/java/art/arcane/openblocks/integration/OBComputerCraftGuide.java`
 - Sound register: `src/main/java/art/arcane/openblocks/registry/OBSounds.java`
 - Custom statistic register for Bricks dropped: `src/main/java/art/arcane/openblocks/registry/OBStats.java`
 - Enchantment register: `src/main/java/art/arcane/openblocks/registry/OBEnchantments.java`
@@ -316,8 +324,8 @@ Source: `old-1.12.2/src/main/java/openblocks/OpenBlocks.java`
 | ID | Block Class | Field | Tile Entity | ItemBlock / Item Wrapper | Legacy IDs / Notes |
 |---|---|---|---|---|---|
 | ladder | BlockLadder | `Blocks.ladder` | - | default | - |
-| guide | BlockGuide | `Blocks.guide` | TileEntityGuide | ItemGuide | - |
-| builder_guide | BlockBuilderGuide | `Blocks.builderGuide` | TileEntityBuilderGuide | ItemGuide | - |
+| guide | BlockGuide | `Blocks.guide` | TileEntityGuide | ItemGuide | 11 shapes, face controls, redstone gating, and colored marker previews. |
+| builder_guide | BlockBuilderGuide | `Blocks.builderGuide` | TileEntityBuilderGuide | ItemGuide | Adds material-consuming survival placement and obsidian-triggered creative fill. Both Guide types expose `openblocks_guide` with CC: Tweaked. |
 | elevator | BlockElevator | `Blocks.elevator` | - | ItemElevator | `registerDefaultItemModel = false` |
 | elevator_rotating | BlockElevatorRotating | `Blocks.elevatorRotating` | TileEntityElevatorRotating | ItemElevator | `registerDefaultItemModel = false` |
 | heal | BlockHeal | `Blocks.heal` | TileEntityHealBlock | default | - |

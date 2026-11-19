@@ -7,6 +7,7 @@ import art.arcane.openblocks.config.OBClientConfig;
 import art.arcane.openblocks.config.OBServerConfig;
 import art.arcane.openblocks.integration.OBComputerCraftCannon;
 import art.arcane.openblocks.integration.OBComputerCraftDonations;
+import art.arcane.openblocks.integration.OBComputerCraftGuide;
 import art.arcane.openblocks.integration.OBComputerCraftMagnet;
 import art.arcane.openblocks.integration.OBComputerCraftProjector;
 import art.arcane.openblocks.network.OBNetwork;
@@ -77,6 +78,7 @@ public class OpenBlocks {
     private void setupComputerCraft(final FMLCommonSetupEvent event) {
         event.enqueueWork(() -> {
             OBComputerCraftDonations.register();
+            OBComputerCraftGuide.register();
             OBComputerCraftCannon.register();
             OBComputerCraftProjector.register();
         });
