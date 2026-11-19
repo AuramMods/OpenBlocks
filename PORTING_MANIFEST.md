@@ -44,6 +44,13 @@ Current registry classes:
   - `src/main/java/art/arcane/openblocks/integration/OBTurtleMagnetPeripheral.java`
   - `src/main/java/art/arcane/openblocks/client/OBComputerCraftMagnetClient.java`
   - `src/main/resources/data/open_blocks/computercraft/turtle_upgrades/magnet_turtle.json`
+- Cartographer and height maps:
+  - `src/main/java/art/arcane/openblocks/entity/OBCartographer.java`
+  - `src/main/java/art/arcane/openblocks/client/OBCartographerRendering.java`
+  - `src/main/java/art/arcane/openblocks/world/OBHeightMapData.java`
+  - `src/main/java/art/arcane/openblocks/world/OBHeightMapSurvey.java`
+  - `src/main/java/art/arcane/openblocks/recipe/OBMapResizeRecipe.java`
+  - `src/main/java/art/arcane/openblocks/recipe/OBMapCloneRecipe.java`
 - Sound register: `src/main/java/art/arcane/openblocks/registry/OBSounds.java`
 - Custom statistic register for Bricks dropped: `src/main/java/art/arcane/openblocks/registry/OBStats.java`
 - Enchantment register: `src/main/java/art/arcane/openblocks/registry/OBEnchantments.java`
@@ -347,9 +354,9 @@ Source: `old-1.12.2/src/main/java/openblocks/OpenBlocks.java`
 | paintbrush | ItemPaintBrush | `Items.paintBrush` | `paintBrush` |
 | stencil | ItemStencil | `Items.stencil` | no default model |
 | squeegee | ItemSqueegee | `Items.squeegee` | - |
-| height_map | ItemHeightMap | `Items.heightMap` | `heightMap` |
-| empty_map | ItemEmptyMap | `Items.emptyMap` | `emptyMap` |
-| cartographer | ItemCartographer | `Items.cartographer` | - |
+| height_map | ItemHeightMap | `Items.heightMap` | The Cartographer produces a surveyed map. Copies with the same ID share terrain and liquid data across dimensions. |
+| empty_map | ItemEmptyMap | `Items.emptyMap` | Blank map with five scales from 1:1 through 1:16. Resize in a crafting grid or clone a surveyed map at the same scale. |
+| cartographer | ItemCartographer | `Items.cartographer` | Deploy from the main hand. Sneak-use inserts and removes maps. Attack packs the assistant and its survey. |
 | tasty_clay | ItemTastyClay | `Items.tastyClay` | `tastyClay`. In 1.20.1, `OBBrickActions` adds a stored brick after the always-edible food is consumed with digestion enabled. |
 | golden_eye | ItemGoldenEye | `Items.goldenEye` | `goldenEye` |
 | generic_unstackable | ItemOBGenericUnstackable | `Items.genericUnstackable` | no default model; `genericUnstackable` |
@@ -483,7 +490,7 @@ Registered mod entities:
 - `openblocks:magnet` -> `EntityMagnet` (`703`). The `openblocks_magnet` turtle peripheral commands this variant of `OBMagnet`. It recovers carried blocks with the turtle owner's Forge identity when its controller goes away.
 - `openblocks:mounted_block` -> `EntityMountedBlock` (`704`). `OBMountedBlock` stores block state and block entity data. A placement veto keeps the cargo available for another attempt.
 - `openblocks:player_magnet` -> `EntityMagnet.PlayerBound` (`708`). Worn equipment deploys `OBMagnet`, which follows the player and prioritizes eligible entities over blocks.
-- `openblocks:cartographer` -> `EntityCartographer` (`705`)
+- `openblocks:cartographer` -> `EntityCartographer` (`705`). `OBCartographer` follows its owner and surveys nearby loaded chunks. The client shows survey progress when looking at it.
 - `openblocks:item_projectile` -> `EntityItemProjectile` (`706`)
 - `openblocks:golden_eye` -> `EntityGoldenEye` (`707`)
 - `openblocks:mini_me` -> `EntityMiniMe` (`710`)

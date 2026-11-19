@@ -132,7 +132,7 @@ Suggested order:
 - [-] Storage/domain: tanks, xp systems, vacuum hopper, donation station
 - [-] Utility/domain: block breaker/placer/dropper, auto anvil/enchantment table
 - [ ] Visual/domain: canvas/paint/stencil/glyph/projector/sky block
-- [-] Entity/domain: cartographer, mini-me, golden eye, and the remaining entities in the manifest
+- [-] Entity/domain: mini-me, golden eye, and the remaining entities in the manifest
 - [ ] Fun/domain: trophies, flim-flam, sounds/effects
 
 Per-feature checklist template:
@@ -198,3 +198,4 @@ Checklist:
 - [x] Restore Hang Glider deployment, steering, dive, fall protection, thermal lift, camera-specific rendering, and variometer controls.
 - [x] Restore the wearable Crane Backpack, Crane Control, and player magnet with block and entity pickup, protected cargo placement, and synchronized models.
 - [x] Restore the optional Miracle Magnet for CC: Tweaked turtles, including native crafting and equipping, Lua control, fuel, and left and right upgrade models.
+- [x] Restore the Cartographer, world-saved terrain and liquid surveys, map resizing and cloning, and the assistant's progress display.

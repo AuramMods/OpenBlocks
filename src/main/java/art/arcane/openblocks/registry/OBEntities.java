@@ -1,6 +1,7 @@
 package art.arcane.openblocks.registry;
 
 import art.arcane.openblocks.OpenBlocks;
+import art.arcane.openblocks.entity.OBCartographer;
 import art.arcane.openblocks.entity.OBFallingExperienceOrb;
 import art.arcane.openblocks.entity.OBHangGlider;
 import art.arcane.openblocks.entity.OBItemProjectile;
@@ -34,7 +35,9 @@ public final class OBEntities {
             () -> EntityType.Builder.of(OBMountedBlock::new, MobCategory.MISC).noSummon()
                     .sized(0.925F, 0.925F).clientTrackingRange(4).updateInterval(1).build(OpenBlocks.id("mounted_block").toString()));
     public static final RegistryObject<EntityType<OBMagnet>> PLAYER_MAGNET = registerMagnet("player_magnet");
-    public static final RegistryObject<EntityType<OBPlaceholderEntity>> CARTOGRAPHER = register("cartographer", 64, 8);
+    public static final RegistryObject<EntityType<OBCartographer>> CARTOGRAPHER = ENTITY_TYPES.register("cartographer",
+            () -> EntityType.Builder.of(OBCartographer::new, MobCategory.MISC).fireImmune()
+                    .sized(0.4F, 0.4F).clientTrackingRange(4).updateInterval(2).build(OpenBlocks.id("cartographer").toString()));
     public static final RegistryObject<EntityType<OBItemProjectile>> ITEM_PROJECTILE = ENTITY_TYPES.register("item_projectile",
             () -> EntityType.Builder.<OBItemProjectile>of(OBItemProjectile::new, MobCategory.MISC)
                     .sized(0.25F, 0.25F).clientTrackingRange(4).updateInterval(1).setShouldReceiveVelocityUpdates(true)

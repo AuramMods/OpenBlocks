@@ -4,8 +4,10 @@ import art.arcane.openblocks.OpenBlocks;
 import art.arcane.openblocks.block.entity.OBTankBlockEntity;
 import art.arcane.openblocks.config.OBServerConfig;
 import art.arcane.openblocks.item.OBElevatorItem;
+import art.arcane.openblocks.item.OBEmptyMapItem;
 import art.arcane.openblocks.item.OBSkyItem;
 import art.arcane.openblocks.item.OBTankItem;
+import art.arcane.openblocks.world.OBHeightMapData;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
@@ -29,10 +31,13 @@ public final class OBCreativeTabs {
                     .displayItems((params, output) -> OBItems.all().forEach(entry -> {
                         final var item = entry.get();
                         if (entry == OBItems.XP_BUCKET && OBServerConfig.SPEC.isLoaded() && !OBServerConfig.XP_BUCKET_IN_CREATIVE.get()) return;
+                        if (entry == OBItems.HEIGHT_MAP) return;
                         if (item instanceof OBElevatorItem) {
                             for (final DyeColor color : DyeColor.values()) {
                                 output.accept(OBElevatorItem.create(item, color));
                             }
+                        } else if (item instanceof OBEmptyMapItem) {
+                            for (int scale = 0; scale <= OBHeightMapData.MAX_SCALE; scale++) output.accept(OBEmptyMapItem.create(scale));
                         } else {
                             output.accept(item);
                             if (item instanceof OBSkyItem) output.accept(OBSkyItem.create(true));

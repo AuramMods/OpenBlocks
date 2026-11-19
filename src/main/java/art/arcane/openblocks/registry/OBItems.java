@@ -4,11 +4,14 @@ import art.arcane.openblocks.OpenBlocks;
 import art.arcane.openblocks.item.OBAnimatedFloorItem;
 import art.arcane.openblocks.item.OBCannonItem;
 import art.arcane.openblocks.item.OBCraneBackpackItem;
+import art.arcane.openblocks.item.OBCartographerItem;
 import art.arcane.openblocks.item.OBCraneControlItem;
 import art.arcane.openblocks.item.OBDevNullItem;
 import art.arcane.openblocks.item.OBElevatorItem;
+import art.arcane.openblocks.item.OBEmptyMapItem;
 import art.arcane.openblocks.item.OBFlagItem;
 import art.arcane.openblocks.item.OBHangGliderItem;
+import art.arcane.openblocks.item.OBHeightMapItem;
 import art.arcane.openblocks.item.OBLuggageItem;
 import art.arcane.openblocks.item.OBPedometerItem;
 import art.arcane.openblocks.item.OBPointerItem;
@@ -116,9 +119,9 @@ public final class OBItems {
     public static final RegistryObject<Item> PAINTBRUSH = registerItem("paintbrush");
     public static final RegistryObject<Item> STENCIL = registerItem("stencil");
     public static final RegistryObject<Item> SQUEEGEE = registerItem("squeegee");
-    public static final RegistryObject<Item> HEIGHT_MAP = registerItem("height_map");
-    public static final RegistryObject<Item> EMPTY_MAP = registerItem("empty_map");
-    public static final RegistryObject<Item> CARTOGRAPHER = registerItem("cartographer");
+    public static final RegistryObject<Item> HEIGHT_MAP = registerItem("height_map", OBHeightMapItem::new);
+    public static final RegistryObject<Item> EMPTY_MAP = registerItem("empty_map", OBEmptyMapItem::new);
+    public static final RegistryObject<Item> CARTOGRAPHER = registerItem("cartographer", OBCartographerItem::new);
     public static final RegistryObject<Item> TASTY_CLAY = registerItem("tasty_clay", new Item.Properties().food(
             new FoodProperties.Builder().nutrition(1).saturationMod(0.1f).alwaysEat().build()));
     public static final RegistryObject<Item> GOLDEN_EYE = registerItem("golden_eye");
