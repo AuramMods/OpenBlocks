@@ -4,6 +4,8 @@ This repository ports OpenBlocks from Forge 1.12.2 to Minecraft 1.20.1. The 1.20
 
 ## Build and test
 
+Build, test, and package OpenBlocks releases locally with Gradle. Keep this project off GitHub Actions so builds use the local machine's cores and Gradle cache.
+
 ```sh
 ./gradlew -PopenBlocksStandalone runData
 ./gradlew -PopenBlocksStandalone jar reobfJar
