@@ -1,10 +1,12 @@
 package art.arcane.openblocks.block.entity;
 
 import art.arcane.openblocks.config.OBServerConfig;
+import art.arcane.openblocks.integration.OBWind;
 import art.arcane.openblocks.registry.OBBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
@@ -20,9 +22,14 @@ public final class OBFanBlockEntity extends BlockEntity {
 
     private static final double CONE_RADIUS_COS = Math.cos(0.6);
     private static final float BLADE_SPEED = 45.0F;
+    private static final float FULL_WIND = 0.30F;
+    private static final int WIND_REFRESH_TICKS = 40;
     private float yaw;
     private int power;
     private float bladeRotation;
+    private int windPower;
+    private float windYaw;
+    private long nextWindRefresh;
 
     public OBFanBlockEntity(final BlockPos pos, final BlockState state) { super(OBBlockEntities.FAN.get(), pos, state); }
 
@@ -54,12 +61,50 @@ public final class OBFanBlockEntity extends BlockEntity {
         }
         final double force = OBServerConfig.FAN_FORCE.get() * signal / 15.0;
         final double range = OBServerConfig.FAN_RANGE.get();
-        if (force > 0 && range > 0) fan.pushEntities(level, pos, range, force);
+        if (force > 0 && range > 0) {
+            final Vec3 forward = fan.forward();
+            if (level instanceof ServerLevel server) fan.publishWind(server, pos, forward, signal);
+            fan.pushEntities(level, pos, forward, range, force);
+        } else {
+            fan.clearWind();
+        }
     }
 
-    private void pushEntities(final Level level, final BlockPos pos, final double range, final double maxForce) {
+    private Vec3 forward() {
         final double heading = Math.toRadians(yaw);
-        final Vec3 forward = new Vec3(Math.sin(heading), 0, -Math.cos(heading));
+        return new Vec3(Math.sin(heading), 0, -Math.cos(heading));
+    }
+
+    private void publishWind(final ServerLevel level, final BlockPos pos, final Vec3 forward, final int signal) {
+        long now = level.getGameTime();
+        if (windPower == signal && windYaw == yaw && now < nextWindRefresh) return;
+        OBWind.setFan(level, pos, forward, FULL_WIND * signal / 15.0F);
+        windPower = signal;
+        windYaw = yaw;
+        nextWindRefresh = now + WIND_REFRESH_TICKS;
+    }
+
+    private void clearWind() {
+        if (windPower != 0 && level instanceof ServerLevel server) {
+            OBWind.stopFan(server, worldPosition);
+            windPower = 0;
+        }
+    }
+
+    @Override
+    public void setRemoved() {
+        clearWind();
+        super.setRemoved();
+    }
+
+    @Override
+    public void onChunkUnloaded() {
+        clearWind();
+        super.onChunkUnloaded();
+    }
+
+    private void pushEntities(final Level level, final BlockPos pos, final Vec3 forward, final double range,
+                              final double maxForce) {
         final Vec3 apex = Vec3.atCenterOf(pos).subtract(forward.scale(1.1));
         final AABB bounds = new AABB(apex, apex).inflate(range);
         for (final Entity entity : level.getEntitiesOfClass(Entity.class, bounds, OBFanBlockEntity::canPush)) {
